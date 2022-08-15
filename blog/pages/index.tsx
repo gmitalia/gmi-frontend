@@ -20,7 +20,7 @@ export default function Home({posts}: Props) {
     <Header/>
 
 <div className='flex justify-between items-center bg-gray-800 text-gray-100 border-y border-gray-100 py-10 lg:py-0'>
-  <div className='px-10 space-y-5'>
+  <div className='px-2 md:px-10 space-y-5'>
     <h1 className='text-6xl max-w-xl font-serif'><span className='underline decoration-gray-100  text-gray-100 decoration-4'>GMI</span> &egrave; la community italiana di GameMaker</h1>
     <h2>Un software che permette di creare videogiochi in modo veloce e divertente.</h2>
   </div>
@@ -30,7 +30,7 @@ export default function Home({posts}: Props) {
 
 
 {/* posts */}
-    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 p-2 md:p-6'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 px-2 py-6 md:px-10 md:p-6'>
       {posts.map((post) => {
        return <Link href={`/posts/${post?.slug.current}`} key={post?._id}>
           <div className='group cursor-pointer overflow-hidden border rounded-lg'>
