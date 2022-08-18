@@ -7,14 +7,17 @@
     "export": "npm run build && next export"
   },
   "dependencies": {
+    "@sanity/block-content-to-react": "^3.0.0",
     "@sanity/client": "^3.3.2",
     "@sanity/image-url": "^1.0.1",
+    "get-youtube-id": "^1.0.1",
     "next": "latest",
     "next-sanity": "^0.5.2",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-hook-form": "^7.31.3",
-    "react-portable-text": "^0.4.3"
+    "react-portable-text": "^0.4.3",
+    "react-youtube": "^9.0.3"
   },
   "devDependencies": {
     "@types/node": "17.0.35",

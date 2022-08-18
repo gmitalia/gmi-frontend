@@ -6,6 +6,7 @@ import { sanityClient, urlFor } from '../../sanity';
 import { Post } from '../../typings';
 import { config } from '../../sanity';
 import {useForm, SubmitHandler} from 'react-hook-form'
+import getYouTubeId from 'get-youtube-id'
 
 interface iForm {
     _id: string;
@@ -20,7 +21,7 @@ interface Props {
 const Post = ({post}: Props) => {
     const {register, handleSubmit, formState:{errors}} = useForm<iForm>()
     const [submitted, setsubmitted] = useState(false)
-    // console.log(post)
+    //console.log(post)
 
     const onSubmit: SubmitHandler<iForm> = (data) => {
         // console.log(data)
@@ -64,8 +65,13 @@ const Post = ({post}: Props) => {
                 ),
                 link: ({href, children}: any) => (
                     <a href={href} className='text-blue-500 hover:underline'>{children}</a>
-                )
-
+                ),
+                youtube: ({url}: any) => {
+                    const id = getYouTubeId(url) || undefined;
+                    return (
+                        <iframe width="560" height="315" src={`https://www.youtube.com/embed/${id}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
+                    )
+                }
              }}
             />
         </div>
