@@ -16,7 +16,7 @@
     https://gmitalia.sanity.studio/desk
 
 - render the blog to static pages
-    npm run dev
+    npm run export
 
 - deploy on firebase
     npx firebase deploy
