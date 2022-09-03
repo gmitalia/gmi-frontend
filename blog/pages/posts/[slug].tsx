@@ -39,12 +39,12 @@ const Post = ({post}: Props) => {
   return (
       <>
       <Header/>
-      {post.mainImage && <img className='w-full h-40 object-cover' src={urlFor(post.mainImage)?.url()!} alt='' />}
+      {/* {post.mainImage && <img className='w-full h-40 object-cover' src={urlFor(post.mainImage)?.url()!} alt='' />} */}
     
-    <article className='max-w-3xl mx-auto p-5'>
-        <h1 className='text-3xl mt-10 mb-3'>{post.title}</h1>
-        <h2 className='font-light text-xl mb-2 text-gray-500'>{post.description}</h2>
-        <div className='flex items-center space-x-2'>
+    <article className='max-w-7xl mx-auto p-5'>
+        <h2 className='text-3xl mb-3 text-center'>{post.title}</h2>
+        {/* <h2 className='font-light text-xl mb-2 text-gray-500'>{post.description}</h2> */}
+        <div className='flex items-center space-x-2 justify-center'>
             {post.author.image && <img className='h-10 w-10 rounded-full' src={urlFor(post.author.image)?.url()!} alt={post.author.name} /> }
             <p className='font-extralight text-sm'>Blog post by <span className='text-green-600'>{post.author.name}</span> - published at {new Date(post._createdAt).toLocaleString()}</p>
         </div>
@@ -69,7 +69,7 @@ const Post = ({post}: Props) => {
                 youtube: ({url}: any) => {
                     const id = getYouTubeId(url) || undefined;
                     return (
-                        <iframe width="560" height="315" src={`https://www.youtube.com/embed/${id}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
+                        <iframe width="560" height="315" className="mx-auto p-4" src={`https://www.youtube.com/embed/${id}`} title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
                     )
                 }
              }}

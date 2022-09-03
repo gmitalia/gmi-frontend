@@ -3,7 +3,7 @@ import React from 'react'
 
 const Header = () => {
   return (
-   <header className='flex justify-between p-5 max-w-7xl mx-auto'>
+   <header className='flex justify-between py-5 max-w-7xl mx-auto'>
        <div className='flex space-x-5'>
            <Link href={'/'}>
                 <img 
