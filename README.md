@@ -32,6 +32,12 @@
 - deploy on firebase
     npx firebase deploy
   
+## Deploy gmi-contest
+
+- Open the gmi-contest project
+- follow the README.md
+- deploy on firebase
+    npx firebase deploy
 
 
 ## rewrite del path verso index
