@@ -36,7 +36,7 @@
 
 - Open the gmi-contest project
 - follow the README.md
-- deploy on firebase
+- return here and deploy on firebase
     npx firebase deploy
 
 
