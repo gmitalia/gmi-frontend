@@ -1,4 +1,4 @@
-const GMILogo = (props) => {
+const GMILogo = (props: any) => {
   return (
 <svg viewBox="0 0 295.20001 294.60303" className={props.className}>
   <path

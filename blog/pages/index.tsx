@@ -13,10 +13,10 @@ export default function Home({posts}: Props) {
   // console.log(posts)
   return (
     <div>
-      <Head className="max-w-7xl mx-auto">
-        <title>GameMaker Italia</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <Head>
+      <title>GameMaker Italia</title>
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
 
     <Header/>
 
@@ -46,7 +46,7 @@ export default function Home({posts}: Props) {
   )
 }
 export async function getStaticProps() {
-  const query = `*[_type == 'post']{
+  const query = `*[_type == 'post'] | order(_createdAt desc){
     _id,
     title,
     slug,

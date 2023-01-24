@@ -41,12 +41,12 @@ const Post = ({post}: Props) => {
       <Header/>
       {/* {post.mainImage && <img className='w-full h-40 object-cover' src={urlFor(post.mainImage)?.url()!} alt='' />} */}
     
-    <article className='max-w-7xl mx-auto p-5'>
+    <article className='max-w-3xl mx-auto p-5'>
         <h2 className='text-3xl mb-3 text-center'>{post.title}</h2>
         {/* <h2 className='font-light text-xl mb-2 text-gray-500'>{post.description}</h2> */}
         <div className='flex items-center space-x-2 justify-center'>
             {post.author.image && <img className='h-10 w-10 rounded-full' src={urlFor(post.author.image)?.url()!} alt={post.author.name} /> }
-            <p className='font-extralight text-sm'>Blog post by <span className='text-green-600'>{post.author.name}</span> - published at {new Date(post._createdAt).toLocaleString()}</p>
+            <p className='font-extralight text-sm'>Blog post di <span className='text-green-600'>{post.author.name}</span> - pubblicato il {new Date(post._createdAt).toLocaleString()}</p>
         </div>
         <div className='mt-10'>
             <PortableText
