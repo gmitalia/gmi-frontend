@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Hero from '../components/Hero'
 import Link from 'next/link'
-import Header from '../components/Header'
+import Header from '../components/Header/Header'
 import {sanityClient, urlFor} from '../sanity'
 import { Post } from '../typings'
 

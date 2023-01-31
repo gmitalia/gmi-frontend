@@ -1,4 +1,4 @@
-import GMILogo from "./GMILogo";
+import GMILogo from "./Header/GMILogo";
 import HeroImage from "../public/images/HompageHero.png";
 
 console.log(HeroImage.src);
