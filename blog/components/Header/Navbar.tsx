@@ -1,9 +1,16 @@
 import React from "react";
 import Link from "next/link";
 
-const Navbar = () => {
+type NavbarProps = {
+  openMenu: boolean;
+  setOpenMenu: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const Navbar = ({ openMenu, setOpenMenu }: NavbarProps) => {
   return (
-    <ul className="text-lg hidden md:inline-flex items-center justify-end space-x-5">
+    <ul
+      className={`text-lg hidden md:inline-flex items-center justify-end space-x-5 flex-1`}
+    >
       <li>
         <Link href="/competizioni">Competizioni</Link>
       </li>
