@@ -42,6 +42,7 @@
 
     p {
       margin-bottom: calc(var(--defaultSpace) / 3);
+      line-height: 1.2;
     }
 
     img {
@@ -70,6 +71,10 @@
         background-color: var(--green);
         height: 2px;
       }
+    }
+
+    p+h4 {
+      margin-top: calc(var(--defaultSpace)*2);
     }
   }
 }
