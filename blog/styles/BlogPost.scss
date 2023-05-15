@@ -1,4 +1,7 @@
 .blog-post {
+  @media (max-width: 768px) {
+    --defaultSpace: 12px;
+  }
   background-color: var(--white);
   max-width: var(--blogPostWidth);
   margin: 0 auto;
@@ -21,7 +24,7 @@
 
   &__wrapper {
     background-color: var(--cloudGrayLight);
-    padding: var(--defaultSpace) 4px;
+    padding: var(--defaultSpace) 0;
   }
 
   &__title {
@@ -55,6 +58,10 @@
   &__text {
     padding: 0 var(--defaultSpace);
     margin: var(--defaultSpace) 0;
+
+    & > div {
+      overflow: hidden;
+    }
 
     p {
       margin-bottom: calc(var(--defaultSpace) / 3);
