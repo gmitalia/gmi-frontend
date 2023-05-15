@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  /* Colors */
+  --cloudGrayLight: #F5F7F9;
+  --cloudGray: #E8EDF1;
+  --cloudGrayDark: #BAC7D5;
+  --white: #FFF;
+
+  --orangeLight: #FEF2E6;
+  --orange: #DF7B00;
+  --orangeDark: #AD5700;
+
+  --yellowLight: #ffef62;
+  --yellow: #ffeb3b;
+  --yellowDark: #b2a429;
+
+  --purpleLight: #834bff;
+  --purple: #651fff;
+  --purpleDark: #4615b2;
+
+  --greenLight: #00A58E;
+  --green: #007A69;
+  --greenDark: #005C4E;
+
+  /* Size and distances */
+  --defaultSpace: 24px;
+  --blogPostWidth: 900px;
+}

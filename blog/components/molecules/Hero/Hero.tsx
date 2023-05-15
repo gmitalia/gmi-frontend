@@ -1,5 +1,5 @@
-import GMILogo from "./Header/GMILogo";
-import HeroImage from "../public/images/HompageHero.png";
+import GMILogo from "../../atoms/GMILogo/GMILogo";
+import HeroImage from "../../../public/images/HompageHero.png";
 
 const Hero = () => {
   return (
@@ -20,7 +20,7 @@ const Hero = () => {
             divertente.
           </h2>
         </div>
-        <GMILogo className="fill-white max-w-sm p-5" />
+        <GMILogo className="fill-white max-w-sm p-5 hidden md:block" />
       </div>
     </div>
   );
