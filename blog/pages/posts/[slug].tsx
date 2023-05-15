@@ -1,6 +1,6 @@
 import { GetStaticProps } from "next";
 import React, { useState } from "react";
-import Header from "../../components/Header/Header";
+import Header from "../../components/molecules/Header/Header";
 import { sanityClient } from "../../sanity";
 import { Post } from "../../typings";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -24,10 +24,8 @@ const Post = ({ post }: Props) => {
     formState: { errors },
   } = useForm<iForm>();
   const [submitted, setsubmitted] = useState(false);
-  //console.log(post)
 
   const onSubmit: SubmitHandler<iForm> = (data) => {
-    // console.log(data)
     fetch("/api/createComment", {
       method: "POST",
       body: JSON.stringify(data),
@@ -42,7 +40,6 @@ const Post = ({ post }: Props) => {
       });
   };
 
-  console.log(post);
   return (
     <>
       <Header />
@@ -90,7 +87,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       mainImage,
       description,
       body,
-      categories,
+      "categories": categories[]->title,
       }
     `;
   const post = await sanityClient.fetch(query, {

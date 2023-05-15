@@ -3,6 +3,21 @@
   max-width: var(--blogPostWidth);
   margin: 0 auto;
   padding: var(--defaultSpace) 0;
+  &--tutorial {
+    --categoryColor: var(--greenLight);
+  }
+
+  &--notizie {
+    --categoryColor: var(--yellow);
+  }
+
+  &--game-jam {
+    --categoryColor: var(--purpleDark)
+  }
+
+  &--competizioni {
+    --categoryColor: var(--orange)
+  }
 
   &__wrapper {
     background-color: var(--cloudGrayLight);
@@ -11,6 +26,7 @@
 
   &__title {
     font-size: 1.8rem;
+    line-height: 1.2;
     font-weight: bold;
     padding: 0 var(--defaultSpace);
     margin-bottom: var(--defaultSpace);
@@ -27,13 +43,13 @@
     align-items: center;
     gap: var(--defaultSpace);
     padding: var(--defaultSpace);
-    background-color: var(--green);
     color: white;
     text-shadow: 1px 1px 5px #000;
     p + p:before {
       content: "|";
       margin-right: var(--defaultSpace);
     }
+    background-color: var(--categoryColor);
   }
 
   &__text {
@@ -50,30 +66,58 @@
     }
 
     ul {
-      list-style-type: square;
+      list-style: none;
       padding-left: .9rem;
+      margin-bottom: calc(var(--defaultSpace) / 3);
+      line-height: 1.2;
+
+      li {
+        margin-bottom: calc(var(--defaultSpace) / 4);
+      }
+
+      li:before {
+        content: "\25AA";
+        color: var(--categoryColor);
+        font-weight: bold;
+        margin-left: -.9em;
+        margin-right: .4rem;
+      }
     }
 
     a {
       text-decoration: underline;
+      color: var(--categoryColor)
     }
 
-    h4 {
-      font-size: 1.3rem;
+    iframe {
+      margin: var(--defaultSpace) auto;
+    }
+
+    h3,h4 {
+      font-weight: bold;
       margin-bottom: var(--defaultSpace);
       width: fit-content;
 
-      :after {
+      &:after {
         display: block;
         content: "";
         width: calc(100% + 1.5rem);
+        background-color: var(--categoryColor);
         max-width: calc(var(--blogPostWidth) - calc(var(--defaultSpace) * 2));
-        background-color: var(--green);
         height: 2px;
       }
     }
 
-    p+h4 {
+    h3 {
+      font-size: 1.4rem;
+    }
+
+    h4 {
+      font-size: 1.3rem;
+    }
+
+    p+h4,
+    p+h3 {
       margin-top: calc(var(--defaultSpace)*2);
     }
   }

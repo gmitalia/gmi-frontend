@@ -1,4 +1,5 @@
-import { Post } from "../../typings";
+import { Post } from "../../../typings";
+import { formatDate } from "../../utils";
 
 interface BlogMetaDataProps {
   post: Post;
@@ -6,13 +7,10 @@ interface BlogMetaDataProps {
 
 const BlogMetaData = ({ post }: BlogMetaDataProps) => {
   const author = post.author.name;
-  const formatDate = (date: Date) => {
-    return [date.getDate(), date.getMonth() + 1, date.getFullYear()].join("/");
-  };
-  console.log(post.categories.concat());
+
   const date = formatDate(new Date(post._createdAt));
   return (
-    <div className="blog-post__metadata">
+    <div className={`blog-post__metadata`}>
       <p>Scritto da {author}</p>
       <p>{date}</p>
     </div>

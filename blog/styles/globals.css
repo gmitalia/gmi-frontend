@@ -13,9 +13,17 @@
   --orange: #DF7B00;
   --orangeDark: #AD5700;
 
-  --green: #00A58E;
-  --greenDark: #007A69;
-  --greenDarker: #005C4E;
+  --yellowLight: #ffef62;
+  --yellow: #ffeb3b;
+  --yellowDark: #b2a429;
+
+  --purpleLight: #834bff;
+  --purple: #651fff;
+  --purpleDark: #4615b2;
+
+  --greenLight: #00A58E;
+  --green: #007A69;
+  --greenDark: #005C4E;
 
   /* Size and distances */
   --defaultSpace: 24px;

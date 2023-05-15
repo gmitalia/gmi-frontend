@@ -1,6 +1,6 @@
 import getYouTubeID from "get-youtube-id";
-import { Post } from "../../typings";
-import { config } from "../../sanity";
+import { Post } from "../../../typings";
+import { config } from "../../../sanity";
 import PortableText from "react-portable-text";
 
 interface BlogPostTextProps {

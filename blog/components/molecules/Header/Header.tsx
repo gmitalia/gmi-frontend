@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import Navbar from "./Navbar";
+import Navbar from "../Navbar/Navbar";
 
 const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
