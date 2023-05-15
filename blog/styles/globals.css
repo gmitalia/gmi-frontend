@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  /* Colors */
+  --cloudGrayLight: #F5F7F9;
+  --cloudGray: #E8EDF1;
+  --cloudGrayDark: #BAC7D5;
+  --white: #FFF;
+
+  /* Size and distances */
+  --defaultSpace: 24px;
+}
