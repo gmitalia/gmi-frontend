@@ -9,6 +9,15 @@
   --cloudGrayDark: #BAC7D5;
   --white: #FFF;
 
+  --orangeLight: #FEF2E6;
+  --orange: #DF7B00;
+  --orangeDark: #AD5700;
+
+  --green: #00A58E;
+  --greenDark: #007A69;
+  --greenDarker: #005C4E;
+
   /* Size and distances */
   --defaultSpace: 24px;
+  --blogPostWidth: 900px;
 }

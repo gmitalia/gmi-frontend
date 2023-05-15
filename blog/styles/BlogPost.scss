@@ -1,6 +1,6 @@
 .blog-post {
   background-color: var(--white);
-  max-width: 1024px;
+  max-width: var(--blogPostWidth);
   margin: 0 auto;
   padding: var(--defaultSpace) 0;
 
@@ -12,6 +12,64 @@
   &__title {
     font-size: 1.8rem;
     font-weight: bold;
-    padding: 0 var(--defaultSpace)
+    padding: 0 var(--defaultSpace);
+    margin-bottom: var(--defaultSpace);
+  }
+
+  &__main-image {
+    width: 100%;
+    padding: 0 var(--defaultSpace);
+    margin-bottom: var(--defaultSpace);
+  }
+
+  &__metadata {
+    display: flex;
+    align-items: center;
+    gap: var(--defaultSpace);
+    padding: var(--defaultSpace);
+    background-color: var(--green);
+    color: white;
+    text-shadow: 1px 1px 5px #000;
+    p + p:before {
+      content: "|";
+      margin-right: var(--defaultSpace);
+    }
+  }
+
+  &__text {
+    padding: 0 var(--defaultSpace);
+    margin: var(--defaultSpace) 0;
+
+    p {
+      margin-bottom: calc(var(--defaultSpace) / 3);
+    }
+
+    img {
+      margin: var(--defaultSpace) auto;
+    }
+
+    ul {
+      list-style-type: square;
+      padding-left: .9rem;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+
+    h4 {
+      font-size: 1.3rem;
+      margin-bottom: var(--defaultSpace);
+      width: fit-content;
+
+      :after {
+        display: block;
+        content: "";
+        width: calc(100% + 1.5rem);
+        max-width: calc(var(--blogPostWidth) - calc(var(--defaultSpace) * 2));
+        background-color: var(--green);
+        height: 2px;
+      }
+    }
   }
 }

@@ -89,7 +89,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       ],
       mainImage,
       description,
-      body
+      body,
+      categories,
       }
     `;
   const post = await sanityClient.fetch(query, {
