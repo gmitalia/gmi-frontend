@@ -72,6 +72,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     *[_type == 'post' && slug.current == $slug][0]{
         _id,
         _createdAt,
+        publishedAt,
         title,
         slug,
         author -> {
