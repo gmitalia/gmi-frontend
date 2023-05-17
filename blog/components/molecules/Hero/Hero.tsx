@@ -1,5 +1,6 @@
 import GMILogo from "../../atoms/GMILogo/GMILogo";
 import HeroImage from "../../../public/images/HompageHero.png";
+import GMLogo from "../../atoms/GMLogo/GMLogo";
 
 const Hero = () => {
   return (
@@ -20,7 +21,7 @@ const Hero = () => {
             divertente.
           </h2>
         </div>
-        <GMILogo className="fill-white max-w-sm p-5 hidden md:block" />
+        <GMLogo className="fill-white max-w-sm p-5 hidden md:block" />
       </div>
     </div>
   );

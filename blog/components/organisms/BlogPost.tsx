@@ -1,7 +1,7 @@
 import { urlFor } from "../../sanity";
 import { Post } from "../../typings";
 import BlogMetaData from "../atoms/BlogMetaData/BlogMetaData";
-import BlogPostText from "../atoms/BlogPostText/BlogPostText";
+import BlogPostText from "../molecules/BlogPostText/BlogPostText";
 
 interface BlogPostProps {
   post: Post;
