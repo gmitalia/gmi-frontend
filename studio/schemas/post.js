@@ -9,6 +9,12 @@ export default {
       type: "string",
     },
     {
+      name: "description",
+      title: "Description",
+      type: "string",
+      validation: Rule => Rule.max(30)
+    },
+    {
       name: "slug",
       title: "Slug",
       type: "slug",
