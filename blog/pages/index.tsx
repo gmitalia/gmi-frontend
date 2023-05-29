@@ -69,6 +69,7 @@ export async function getStaticProps() {
   const query = `*[_type == 'post'] | order(publishedAt desc){
     _id,
     title,
+    description,
     "categories": categories[]->title,
     slug,
     author -> {
