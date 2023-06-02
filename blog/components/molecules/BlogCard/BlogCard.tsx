@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { urlFor } from "../../../sanity";
 import { Post } from "../../../typings";
 
@@ -7,7 +6,6 @@ interface BlogCardProps {
 }
 
 const BlogCard = ({post}: BlogCardProps) => {
-  console.log(post)
   const category = post.categories[0].toLowerCase().replace(" ", "-");
   return (
     <section className={`blog-card blog-card--${category}`}>
@@ -17,7 +15,9 @@ const BlogCard = ({post}: BlogCardProps) => {
       <div className="blog-card__category">{category}</div>
       <div className="blog-card__body">
         <div>
-          <h2 className="blog-card__title">{post?.title}</h2>
+          <a className="blog-card__link" href={`/posts/${post?.slug.current}`} title={post?.title}>
+            <h2 className="blog-card__title">{post?.title}</h2>
+          </a>
         </div>
         <div className="blog-card__description">
         {post?.description}

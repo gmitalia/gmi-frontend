@@ -40,6 +40,10 @@ body {
     margin: calc(var(--defaultSpace) / 2) 0;
   }
 
+  &__link:hover {
+    text-decoration: underline;
+  }
+
   &__body {
     flex: 1;
     padding: 0 calc(var(--defaultSpace) / 2);

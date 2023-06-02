@@ -10,9 +10,9 @@ const Header = () => {
       <div className="md:flex md:justify-between p-5 max-w-7xl mx-auto">
         <div className="block md:flex md:space-x-5 items-center w-full gap-5">
           <div className="flex items-center justify-between space-x-5">
-            <Link href={"/"}>
+            <a href="/" title="GameMaker Italia Home Page">
               <GMILogo className="w-16 object-contain cursor-pointer" />
-            </Link>
+            </a>
             <span className="text-3xl hidden lg:block ">GameMaker Italia</span>
             <button
               className="md:hidden relative"

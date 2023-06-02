@@ -44,7 +44,7 @@
     gap: var(--defaultSpace);
     padding: var(--defaultSpace);
     color: white;
-    text-shadow: 1px 1px 5px #000;
+    //text-shadow: 1px 1px 5px #000;
     p + p:before {
       content: "|";
       margin-right: var(--defaultSpace);
