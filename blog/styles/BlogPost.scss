@@ -21,7 +21,7 @@
 
   &__wrapper {
     background-color: var(--cloudGrayLight);
-    padding: var(--defaultSpace) 4px;
+    padding: var(--defaultSpace) 0;
   }
 
   &__title {
@@ -93,6 +93,8 @@
       margin: var(--defaultSpace) auto;
     }
 
+    
+
     h3,h4 {
       font-weight: bold;
       margin-bottom: var(--defaultSpace);
@@ -120,5 +122,9 @@
     p+h3 {
       margin-top: calc(var(--defaultSpace)*2);
     }
+  }
+
+  &__youtube-iframe {
+    aspect-ratio: 16/9;
   }
 }
