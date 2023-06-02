@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { urlFor } from "../../../sanity";
 import { Post } from "../../../typings";
 
@@ -11,11 +12,7 @@ const BlogCard = ({post}: BlogCardProps) => {
   return (
     <section className={`blog-card blog-card--${category}`}>
       <div 
-      className="blog-card__image">
-        <img
-          src={urlFor(post?.mainImage)?.url()!}
-          alt={post?.title}
-        />
+      className="blog-card__image" style={{backgroundImage: `url(${urlFor(post?.mainImage)?.url()!}`}}>
       </div>
       <div className="blog-card__category">{category}</div>
       <div className="blog-card__body">

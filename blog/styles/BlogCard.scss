@@ -13,7 +13,7 @@ body {
   }
 
   &--notizie {
-    --categoryColor: var(--yellow);
+    --categoryColor: var(--pink);
   }
 
   &--game-jam {
@@ -47,7 +47,9 @@ body {
 
   &__image {
     aspect-ratio: 16/9;
-    padding: calc(var(--defaultSpace) / 2);
+    margin: calc(var(--defaultSpace) / 2);
+    background-position: center;
+    background-size: cover;
   }
 
   &__author {
