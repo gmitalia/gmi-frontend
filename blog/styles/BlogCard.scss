@@ -1,0 +1,64 @@
+body {
+  background-color: var(--cloudGray)
+}
+
+
+.blog-card {
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+
+  &--tutorial {
+    --categoryColor: var(--greenLight);
+  }
+
+  &--notizie {
+    --categoryColor: var(--pink);
+  }
+
+  &--game-jam {
+    --categoryColor: var(--purpleDark)
+  }
+
+  &--competizioni {
+    --categoryColor: var(--orange)
+  }
+
+
+  &__category {
+    text-transform: uppercase;
+    font-size: .7rem;
+    border-bottom: 2px solid var(--categoryColor);
+    margin-left: calc(var(--defaultSpace) / 2);
+    // color: var(--white);
+    width: fit-content;
+  }
+
+  &__title {
+    font-size: 1.2rem;
+    line-height: 1.1;
+    margin: calc(var(--defaultSpace) / 2) 0;
+  }
+
+  &__link:hover {
+    text-decoration: underline;
+  }
+
+  &__body {
+    flex: 1;
+    padding: 0 calc(var(--defaultSpace) / 2);
+  }
+
+  &__image {
+    aspect-ratio: 16/9;
+    margin: calc(var(--defaultSpace) / 2);
+    background-position: center;
+    background-size: cover;
+  }
+
+  &__author {
+    text-transform: uppercase;
+    font-size: .7rem;
+    padding: calc(var(--defaultSpace) / 2);
+  }
+}
