@@ -1,11 +1,55 @@
-const GMILogo = (props: any) => {
-  return (
-<svg viewBox="0 0 295.20001 294.60303" className={props.className}>
-  <path
-     d="M 73.7,73.400902 0,147.1009 l 9.8,9.8 c 10.6,10.8 137.1,137.1 137.8,137.7 0.2,0.2 14.6,-13.8 31.9,-31 l 31.6,-31.3 v -84.6 l 42.1,-0.2 42,-0.3 -73.5,-73.499998 C 181.2,33.300902 147.9,0.1009016 147.8,9.0160353e-4 147.6,-0.1990984 114.3,32.900902 73.7,73.400902 Z m 110.5,47.799998 25,25 -31,0.3 -31.1,0.2 -0.2,31.1 -0.3,31 -30.8,-30.7 -30.8,-30.7 5.8,-6 31.3,-31.3 25.4,-25.399998 5.9,5.7 c 3.2,3.2 17.1,16.999998 30.8,30.799998 z"
-     id="path2" />
-</svg>
+interface GMILogoProps {
+  className: string;
+}
 
+function GMILogo(props:GMILogoProps) {
+  return (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      version='1.1'
+      viewBox='0 0 28.7 28.7'
+      xmlSpace='preserve'
+    className={props.className}
+    >
+      <g
+        fillOpacity='1'
+        strokeDasharray='none'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+        strokeOpacity='1'
+        transform='translate(-1.65 -1.65)'
+      >
+        <path
+          fill='#f20d0d'
+          stroke='none'
+          strokeWidth='1'
+          d='M12 6l4-4 14 14h-8z'
+          vectorEffect='non-scaling-stroke'
+        ></path>
+        <path
+          fill='#1eb464'
+          stroke='none'
+          strokeWidth='1'
+          d='M6 12l14 14-4 4L2 16z'
+          vectorEffect='non-scaling-stroke'
+        ></path>
+        <path
+          fill='#fff'
+          stroke='none'
+          strokeWidth='1'
+          d='M10 16l6-6-4-4-6 6zm6 6v-6h6v8l-2 2z'
+          vectorEffect='non-scaling-stroke'
+        ></path>
+        <path
+          fill='none'
+          stroke='#000'
+          strokeWidth='0.7'
+          d='M16 2l14 14h-8l-6-6-6 6 6 6v-6h6v8l-6 6L2 16z'
+        ></path>
+      </g>
+    </svg>
   );
 }
+
 export default GMILogo;
+

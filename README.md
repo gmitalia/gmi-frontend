@@ -1,4 +1,4 @@
-# Test the blog
+## Test the blog
 
 - navigate to blog directory
   `cd blog`
@@ -7,14 +7,14 @@
 - Run Next.js in development mode
   `npm run dev`
 
-# Login to Firebase
+## Login to Firebase
 
 If it is the first time you try to deploy, you need to login to Firebase
 `npx firebase login`
 or
 `npm exec -- firebase login`
 
-# Deploy a new blog post
+## Deploy a new blog post
 
 - Edit articles content at
   https://gmitalia.sanity.studio/desk
@@ -47,3 +47,9 @@ or
   }
 ]
 ```
+
+## Deploy the CMS
+- navigate to /studio
+- `npx sanity login`
+- use the same account you use to access the CMS
+- `npx sanity deploy`

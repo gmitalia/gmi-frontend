@@ -5,6 +5,7 @@ import { sanityClient } from "../../sanity";
 import { Post } from "../../typings";
 import { useForm, SubmitHandler } from "react-hook-form";
 import BlogPost from "../../components/organisms/BlogPost";
+import Head from "next/head";
 
 interface iForm {
   _id: string;
@@ -42,6 +43,23 @@ const Post = ({ post }: Props) => {
   return (
     <>
       <Header />
+      <Head>
+        <title>{post.title} | GameMaker Italia</title>
+        <meta property="og:title" content={post.title} />
+        <meta
+          property="og:description"
+          content={post.description}
+        />
+        <meta
+          name="description"
+          content={post.description}
+          key="desc"
+        />
+        <meta
+          property="og:image"
+          content={post.mainImage.asset.url}
+        />
+      </Head>
       {/* {post.mainImage && <img className='w-full h-40 object-cover' src={urlFor(post.mainImage)?.url()!} alt='' />} */}
       <BlogPost post={post} />
     </>
@@ -72,6 +90,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     *[_type == 'post' && slug.current == $slug][0]{
         _id,
         _createdAt,
+        publishedAt,
         title,
         slug,
         author -> {

@@ -11,7 +11,7 @@
   }
 
   &--notizie {
-    --categoryColor: var(--yellow);
+    --categoryColor: var(--pink);
   }
 
   &--game-jam {
@@ -47,7 +47,7 @@
     gap: var(--defaultSpace);
     padding: var(--defaultSpace);
     color: white;
-    text-shadow: 1px 1px 5px #000;
+    //text-shadow: 1px 1px 5px #000;
     p + p:before {
       content: "|";
       margin-right: var(--defaultSpace);
@@ -100,6 +100,8 @@
       margin: var(--defaultSpace) auto;
     }
 
+    
+
     h3,h4 {
       font-weight: bold;
       margin-bottom: var(--defaultSpace);
@@ -127,5 +129,9 @@
     p+h3 {
       margin-top: calc(var(--defaultSpace)*2);
     }
+  }
+
+  &__youtube-iframe {
+    aspect-ratio: 16/9;
   }
 }

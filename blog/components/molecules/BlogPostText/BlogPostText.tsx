@@ -23,8 +23,8 @@ const BlogPostText = ({ post }: BlogPostTextProps) => {
             const id = getYouTubeID(url) || undefined;
             return (
               <iframe
-                width="560"
-                height="315"
+                width="100%"
+                className="blog-post__youtube-iframe"
                 src={`https://www.youtube.com/embed/${id}`}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
