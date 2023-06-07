@@ -99,7 +99,10 @@
       font-weight: bold;
       margin-bottom: var(--defaultSpace);
       width: fit-content;
+    }
 
+    h3 {
+      font-size: 1.4rem;
       &:after {
         display: block;
         content: "";
@@ -110,12 +113,8 @@
       }
     }
 
-    h3 {
-      font-size: 1.4rem;
-    }
-
     h4 {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
 
     p+h4,
