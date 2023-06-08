@@ -6,6 +6,7 @@ import { Post } from "../../typings";
 import { useForm, SubmitHandler } from "react-hook-form";
 import BlogPost from "../../components/organisms/BlogPost";
 import Head from "next/head";
+import { urlFor } from "../../sanity";
 
 interface iForm {
   _id: string;
@@ -40,6 +41,7 @@ const Post = ({ post }: Props) => {
         setsubmitted(false);
       });
   };
+  console.log(post.mainImage)
   return (
     <>
       <Header />
@@ -57,10 +59,9 @@ const Post = ({ post }: Props) => {
         />
         <meta
           property="og:image"
-          content={post.mainImage.asset.url}
+          content={urlFor(post.mainImage)?.url()!}
         />
       </Head>
-      {/* {post.mainImage && <img className='w-full h-40 object-cover' src={urlFor(post.mainImage)?.url()!} alt='' />} */}
       <BlogPost post={post} />
     </>
   );
