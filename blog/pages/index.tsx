@@ -16,6 +16,19 @@ export default function Home({ posts }: Props) {
       <Head>
         <title>GameMaker Italia</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta property="og:title" content="GameMaker Italia" />
+        <meta
+          property="og:description"
+          content="Sviluppatori per passione"
+        />
+        <meta
+          name="description"
+          content="Sviluppatori per passione"
+          key="desc"
+        />
+        <meta
+          property="og:image"
+          content="../public/images/gmi_logo.png" />
       </Head>
 
       <Header />
