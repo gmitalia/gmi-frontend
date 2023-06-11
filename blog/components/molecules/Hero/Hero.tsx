@@ -5,17 +5,20 @@ import GMLogo from "../../atoms/GMLogo/GMLogo";
 const Hero = () => {
   return (
     <div
-      className="bg-gray-800 text-gray-100 border-y border-gray-100 py-10"
+      className="bg-gray-800 text-gray-100 border-y border-gray-100 py-10 bg-center"
       style={{ backgroundImage: `url(${HeroImage.src})` }}
     >
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="space-y-5 p-5 max-w-7xl">
           <div className="text-6xl max-w-xl font-sans">
-            <h1 className="text-gray-100 mb-5 text-4xl md:text-6xl">
+            <h1 className="text-gray-100 md:mb-2 text-4xl md:text-6xl">
               GameMaker Italia
             </h1>
-            <div className="text-xl md:text-3xl">
+            <div className="text-xl md:text-3xl mb-5">
               Sviluppatori per passione
+            </div>
+            <div className="text-sm md:text-xl">
+              La community italiana del software GameMaker
             </div>
           </div>
         </div>

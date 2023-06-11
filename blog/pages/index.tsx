@@ -51,7 +51,7 @@ export default function Home({ posts }: Props) {
   );
 }
 export async function getStaticProps() {
-  const query = `*[_type == 'post'] | order(publishedAt desc){
+  const query = `*[_type == 'post'] | order(publishedAt desc) [0..5] {
     _id,
     title,
     description,
