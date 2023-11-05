@@ -7,6 +7,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import BlogPost from "../../components/organisms/BlogPost";
 import Head from "next/head";
 import { urlFor } from "../../sanity";
+import Footer from "../../components/molecules/Footer/Footer";
 
 interface iForm {
   _id: string;
@@ -63,6 +64,7 @@ const Post = ({ post }: Props) => {
         />
       </Head>
       <BlogPost post={post} />
+      <Footer />
     </>
   );
 };
