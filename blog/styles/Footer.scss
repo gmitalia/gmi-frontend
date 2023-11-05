@@ -2,9 +2,23 @@
   width: 100%;
   background-color: white;
   
-  .footer__body {
+  &__body {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     max-width: 80rem;
     padding: 1.25rem;
     margin: 0 auto;
+  }
+
+  &__social {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+
+    & a {
+      padding: 4px;
+    }
   }
 }

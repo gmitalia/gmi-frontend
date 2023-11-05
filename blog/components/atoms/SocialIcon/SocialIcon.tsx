@@ -1,14 +1,41 @@
 import DiscordIcon from "./DiscordIcon"
 import TwitterIcon from "./TwitterIcon"
+import YoutubeIcon from "./YoutubeIcon";
 
-type SocialProps = {
-  social: "twitter" | "discord"
+type SocialProps = "Twitter" | "Discord" | "YouTube";
+
+type SocialIconProps = {
+  social: SocialProps;
 }
 
-const SocialIcon = ({social}: SocialProps) => {
-  const icon = social === "twitter" ? <TwitterIcon /> : <DiscordIcon />
+const SocialIcon = ({social}: SocialIconProps) => {
+  const link = (social: SocialProps) => {
+    switch(social) {
+      case "Twitter":
+        return "https://twitter.com/GameMakerIta"
+
+      case "Discord":
+        return "https://discord.gg/0wKBBPIbX2r3S32a"
+
+      case "YouTube":
+        return "https://www.youtube.com/channel/UCee7hFC_VtQ_gnX5J2tMTHg"
+    }
+  }
+
+  const icon = (social: SocialProps) => {
+    switch(social) {
+      case "Twitter":
+        return <TwitterIcon />
+
+      case "Discord":
+        return <DiscordIcon />
+
+      case "YouTube":
+        return <YoutubeIcon />
+    }
+  }
   return (
-    <div>{icon}</div>
+    <a href={link(social)} title={social}>{icon(social)}</a>
   )
 }
 

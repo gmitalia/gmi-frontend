@@ -1,5 +1,5 @@
 interface GMILogoProps {
-  className: string;
+  className?: string;
 }
 
 function GMILogo(props:GMILogoProps) {
@@ -9,7 +9,7 @@ function GMILogo(props:GMILogoProps) {
       version='1.1'
       viewBox='0 0 28.7 28.7'
       xmlSpace='preserve'
-    className={props.className}
+      className={props.className}
     >
       <g
         fillOpacity='1'

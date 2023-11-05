@@ -10,10 +10,10 @@ const Header = () => {
       <div className="md:flex md:justify-between p-5 max-w-7xl mx-auto">
         <div className="block md:flex md:space-x-5 items-center w-full gap-5">
           <div className="flex items-center justify-between space-x-5">
-            <a href="/" title="GameMaker Italia Home Page">
+            <a href="/" title="GameMaker Italia Home Page" className="flex gap-2">
               <GMILogo className="w-9 object-contain cursor-pointer" />
+              <span className="text-3xl hidden lg:block ">GameMaker Italia</span>
             </a>
-            <span className="text-3xl hidden lg:block ">GameMaker Italia</span>
             <button
               className="md:hidden relative"
               onClick={() => setOpenMenu(!openMenu)}
