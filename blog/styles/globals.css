@@ -29,3 +29,9 @@
   --defaultSpace: 24px;
   --blogPostWidth: 900px;
 }
+
+.page {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100vh;
+}

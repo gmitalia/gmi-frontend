@@ -1,0 +1,35 @@
+.showcaseCard {
+  display: block;
+  aspect-ratio: 16 / 9;
+  background-size: 100%;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: all .3s ease-in-out;
+  overflow: hidden;
+
+  &:hover {
+    background-size: 110%;
+    filter: grayscale(80%);
+
+    & > .showcaseCard__text-wrapper {
+      transform: translate(0, 0);
+    }
+  }
+
+  &__text-wrapper {
+    background-color: rgba(0,0,0,.7);
+    color: var(--white);
+    font-size: 1.1em;
+    padding: 1em;
+    font-style: italic;
+    transform: translate(0, 100%);
+    transition: all .3s ease-in-out;
+  }
+
+  &__wrapper {
+    background-color: var(--white);
+    padding: calc(var(--defaultSpace) / 2);
+  }
+}

@@ -37,3 +37,15 @@ export interface Comment {
     _type: string;
     updatedAt: string;
 }
+
+export interface Game {
+    _id: string;
+    title: string;
+    author: string;
+    banner: {
+        asset: {
+            url: string;
+        };
+    };
+    url: string;
+}
