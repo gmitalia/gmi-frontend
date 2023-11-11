@@ -3,7 +3,7 @@ import Header from "../components/molecules/Header/Header";
 import { sanityClient } from "../sanity";
 import { Game } from "../typings";
 import Footer from "../components/molecules/Footer/Footer";
-import ShowcaseCard from "../components/molecules/ShowcaseCard/ShowCaseCard";
+import ShowcaseCard from "../components/molecules/ShowcaseCard/ShowcaseCard";
 
 interface Props {
   games: [Game];
