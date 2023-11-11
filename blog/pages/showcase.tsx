@@ -51,7 +51,7 @@ export default function Showcase({ games }: Props) {
   );
 }
 export async function getStaticProps() {
-  const query = `*[_type == 'game'] {
+  const query = `*[_type == 'game'] | order(title asc) {
     _id,
     title,
     author,
