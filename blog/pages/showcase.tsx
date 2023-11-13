@@ -26,7 +26,7 @@ export default function Showcase({ games }: Props) {
         />
         <meta
           property="og:image"
-          content="../public/images/gmi_logo.png" />
+          content="https://gamemakeritalia.it/images/gmi_logo.png" />
       </Head>
 
       <Header />
