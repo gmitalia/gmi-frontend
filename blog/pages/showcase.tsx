@@ -15,10 +15,7 @@ export default function Showcase({ games }: Props) {
         <title>GameMaker Italia | Showcase</title>
         <link rel="icon" href="/favicon.ico" />
         <meta property="og:title" content="GameMaker Italia | Showcase" />
-        <meta
-          property="og:description"
-          content="Sviluppatori per passione"
-        />
+        <meta property="og:description" content="Sviluppatori per passione" />
         <meta
           name="description"
           content="Sviluppatori per passione"
@@ -33,15 +30,12 @@ export default function Showcase({ games }: Props) {
       <div>
         <div className="max-w-7xl mx-auto p-5 blog-section">
           <h2 className="text-3xl mb-3">Showcase</h2>
-          <p>Una selezione di titoli pubblicati dai membri della community</p>
+          <p>Una selezione di titoli sviluppati dai membri della community</p>
           {/* games */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 py-6">
             {games.map((game) => {
-              return (
-                <ShowcaseCard game={game} key={game._id} />
-              );
+              return <ShowcaseCard game={game} key={game._id} />;
             })}
-
           </div>
         </div>
       </div>
