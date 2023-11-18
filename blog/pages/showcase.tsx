@@ -4,11 +4,46 @@ import { sanityClient } from "../sanity";
 import { Game } from "../typings";
 import Footer from "../components/molecules/Footer/Footer";
 import ShowcaseCard from "../components/molecules/ShowcaseCard/ShowcaseCard";
+import { useState } from "react";
 
 interface Props {
   games: [Game];
 }
+
+function orderByAuthor(firstElement: Game, secondElement: Game) {
+  const autorA = firstElement.author.toUpperCase(); // Ignora maiuscole/minuscole
+  const autorB = secondElement.author.toUpperCase();
+
+  if (autorA < autorB) {
+    return -1;
+  }
+  if (autorA > autorB) {
+    return 1;
+  }
+  return 0;
+}
+
+function orderByTitle(firstElement: Game, secondElement: Game) {
+  const autorA = firstElement.title.toUpperCase(); // Ignora maiuscole/minuscole
+  const autorB = secondElement.author.toUpperCase();
+
+  if (autorA < autorB) {
+    return -1;
+  }
+  if (autorA > autorB) {
+    return 1;
+  }
+  return 0;
+}
+
 export default function Showcase({ games }: Props) {
+  const titleOrder = [...games].sort(orderByTitle);
+  const randomOrder = [...games].sort(() => Math.random() - 0.5);
+  const authorOrder = [...games].sort(orderByAuthor);
+  
+  const [gamesArray, setGamesArray] = useState<Game[]>(games)
+  const [activeButton, setActiveButton] = useState<"title" | "random" | "author">("title")
+
   return (
     <div className="page">
       <Head>
@@ -30,10 +65,16 @@ export default function Showcase({ games }: Props) {
       <div>
         <div className="max-w-7xl mx-auto p-5 blog-section">
           <h2 className="text-3xl mb-3">Showcase</h2>
-          <p>Una selezione di titoli sviluppati dai membri della community</p>
+          <p className="mb-1">Una selezione di titoli sviluppati dai membri della community</p>
+          <div className="showcaseCard-btn__container">
+            <span>Ordina per:</span>
+            <button onClick={() => {setGamesArray(titleOrder); setActiveButton("title")}} className={`showcaseCard-btn${activeButton === 'title' ? ' showcaseCard-btn--active' : ''}`}>Titolo</button>
+            <button onClick={() => {setGamesArray(authorOrder); setActiveButton("author")}} className={`showcaseCard-btn${activeButton === 'author' ? ' showcaseCard-btn--active' : ''}`}>Autore</button>
+            <button onClick={() => {setGamesArray(randomOrder); setActiveButton("random")}} className={`showcaseCard-btn${activeButton === 'random' ? ' showcaseCard-btn--active' : ''}`}>Random</button>
+          </div>
           {/* games */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 py-6">
-            {games.map((game) => {
+            {gamesArray.map((game) => {
               return <ShowcaseCard game={game} key={game._id} />;
             })}
           </div>
@@ -53,7 +94,8 @@ export async function getStaticProps() {
     url
   }`;
 
-  const games = await sanityClient.fetch(query);
+  const games = await sanityClient.fetch(query)
+
   return {
     props: { games }, // will be passed to the page component as props
   };

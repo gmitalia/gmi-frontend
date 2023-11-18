@@ -32,4 +32,17 @@
     background-color: var(--white);
     padding: calc(var(--defaultSpace) / 2);
   }
+
+  &-btn {
+    border-bottom: 2px solid transparent;
+
+    &--active {
+      border-color: purple;
+    }
+    &__container {
+      display: flex;
+      justify-content: flex-start;
+      gap: .5em;
+    }
+  }
 }
