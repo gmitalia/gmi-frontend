@@ -48,7 +48,7 @@ const Navbar = ({ openMenu, setOpenMenu }: NavbarProps) => {
           <li className="my-6 md:my-0">
             <div className="items-center justify-end">
               <div className="flex justify-center items-center text-white bg-gray-800 px-4 py-2 rounded-full leading-none hover:shadow-lg hover:contrast-200 transition-all">
-                <Link href="https://discord.gg/0wKBBPIbX2r3S32a">
+                <Link href="https://discord.com/invite/juj4yEF2Yv">
                   Entra su Discord
                 </Link>
               </div>

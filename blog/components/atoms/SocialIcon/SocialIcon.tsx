@@ -15,7 +15,7 @@ const SocialIcon = ({social}: SocialIconProps) => {
         return "https://twitter.com/GameMakerIta"
 
       case "Discord":
-        return "https://discord.gg/0wKBBPIbX2r3S32a"
+        return "https://discord.com/invite/juj4yEF2Yv"
 
       case "YouTube":
         return "https://www.youtube.com/channel/UCee7hFC_VtQ_gnX5J2tMTHg"
