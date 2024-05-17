@@ -37,6 +37,11 @@ or
 - return here and deploy on firebase
   `npx firebase deploy`
 
+In case of this error:
+  Error: Failed to get Firebase project gmi-frontend. Please make sure the project exists and your account has permission to access it.
+do
+  `npx firebase login --reauth`
+
 ## rewrite del path verso index
 
 ```json
