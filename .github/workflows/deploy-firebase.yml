@@ -24,16 +24,32 @@ jobs:
     - name: Install Firebase CLI
       run: npm install -g firebase-tools
 
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./blog
-
-    - name: build and export
-      run: npm run export
-      working-directory: ./blog
+    - name: Create public directory
+      run: mkdir public
       
-    - name: copy artifact
-      run: cp -r ./blog/out ./public
+    - name: [Blog] Install dependencies
+      run: npm install
+      working-directory: ./packages/blog
+
+    - name: [Blog] build and export
+      run: npm run export
+      working-directory: ./packages/blog
+      
+    - name: [Blog] copy artifact
+      run: cp -r . ../../../public
+      working-directory: ./packages/blog/out
+
+    - name: [Gmicontest] install dependencies
+      run: npm ci
+      working-directory: ./packages/gmicontest
+
+    - name: [Gmicontest] build and export
+      run: npm run build && npm run export
+      working-directory: ./packages/gmicontest
+
+    - name: [Gmicontest] rename and copy artifact
+      run: mv out competizioni && cp -r competizioni ../../public
+      working-directory: ./packages/gmicontest
 
     - name: Deploy to Firebase
       env:

@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "gmi-frontend"
-  }
+    "default": "gmi-frontend",
+    "staging": "gmi-frontend"
+  },
+  "targets": {},
+  "etags": {}
 }

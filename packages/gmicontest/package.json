@@ -1,0 +1,66 @@
+{
+  "name": "gmicontest-frontend",
+  "homepage": ".",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.8.1",
+    "@testing-library/react": "^13.0.0",
+    "moment": "^2.29.3",
+    "next": "^12.3.4",
+    "next-redux-wrapper": "^7.0.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-redux": "^8.0.1",
+    "react-scripts": "^5.0.0",
+    "redux": "^4.2.0",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.4.1",
+    "sass": "^1.50.0",
+    "sharp": "^0.30.3"
+  },
+  "scripts": {
+    "install": "npm install next react react-dom",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next export",
+    "lint": "next lint --no-cache",
+    "eslint": "eslint ."
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "next/core-web-vitals"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.4.0",
+    "@tailwindcss/typography": "^0.5.8",
+    "autoprefixer": "^10.4.7",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^12.1.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.34.2",
+    "eslint-plugin-react-hooks": "^4.4.0",
+    "globals": "^15.3.0",
+    "postcss": "^8.4.14",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^3.0.24"
+  }
+}
