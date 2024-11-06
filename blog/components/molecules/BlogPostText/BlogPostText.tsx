@@ -31,6 +31,14 @@ const BlogPostText = ({ post }: BlogPostTextProps) => {
               ></iframe>
             );
           },
+          code: (props: any) => { return <pre>wow</pre> },
+          unknownType: (props: any) => {
+            console.log("unknown type", props);
+            if (props && props.node && props.node._type == "code") {
+              const node = props.node;
+              return <pre className="codeblock">{node.code}</pre>
+            }
+          },
         }}
       />
     </div>

@@ -2,10 +2,12 @@
   @media (max-width: 768px) {
     --defaultSpace: 12px;
   }
+
   background-color: var(--white);
   max-width: var(--blogPostWidth);
   margin: 0 auto;
   padding: var(--defaultSpace) 0;
+
   &--tutorial {
     --categoryColor: var(--greenLight);
   }
@@ -61,6 +63,15 @@
 
     & > div {
       overflow: hidden;
+    }
+
+    pre {
+      border-radius: 8px;
+      background-color: #2f2f2f;
+      color: var(--white);
+      padding: 8px 16px;
+      margin-bottom: 8px;
+      font-size: 10pt;
     }
 
     p {

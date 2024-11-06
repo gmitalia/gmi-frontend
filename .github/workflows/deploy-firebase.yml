@@ -1,4 +1,4 @@
-name: Deploy Firebase Functions
+name: Deploy to Firebase
 
 on:
   push:
@@ -28,12 +28,12 @@ jobs:
       run: npm install
       working-directory: ./blog
 
-    - name: build
-      run: npm run build
+    - name: build and export
+      run: npm run export
       working-directory: ./blog
-
-    - name: Copy blog to ../public
-      run: cp -r ./blog/out ../public
+      
+    - name: copy artifact
+      run: cp -r ./blog/out ./public
 
     - name: Deploy to Firebase
       env:
