@@ -2,6 +2,7 @@ import getYouTubeID from "get-youtube-id";
 import { Post } from "../../../typings";
 import { config } from "../../../sanity";
 import PortableText from "react-portable-text";
+import { Code } from "../../atoms/Code/Code";
 
 interface BlogPostTextProps {
   post: Post;
@@ -15,6 +16,7 @@ const BlogPostText = ({ post }: BlogPostTextProps) => {
         projectId={config.projectId}
         content={post.body}
         serializers={{
+          code: ({children}: any) => <Code language={"js"} code={children as string} highlightedLines={undefined} />,
           h1: (props: any) => <h1 {...props} />,
           h2: (props: any) => <h2 {...props} />,
           li: ({ children }: any) => <li>{children}</li>,
