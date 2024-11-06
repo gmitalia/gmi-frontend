@@ -3,7 +3,7 @@ name: Deploy Firebase Functions
 on:
   push:
     branches:
-      - feature/blog-code-bloc  # Branch where github action gets triggered
+      - feature/blog-code-block  # Branch where github action gets triggered
 
 jobs:
   build-and-deploy:
