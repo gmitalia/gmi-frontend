@@ -1,5 +1,11 @@
 ![Deploy to firebase](https://github.com/gmitalia/gmi-frontend/actions/workflows/deploy-firebase.yml/badge.svg)
 
+## Ambiente staging
+https://gmi-frontend-staging.web.app/
+
+## Ambiente produzione
+https://gamemakeritalia.it
+
 # Build
 ## Build the blog
 Follow the readme `./packages/blog/README.md`
