@@ -6,7 +6,7 @@ on:
       - master
   repository_dispatch:
     types:
-      - webhook
+      - blog
 
 jobs:
   build-and-deploy:
