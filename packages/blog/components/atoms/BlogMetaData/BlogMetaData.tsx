@@ -17,4 +17,5 @@ const BlogMetaData = ({ post }: BlogMetaDataProps) => {
   );
 };
 
+
 export default BlogMetaData;
