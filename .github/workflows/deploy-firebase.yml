@@ -55,4 +55,4 @@ jobs:
     - name: Deploy to Firebase
       env:
         FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      run: firebase deploy --token "$FIREBASE_TOKEN" -P staging
+      run: firebase deploy --token "$FIREBASE_TOKEN" -P default
