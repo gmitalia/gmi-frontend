@@ -3,6 +3,7 @@ import category from './category'
 import post from './post'
 import author from './author'
 import youtube from './youtube'
+import code from './code'
 import game from './game'
 import resource from './resource'
 import resourceCategories from './resourceCategories'
@@ -13,6 +14,7 @@ export const schemaTypes = [
     category, 
     blockContent,
     youtube,
+    code,
     game,
     resource,
     resourceCategories,

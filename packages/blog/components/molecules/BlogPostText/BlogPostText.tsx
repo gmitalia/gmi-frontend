@@ -2,12 +2,14 @@ import getYouTubeID from "get-youtube-id";
 import { Post } from "../../../typings";
 import { config } from "../../../sanity";
 import PortableText from "react-portable-text";
+import { Code } from "../../atoms/Code/Code";
 
 interface BlogPostTextProps {
   post: Post;
 }
 
 const BlogPostText = ({ post }: BlogPostTextProps) => {
+
   return (
     <div className="blog-post__text">
       <PortableText
@@ -31,12 +33,11 @@ const BlogPostText = ({ post }: BlogPostTextProps) => {
               ></iframe>
             );
           },
-          code: (props: any) => { return <pre>wow</pre> },
           unknownType: (props: any) => {
             console.log("unknown type", props);
             if (props && props.node && props.node._type == "code") {
               const node = props.node;
-              return <pre className="codeblock">{node.code}</pre>
+              return <Code language={"javascript"} code={node.code} highlightedLines={undefined}/>
             }
           },
         }}
