@@ -7,7 +7,7 @@ registerLanguage(js)
 export function Code(props: { language: string; code: string; highlightedLines: (number | Marker)[] | undefined }) {
   return (
     <Refractor
-      language={props.language}
+      language={"js"}
       value={props.code}
     />
   )

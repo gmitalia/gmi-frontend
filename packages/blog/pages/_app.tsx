@@ -1,6 +1,7 @@
 import "../styles/globals.css";
 import "../styles/BlogPost.scss";
 import "../styles/BlogCard.scss";
+import "../styles/Code.scss";
 import "../styles/ShowcaseCard.scss"
 import "../styles/Footer.scss"
 import type { AppProps } from "next/app";
