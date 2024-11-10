@@ -4,12 +4,12 @@ import Hero from "../components/molecules/Hero/Hero";
 import Link from "next/link";
 import Header from "../components/molecules/Header/Header";
 import { sanityClient, urlFor } from "../sanity";
-import { Post } from "../typings";
+import { PostInterface } from "../typings";
 import BlogCard from "../components/molecules/BlogCard/BlogCard";
 import Footer from "../components/molecules/Footer/Footer";
 
 interface Props {
-  posts: [Post];
+  posts: [PostInterface];
 }
 export default function Blog({ posts }: Props) {
   return (

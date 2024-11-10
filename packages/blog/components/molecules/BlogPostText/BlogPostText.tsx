@@ -1,11 +1,11 @@
 import getYouTubeID from "get-youtube-id";
-import { Post } from "../../../typings";
+import { PostInterface } from "../../../typings";
 import { config } from "../../../sanity";
 import PortableText from "react-portable-text";
 import { Code } from "../../atoms/Code/Code";
 
 interface BlogPostTextProps {
-  post: Post;
+  post: PostInterface;
 }
 
 const BlogPostText = ({ post }: BlogPostTextProps) => {
@@ -37,7 +37,7 @@ const BlogPostText = ({ post }: BlogPostTextProps) => {
             console.log("unknown type", props);
             if (props && props.node && props.node._type == "code") {
               const node = props.node;
-              return <Code language={"javascript"} code={node.code} highlightedLines={undefined}/>
+              return <Code language={props.node.language} code={node.code} highlightedLines={[1]}/>
             }
           },
         }}

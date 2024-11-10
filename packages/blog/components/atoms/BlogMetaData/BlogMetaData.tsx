@@ -1,8 +1,8 @@
-import { Post } from "../../../typings";
+import { PostInterface } from "../../../typings";
 import { formatDate } from "../../utils";
 
 interface BlogMetaDataProps {
-  post: Post;
+  post: PostInterface;
 }
 
 const BlogMetaData = ({ post }: BlogMetaDataProps) => {

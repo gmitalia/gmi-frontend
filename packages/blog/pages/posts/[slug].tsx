@@ -2,7 +2,7 @@ import { GetStaticProps } from "next";
 import React, { useState } from "react";
 import Header from "../../components/molecules/Header/Header";
 import { sanityClient } from "../../sanity";
-import { Post } from "../../typings";
+import { PostInterface } from "../../typings";
 import { useForm, SubmitHandler } from "react-hook-form";
 import BlogPost from "../../components/organisms/BlogPost";
 import Head from "next/head";
@@ -17,7 +17,7 @@ interface iForm {
 }
 
 interface Props {
-  post: Post;
+  post: PostInterface;
 }
 
 const Post = ({ post }: Props) => {
@@ -77,7 +77,7 @@ export async function getStaticPaths() {
       }`;
   const posts = await sanityClient.fetch(query);
 
-  const paths = posts.map((post: Post) => ({
+  const paths = posts.map((post: PostInterface) => ({
     params: {
       slug: post.slug.current,
     },

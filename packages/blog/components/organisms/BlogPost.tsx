@@ -1,10 +1,10 @@
 import { urlFor } from "../../sanity";
-import { Post } from "../../typings";
+import { PostInterface } from "../../typings";
 import BlogMetaData from "../atoms/BlogMetaData/BlogMetaData";
 import BlogPostText from "../molecules/BlogPostText/BlogPostText";
 
 interface BlogPostProps {
-  post: Post;
+  post: PostInterface;
 }
 
 const BlogPost = ({ post }: BlogPostProps) => {

@@ -1,8 +1,8 @@
 import { urlFor } from "../../../sanity";
-import { Post } from "../../../typings";
+import { PostInterface } from "../../../typings";
 
 interface BlogCardProps {
-  post: Post;
+  post: PostInterface;
 }
 
 const BlogCard = ({post}: BlogCardProps) => {
