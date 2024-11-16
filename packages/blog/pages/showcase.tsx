@@ -4,9 +4,9 @@ import { sanityClient } from "../sanity";
 import { Game } from "../typings";
 import Footer from "../components/molecules/Footer/Footer";
 import ShowcaseCard from "../components/molecules/ShowcaseCard/ShowcaseCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-interface Props {
+interface ShowcaseProps {
   games: [Game];
 }
 
@@ -36,13 +36,18 @@ function orderByTitle(firstElement: Game, secondElement: Game) {
   return 0;
 }
 
-export default function Showcase({ games }: Props) {
+export default function Showcase({ games }: ShowcaseProps) {
   const titleOrder = [...games].sort(orderByTitle);
-  const randomOrder = [...games].sort(() => Math.random() - 0.5);
   const authorOrder = [...games].sort(orderByAuthor);
-  
-  const [gamesArray, setGamesArray] = useState<Game[]>(games)
-  const [activeButton, setActiveButton] = useState<"title" | "random" | "author">("title")
+
+  const [gamesArray, setGamesArray] = useState<Game[]>(games);
+  const [activeButton, setActiveButton] = useState<"title" | "random" | "author">("random");
+
+  useEffect(() => {
+    const shuffledGames = [...games].sort(() => Math.random() - 0.5);
+    setGamesArray(shuffledGames);
+    setActiveButton("random");
+  }, [games]);
 
   return (
     <div className="page">
@@ -70,7 +75,7 @@ export default function Showcase({ games }: Props) {
             <span>Ordina per:</span>
             <button onClick={() => {setGamesArray(titleOrder); setActiveButton("title")}} className={`showcaseCard-btn${activeButton === 'title' ? ' showcaseCard-btn--active' : ''}`}>Titolo</button>
             <button onClick={() => {setGamesArray(authorOrder); setActiveButton("author")}} className={`showcaseCard-btn${activeButton === 'author' ? ' showcaseCard-btn--active' : ''}`}>Autore</button>
-            <button onClick={() => {setGamesArray(randomOrder); setActiveButton("random")}} className={`showcaseCard-btn${activeButton === 'random' ? ' showcaseCard-btn--active' : ''}`}>Random</button>
+            <button onClick={() => {setGamesArray([...games].sort(() => Math.random() - 0.5)); setActiveButton("random")}} className={`showcaseCard-btn${activeButton === 'random' ? ' showcaseCard-btn--active' : ''}`}>Random</button>
           </div>
           {/* games */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 py-6">
