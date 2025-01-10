@@ -1,20 +1,15 @@
-import { Config } from "../Constants";
-import GMIApiParent from "./GMIApiParent"
 
-export default class GMIApiMock extends GMIApiParent
+export default class GMIApiParent
 {
-	apiURL = "https://gmitalia.altervista.org/competizioni/api/v1/";
-	imageURL = "https://gmitalia.altervista.org/competizioni/thumbnails/";
-	forumProfileURL ="https://gmitalia.altervista.org/forum/memberlist.php?mode=viewprofile&u=";
+	apiURL = "";
+	imageURL = "";
+	forumProfileURL ="";
 
+	/** Ottieni la roba
+	 * @returns {Promise<string>} */
 	getMe()
 	{
-		return fetch(this.apiURL + "me.php", {
-			credentials: "include",
-			method: "GET",
-		})
-			.then((response) => response.json())
-			.catch((error) => console.error("GMIApi Error:", error));
+		
 	}
 
 	openURL(url, params)

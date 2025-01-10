@@ -1,4 +1,4 @@
-const { basePath } = require("../next.config")
+const { basePath } = require("../next.config");
 
 const Config = {
     

@@ -8,7 +8,8 @@ import { useRouter } from "next/router";
 const InputClasses =
   "form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none ";
 
-export default function GameForm(props) {
+export default function GameForm(props)
+{
   const router = useRouter();
   const contestId = props.contestId;
   const part = props.participation || [];
@@ -18,6 +19,7 @@ export default function GameForm(props) {
       "?" +
       Date.now().toString()
     : "";
+
   let [gameName, setGameName] = useState(part.game_name || "");
   let [gameUrl, setGameUrl] = useState(part.game_url || "");
   let [gameShortDesc, setGameShortDesc] = useState(part.game_short_desc || "");
@@ -30,25 +32,28 @@ export default function GameForm(props) {
   let [uploading, setUploading] = useState();
 
   useEffect(
-    function validateUrl() {
-      var valid =
-        /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(
-          gameUrl
-        );
+    function validateUrl()
+    {
+      var valid = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(gameUrl);
+
       setUrlValid(valid);
-      if (!valid) setSaved(true);
+
+      if (!valid)
+        setSaved(true);
     },
     [gameUrl]
   );
 
   useEffect(
-    function participationChange() {
-      const img_url = part.game_thumbnail
-      ? GMIApi.getInstance().imageURL +
+    function participationChange()
+    {
+      const img_url = part.game_thumbnail? 
+        GMIApi.getInstance().imageURL +
         part.game_thumbnail +
         "?" +
         Date.now().toString()
       : "";
+
       setGameName(gameName || part.game_name || "");
       setGameUrl(gameUrl || part.game_url || "");
       setGameShortDesc(gameShortDesc || part.game_short_desc || "");
@@ -58,37 +63,42 @@ export default function GameForm(props) {
     [part]
   )
 
-  function handleChange() {
+  function handleChange()
+  {
     setUploading(true);
     props.onFormSubmit(
       {
-        name: gameName,
-        downloadUrl: gameUrl,
+        name:             gameName,
+        downloadUrl:      gameUrl,
         shortDescription: gameShortDesc,
-        description: gameDesc,
-        thumbnailFile: file,
+        description:      gameDesc,
+        thumbnailFile:    file,
       },
-      (data) => {
-        if (!data.success) setError(data.error);
+      (data)=>
+      {
+        if(!data.success)
+          setError(data.error);
+
         setSaved(data.success);
         setUploading(false);
       }
     );
   }
 
-  function handleDeletion() {
+  function handleDeletion()
+  {
     if (confirm("Vuoi disiscriverti e cancellare il gioco?")) props.onDelete();
   }
 
-  function handleThumbnail(file) {
-    if (file.size > Config.maxThumbnailSize)
-      return setError(
-        "L'immagine è troppo grande (" + Math.ceil(file.size / 1024) + "KB)"
-      );
+  function handleThumbnail(file)
+  {
+    if(file.size > Config.maxThumbnailSize)
+      return setError("L'immagine è troppo grande (" + Math.ceil(file.size / 1024) + "KB)");
 
     //show the image
     var reader = new FileReader();
-    reader.onload = function (event) {
+    reader.onload = function(event)
+    {
       setGameThumbnail(event.target.result);
     };
     reader.readAsDataURL(file);

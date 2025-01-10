@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { PageLayout } from "./library/Layouts/PageLayout";
-import { ParagraphTitle } from "./library/Titles/ParagraphTitle";
 import { PageTitle } from "./library/Titles/PageTitle";
 import { ExtLink } from "./library/Links/ExtLink";
-import { ButtonPrimary } from "./library/Buttons/ButtonPrimary";
 import RuleBook from "./RuleBook";
 
 export default function PageHome(props) {

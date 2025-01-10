@@ -1,7 +1,8 @@
 import PageContest from '../components/PageContest';
 import Head from 'next/head'
 
-export default function Contest() {
+export default function Contest()
+{
   return (
     <>
     <Head>

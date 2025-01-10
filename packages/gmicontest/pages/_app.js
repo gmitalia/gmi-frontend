@@ -8,7 +8,9 @@ import { Footer } from '../components/commons/Footer';
 import HeaderDesktop from '../components/commons/HeaderDesktop';
 import HeaderMobile from '../components/commons/HeaderMobile';
 
-function MyApp({ Component, pageProps }) {
+
+function MyApp({ Component, pageProps })
+{
   return (
     <Provider store={store}>
       <Head>
@@ -19,7 +21,8 @@ function MyApp({ Component, pageProps }) {
   )
 }
 
-function AppContainer({ Component, pageProps }) {
+function AppContainer({ Component, pageProps })
+{
   const showMenu = useSelector(root=>root.main.showMenu)
   const rootClass = showMenu ? "bg-white flex flex-col min-h-screen h-full overflow-y-hidden" : "bg-white flex flex-col min-h-screen h-full overflow-y-auto"
 
