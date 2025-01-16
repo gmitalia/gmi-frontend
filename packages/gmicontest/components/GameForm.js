@@ -12,6 +12,7 @@ export default function GameForm(props)
 {
   const router = useRouter();
   const contestId = props.contestId;
+  /**@type {Partecipation} */
   const part = props.participation || [];
   const img_url = part.game_thumbnail
     ? GMIApi.getInstance().imageURL +

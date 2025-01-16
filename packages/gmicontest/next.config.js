@@ -1,4 +1,5 @@
-//config
+const path = require("path")
+
 const basePathDev = "";
 const basePathBuild = "/competizioni"
 

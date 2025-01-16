@@ -1,3 +1,4 @@
+import UserList from "../../Users/UserList";
 import ContestList from "./../../../components/Contest/ContestList"
 
 export const PageLayout = (props)=>
@@ -6,7 +7,8 @@ export const PageLayout = (props)=>
 
 	return (
 		<div className="flex flex-grow flex-column bg-backcolor">
-			<div className="w-72 lg:mr-2 hidden lg:inline">
+			<div className="w-72 lg:mr-2  lg:inline flex flex-col gap-1">
+				<UserList />
 				<ContestList />
 			</div>
 			<div className="flex-1 lg:ml-2">

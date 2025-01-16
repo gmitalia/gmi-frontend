@@ -4,9 +4,6 @@ import { Provider } from "react-redux";
 import { store, wrapper } from "./../src/store";
 import Header from "../components/commons/Header.jsx"
 import { useDispatch, useSelector } from "react-redux";
-import { Footer } from '../components/commons/Footer';
-import HeaderDesktop from '../components/commons/HeaderDesktop';
-import HeaderMobile from '../components/commons/HeaderMobile';
 
 
 function MyApp({ Component, pageProps })

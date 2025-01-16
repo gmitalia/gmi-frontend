@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import GMIApi from '../../src/api/GMIApi'
+import Link from 'next/link';
 import { AreaTitle } from '../library/Titles/AreaTitle';
-import { ContestElement } from './ContestElement';
 
-export default function ContestList(props)
+export default function UserList(props)
 {
 	/**@type {[ContestsResponse, (data: ContestsResponse)=> any]} */
 	let [data, setData] = useState()
 
 	useEffect(()=>
 	{
-		GMIApi.getInstance().getContests(setData)
+		GMIApi.getInstance().getContests((data) =>
+		{
+			setData(data)
+		})
 	}, [])
 
 	if(!data)
@@ -20,14 +23,10 @@ export default function ContestList(props)
 		return (<div>{data.error}</div>)
 
 	return (
-		<div className="h-screen">
-			<AreaTitle title="Competizioni" />
-
-			{data.contests.map((contest)=>
-			(
-				<ContestElement key={contest.id} contest={contest} />
-			))}
-
-		</div>
+		<Link  href={`/users`}>
+			<div className='cursor-pointer '>
+			<AreaTitle title="Utenti" inverted={true} />
+			</div>
+		</Link>
 	)
 }

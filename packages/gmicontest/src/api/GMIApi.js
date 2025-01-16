@@ -2,9 +2,10 @@ import GMIApiMock from "./GMIApi.mock"
 import GMIApiProd from "./GMIApi.prod"
 import GMIApiParent from "./GMIApiParent";
 
+/** Classe statica per la distribuzione al resto dell'app delle GMIApi */
 class GMIApi
 {
-	static DIkey = "prod";
+	static DIkey = "mock";
 
 	static instances =
 	{
@@ -12,7 +13,8 @@ class GMIApi
 		mock: new GMIApiMock()
 	}
 
-	/**@returns {GMIApiParent} */
+	/** Ritorna un'istanza di GMI api in base al tipo specificato da 'DIkey'
+	 * @returns {GMIApiParent} */
 	static getInstance()
 	{
 		return this.instances[this.DIkey];
