@@ -7,6 +7,7 @@ import ContestList from "./../Contest/ContestList";
 import { Menu } from "./Menu";
 import { UserInfo } from "./UserInfo";
 import { basePath } from "../../next.config";
+import Link from "next/link";
 
 
 export default function Header(props)
@@ -38,10 +39,12 @@ export default function Header(props)
 							/>
 						</div>
 						<div>
-							<img
-							 className="w-24"
-							 src={`${basePath}/img/logo.png`}
-							/>
+							<Link href={"/"}>
+								<img
+								 className="w-24 cursor-pointer"
+								 src={`${basePath}/img/logo.png`}
+								/>
+							</Link>
 						</div>
 					</div>
 					<div>

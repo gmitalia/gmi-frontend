@@ -1,5 +1,8 @@
 import { Config } from "../Constants";
+import { store } from "../store";
 import GMIApiParent from "./GMIApiParent"
+import { MockContest, MockGames, MockPartecipants, MockUsers } from "./MockDatabase";
+import { useDispatch, useSelector } from "react-redux";
 
 export default class GMIApiMock extends GMIApiParent
 {
@@ -53,20 +56,7 @@ export default class GMIApiMock extends GMIApiParent
 		callback(
 		{
 			success: true,
-			games: 
-			[
-				{
-					id: "200",
-					name: "Supergame",
-					contest_id: "1000",
-					image_url: "19_168740067156688896.png",
-					short_description: "Al mondo tutto il filo è stato usato dagli umani per costruire vestiti, e ai gatti non è rimasto più niente, se non l'ultimo gomitolo esistente. L'unico modo per impossessarsene è battere tutti in un epica battaglia a ping pong.",
-					description: "Readme incluso nella cartella di gioco.",
-					authors: "W3siaWQiOiIxNCIsIm5hbWUiOiJDbGEifV0=",
-					download_url: "https://mega.nz/file/Wdx1DKrJ#rjk_uqEgPzRP80guDNJx7dUlivU5slR7pmQSI5OCh_o",
-					placement: "1",
-				},
-			],
+			games: MockGames.filter(o=> o.contest_id == contest),
 			public_results: true,
 		});
 	}
@@ -76,19 +66,7 @@ export default class GMIApiMock extends GMIApiParent
 		callback(
 		{
 			success: true,
-			contests: 
-			[
-				{
-					id: 1000,
-					name: "Competizione GMI_mock_2036",
-					end_at: "2023-05-10 08:00:00",
-					can_submit: false,
-					completed_at: "2023-05-30 08:00:00",
-					public: "1",
-					is_ended: false,
-					is_completed: false,
-				},
-			],
+			contests: MockContest.filter(o=> o.id == contestId)
 		});
 	}
 
@@ -97,48 +75,48 @@ export default class GMIApiMock extends GMIApiParent
 		callback(
 		{
 			success: true,
-			contests: 
-			[
-				{
-					id: 1000,
-					name: "Competizione GMI mock_2036",
-					end_at: "2023-05-10 08:00:00",
-					can_submit: false,
-					completed_at: "2023-05-30 08:00:00",
-					public: "1",
-					is_ended: false,
-					is_completed: false,
-				},
-				{
-					id: 1001,
-					name: "Competizione GMI mock_2020",
-					end_at: "2020-04-20 08:00:00",
-					can_submit: false,
-					completed_at: "2020-04-20 08:00:00",
-					public: "1",
-					is_ended: true,
-					is_completed: true,
-				},
-			],
+			contests: MockContest
 		});
 	}
 
 	getParticipants(contest, onlyMe, callback)
 	{
-		callback(
+		/**@type {{success: boolean, user: AccountInfo}} */
+		let userInfo = store.getState().auth.userInfo;
+
+		// Questa funzione potrebbe essere chiamata prima che sia completo il login, crea un loop attendendo che l'account di discord sia carico.
+		let inteval = setInterval(()=> 
 		{
-			success: true,
-			participants:
-			[
+			userInfo = store.getState().auth.userInfo;
+
+			if(userInfo == undefined)
+				return;
+			else
+				clearInterval(inteval)
+	
+			if(userInfo.success == false)
+			{
+				callback(
 				{
-					id: "71",
-					user_name: "AlexoFalco",
-					user_discord_id: "190723513911345154",
-					contest_id: "1000",
-					kind: "1",
-				},
-			],
-		});
+					success: true,
+					participants: [],
+				});
+			}
+			else
+			{
+				let partecipant = MockPartecipants.filter(o=> o.contest_id == contest);
+		
+				if(onlyMe)
+					partecipant = partecipant.filter(o=> o.id == userInfo.user.user_id)
+			
+				
+				callback(
+				{
+					success: true,
+					participants: partecipant,
+				});
+			}
+		},100)
 	}
 
 	getUsers(callback)
@@ -146,19 +124,28 @@ export default class GMIApiMock extends GMIApiParent
 		callback(
 		{
 			success: true,
-			users:
-			[
-				{
-					id: "71",
-					user_name: "AlexoFalco",
-					user_discord_id: "190723513911345154",
-					contest_id: "1000",
-					kind: "1",
-				},
-			],
+			users: MockUsers.reduce((acc, obj)=>
+					{
+						if(!acc.some(item => item.id === obj.id))
+							acc.push(obj)
+						return acc
+					}, [])
 		});
 	}
 
+	getUserInfo(userId, callback)
+	{
+		callback(
+		{
+			success: true,
+			users: MockUsers.reduce((acc, obj)=>
+					{
+						if(!acc.some(item => item.id === obj.id))
+							acc.push(obj)
+						return acc
+					}, []).filter(o=> o.id == userId)
+		});
+	}
 
 	getParticipation(contest, callback)
 	{
@@ -166,6 +153,7 @@ export default class GMIApiMock extends GMIApiParent
 		{
 			contest: contest,
 		});
+
 		fetch(this.apiURL + "get_participation_data.php?" + params.toString(),
 		{
 			credentials: "include",

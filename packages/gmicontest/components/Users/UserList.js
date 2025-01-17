@@ -1,32 +1,49 @@
-import React, { useState, useEffect } from 'react'
-import GMIApi from '../../src/api/GMIApi'
-import Link from 'next/link';
-import { AreaTitle } from '../library/Titles/AreaTitle';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import GMIApi from "../../src/api/GMIApi";
+import Spinner from "../commons/Spinner";
+import { UserTile } from "./UserTile";
+
 
 export default function UserList(props)
 {
-	/**@type {[ContestsResponse, (data: ContestsResponse)=> any]} */
-	let [data, setData] = useState()
+	const router = useRouter();
+
+	/**@type {[User[], (User)=> any]} */
+	const [users, setUsers] = useState();
+	const [error, setError] = useState();
+
 
 	useEffect(()=>
 	{
-		GMIApi.getInstance().getContests((data) =>
+		GMIApi.getInstance().getUsers((data) =>
 		{
-			setData(data)
-		})
-	}, [])
+			if(!data.success)
+				setError(data.error || "invalid results");
+			else 
+				setUsers(data.users);
+		});
+	}, []);
 
-	if(!data)
-		return (<div>Loading...</div>)
 
-	if(!data.success)
-		return (<div>{data.error}</div>)
+	const isLoading = users == undefined;
+
+
+	const elements = users?.map((user, i)=>
+	(
+		<UserTile
+		 key={i}
+		 user={user}
+		 position={i + 1}
+		/>
+	))
+
 
 	return (
-		<Link  href={`/users`}>
-			<div className='cursor-pointer '>
-			<AreaTitle title="Utenti" inverted={true} />
+		<div>
+			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5 2xl:gap-8 my-3">
+				{isLoading ? <Spinner /> : elements}
 			</div>
-		</Link>
-	)
+		</div>
+	);
 }

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react"
 import { PageLayout } from "./library/Layouts/PageLayout";
 import { PageTitle } from "./library/Titles/PageTitle";
 import { ExtLink } from "./library/Links/ExtLink";
-import RuleBook from "./RuleBook";
+import RuleBook from "./commons/RuleBook";
 
-export default function PageHome(props) {
+export default function PageHome(props)
+{
 
    return (
 	   <PageLayout>

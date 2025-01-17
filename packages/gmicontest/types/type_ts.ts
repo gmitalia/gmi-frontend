@@ -1,16 +1,19 @@
-type GameData = {
+type GameData = 
+{
 	id: string;
 	name: string;
 	avg_score: string;
  };
  
- type JudgeData = {
+ type JudgeData = 
+ {
 	id: string;
 	name: string;
 	votes_count: string;
  };
  
- type Results = {
+ type Results = 
+ {
 	success: boolean;
 	games_data: GameData[];
 	judges_data: JudgeData[];
@@ -30,8 +33,8 @@ type Partecipation =
 	host: string;
 	kind: string;
 	user_id: string;
-
 }
+
 type Game =
 {
 	id: string; // L'ID del gioco
@@ -78,3 +81,50 @@ type Vote =
 	cons: string[]; // I punti negativi menzionati nel voto
 	judge_name: string; // Il nome del giudice
 }
+
+
+type User =
+{
+	id: string
+	name: string
+	discord_id: string
+	forum_id: string
+	approved: boolean
+}
+
+
+type UserInfo =
+{
+	id: string
+	name: string
+	discord_id: string
+	forum_id: string
+	approved: boolean
+	games: Game[]
+	partecipation: Partecipation[]
+}
+
+type AccountInfo = 
+{
+	user_id: string;
+	forum_id: string | null;
+	discord_info:
+	{
+		id: string;
+		username: string;
+		avatar: string;
+		discriminator: string;
+		public_flags: number;
+		flags: number;
+		banner: string | null;
+		accent_color: number | null;
+		global_name: string;
+		avatar_decoration_data: string | null;
+		banner_color: string | null;
+		clan: string | null;
+		primary_guild: string | null;
+		mfa_enabled: boolean;
+		locale: string;
+		premium_type: number;
+	};
+};

@@ -1,6 +1,7 @@
 {/* prettier-ignore */}
 
-const RuleBook = () => {
+const RuleBook = ()=>
+{
   return (
     <article className="prose max-w-none">
       <div className="px-2 pb-2 md:px-10 md:pb-10">

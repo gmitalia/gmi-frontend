@@ -2,21 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { getQuery, getItalianDate } from "../src/Utils";
 import { ParticipantType } from "../src/Constants";
-import GamesList from "./GamesList";
+import GamesList from "./Contest/GamesList";
 import GMIApi from "../src/api/GMIApi";
 import moment from "moment";
 import "moment/locale/it";
 import { PageLayout } from "./library/Layouts/PageLayout";
 import IconBtn from "./commons/IconBtn";
 import StyledButton from "./commons/StyledButton";
-import RuleBook from "./RuleBook";
+import RuleBook from "./commons/RuleBook";
 
 //@todo remove "visualizza voti" if not ended
 export default function PageContest(props)
 {
 	let router = useRouter();
 	let query = getQuery(router);
-
+	
+	/**@type {[Participant, (obj: Participant)=> any]} */
 	let [participant, setParticipant] = useState(false);
 	/**@type {[Contest, (obj: Contest)=> any]} */
 	let [contest, setContest] = useState();
@@ -30,15 +31,18 @@ export default function PageContest(props)
 		console.debug("fetching contests", query.contest);
 		GMIApi.getInstance().getContest(query.contest, (data) =>
 		{
-			if(data.success) setContest(data.contests[0]);
-			else setError(data.error || "invalid contest");
+			if(data.success)
+				setContest(data.contests[0]);
+			else
+				setError(data.error || "invalid contest");
 		});
 
 		//fetch participant
 		console.debug("fetching participants", query.contest);
 		GMIApi.getInstance().getParticipants(query.contest, true, (data) =>
 		{
-			if(data.success) setParticipant(data.participants[0]);
+			if(data.success)
+				setParticipant(data.participants[0]);
 		});
 	},
 	[query.contest]); 
@@ -58,7 +62,6 @@ export default function PageContest(props)
 	if(!contest) 
 		return <div>Loading</div>;
 
-
 	//judge section
 	const complete_date = new Date(Date.parse(contest.completed_at));
 	const end_date = new Date(Date.parse(contest.end_at));
@@ -66,17 +69,21 @@ export default function PageContest(props)
 	const isComplete = Date.now() > complete_date;
 	const canSubmitGames = !!contest.can_submit;
 
-	const isJudge = participant && participant.kind == ParticipantType.judge;
-	const isCompetitor =	participant && participant.kind == ParticipantType.competitor;
+	const isJudge = participant && participant?.kind == ParticipantType.judge;
+	const isCompetitor =	participant && participant?.kind == ParticipantType.competitor;
 
 	const actions = [];
 	const canVote = isJudge && !isComplete && !canSubmitGames;
+	
 	const canNew = canSubmitGames && !canVote && !isCompetitor;
 	const canEdit = canSubmitGames && !canVote && isCompetitor;
 
 	actions.push(
 		<StyledButton 
-		key={actions.length} className="mr-2" onClick={() => toggleRules()}>
+		 key={actions.length}
+		 className="mr-2"
+		 onClick={()=> toggleRules()}
+		>
 			Regolamento
 		</StyledButton>
 	);
@@ -85,9 +92,9 @@ export default function PageContest(props)
 	{
 		actions.push(
 			<StyledButton
-			key={actions.length}
-				className="mr-2"
-				onClick={() => router.push("/editvotes?contest=" + contest.id)}
+			 key={actions.length}
+			 className="mr-2"
+			 onClick={()=> router.push("/editvotes?contest=" + contest.id)}
 			>
 				Vota
 			</StyledButton>
@@ -97,9 +104,9 @@ export default function PageContest(props)
 	{
 		actions.push(
 			<StyledButton
-			key={actions.length}
-				className="mr-2"
-				onClick={() => router.push("/participation?contest=" + contest.id)}
+			 key={actions.length}
+			 className="mr-2"
+			 onClick={()=> router.push("/participation?contest=" + contest.id)}
 			>
 				Invia Gioco
 			</StyledButton>
@@ -109,9 +116,9 @@ export default function PageContest(props)
 	{
 		actions.push(
 			<StyledButton
-				key={actions.length}
-				className="mr-2"
-				onClick={() => router.push("/participation?contest=" + contest.id)}
+			 key={actions.length}
+			 className="mr-2"
+			 onClick={()=> router.push("/participation?contest=" + contest.id)}
 			>
 				Modifica Dati Partecipazione
 			</StyledButton>

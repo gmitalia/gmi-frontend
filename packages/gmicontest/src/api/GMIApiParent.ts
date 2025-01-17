@@ -96,7 +96,10 @@ export default class GMIApiParent
 	getResults(contest: string, callback: (data: Results)=> void): void
 	{}
 
-	getUsers(data: ({users})=> any)
+	getUsers(callback: (data: {success: boolean; users: User[]})=> void)
+	{}
+
+	getUserInfo(callback: (data: {success: boolean; users: User[]})=> void)
 	{}
 
 	/**

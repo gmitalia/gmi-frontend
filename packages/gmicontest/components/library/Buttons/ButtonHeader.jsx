@@ -1,24 +1,24 @@
-export const ButtonHeader = (props)=>
+export const ButtonHeader = (props) =>
 {
-    const { icon, title, onClick } = props;
+	const { icon, title, onClick } = props;
 
-    const onClickHandler = ()=>
-    {
-        if(onClick)
-            onClick()
-    }
+	const onClickHandler = ()=>
+	{
+		if(onClick)
+			onClick()
+	}
 
-    return (
-        <button className="m-2" onClick={onClickHandler}>
-            {icon && 
-            (
-                <i className={icon}></i>
-            )}
+	return (
+		<button className="m-2" onClick={onClickHandler}>
+			{icon &&
+			(
+				<i className={icon}></i>
+			)}
 
-            {title && 
-            (
-                <span>{title}</span>
-            )}
-        </button>
-    )
+			{title &&
+			(
+				<span>{title}</span>
+			)}
+		</button>
+	)
 }

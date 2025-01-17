@@ -1,4 +1,4 @@
-import PageUsers from "../components/PageUsers";
+import PageUser from "../components/PageUser";
 import Head from "next/head";
 
 export default function Users()
@@ -6,9 +6,9 @@ export default function Users()
 	return (
 		<>
 			<Head>
-				<title>Utenti</title>
+				<title>Utente</title>
 			</Head>
-			<PageUsers />
+			<PageUser/>
 		</>
 	);
 }

@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { getQuery } from "../src/Utils";
 import { ParticipantType } from "../src/Constants";
-import GameForm from "./GameForm";
+import GameForm from "./Forms/GameForm";
 import GMIApi from "../src/api/GMIApi";
-import InfoMessage from "./InfoMessage";
+import InfoMessage from "./commons/InfoMessage";
 
 
 export default function PageEditParticipation(props)
@@ -74,7 +74,8 @@ export default function PageEditParticipation(props)
 		);
 	}
 
-	if(error) return renderBody(error);
+	if(error)
+		return renderBody(error);
 
 	//join contest
 	if(!joined)
