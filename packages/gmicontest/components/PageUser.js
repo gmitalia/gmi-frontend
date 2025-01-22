@@ -24,8 +24,19 @@ export default function PageUser(props)
 		console.debug("fetching user", query.user);
 		GMIApi.getInstance().getUserInfo(query.user, (data) =>
 		{
+			console.log(data)
 			if(data.success)
-				setUser(data.users[0]);
+			{
+				let user = data.users[0];
+
+				if(user.games)
+					user.games = JSON.parse(user.games)
+
+				if(user.partecipation)
+					user.partecipation = JSON.parse(user.partecipation)
+
+				setUser(user);
+			}
 			else
 				setError(data.error || "invalid contest");
 		});
@@ -63,7 +74,7 @@ export default function PageUser(props)
 						/>
 					</svg>
 				</IconBtn>
-				<h2 className="text-2xl">{user.name}</h2>
+				<h2 className="text-2xl">{user.user_name}</h2>
 			</div>
 		</PageLayout>
 	);

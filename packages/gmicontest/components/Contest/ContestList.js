@@ -23,11 +23,12 @@ export default function ContestList(props)
 		<div className="h-screen">
 			<AreaTitle title="Competizioni" />
 
+			<div className="h-screen overflow-y-scroll">
 			{data.contests.map((contest)=>
 			(
 				<ContestElement key={contest.id} contest={contest} />
 			))}
-
+			</div>
 		</div>
 	)
 }

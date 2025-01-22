@@ -95,7 +95,7 @@ export default function GamesList(props)
 
 			{actions}
 			
-			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3">
+			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3 overflow-y-scroll">
 				{isLoading ? <Spinner /> : elements}
 			</div>
 		</div>

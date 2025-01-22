@@ -99,7 +99,7 @@ export default class GMIApiParent
 	getUsers(callback: (data: {success: boolean; users: User[]})=> void)
 	{}
 
-	getUserInfo(callback: (data: {success: boolean; users: User[]})=> void)
+	getUserInfo(userId: number, callback: (data: {success: boolean; users: UserInfo[]})=> void)
 	{}
 
 	/**

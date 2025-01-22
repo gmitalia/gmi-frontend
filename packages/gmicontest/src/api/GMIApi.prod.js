@@ -142,7 +142,7 @@ export default  class GMIApiProd extends GMIApiParent
 			method: "GET"
 		})
 			.then(response => response.json())
-			.then(data => callback(data))
+			.then(data=> callback(data))
 			.catch(error => console.error("GMIApi Error:", error))
 	}
 

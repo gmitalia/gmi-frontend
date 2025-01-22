@@ -16,13 +16,13 @@ export const UserTile = (props) =>
 			>
 				<div className="div-image">
 					<div
-					 style={{width: "85%"}}
+					 style={{width: "50%"}}
 					 className="m-auto"
 					 dangerouslySetInnerHTML={{ __html: multiavatar("GM_USER_"+user.id) }}
 					/>
 				</div>
 
-				<div className="p-6 flex flex-col flex-1 justify-start relative">
+				<div style={{height: "fit-content"}} className="p-1 flex flex-col flex-1 justify-start relative">
 				
 					<div className="overflow-hidden">
 						<div className="text-2xl font-bold text-gray-900 text-center z-10">

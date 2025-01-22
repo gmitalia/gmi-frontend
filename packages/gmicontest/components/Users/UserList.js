@@ -41,7 +41,7 @@ export default function UserList(props)
 
 	return (
 		<div>
-			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5 2xl:gap-8 my-3">
+			<div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-5 2xl:gap-8 my-3">
 				{isLoading ? <Spinner /> : elements}
 			</div>
 		</div>
