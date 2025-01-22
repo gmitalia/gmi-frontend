@@ -6,6 +6,8 @@ import { PageLayout } from "./library/Layouts/PageLayout";
 import IconBtn from "./commons/IconBtn";
 import "moment/locale/it";
 import { GameTile } from "./Contest/GameTile";
+import Link from "next/link";
+import { MedalsInfo } from "../src/Medals";
 
 
 //@todo remove "visualizza voti" if not ended
@@ -93,10 +95,8 @@ export default function PageUser(props)
 				if(data.success)
 					contestInfo[game.id] = data.contests[0]
 
-				if(i == len-1)
-				{
+				if(Object.keys(contestInfo).length == len)
 					setContestInfo(contestInfo)
-				}
 			})
 		})
 	}
@@ -111,8 +111,14 @@ export default function PageUser(props)
 		let contest = contestInfo[game.id]
 
 		return(
-			<div className="flex flex-col items-center">
-				<div className="font-bold">{contest?.name ?? "."}</div>
+			<div key={i} className="flex flex-col items-center">
+
+				<a href={`/contest?contest=${contest.id}`}>
+					<div className="font-bold text-black-500 hover:underline cursor-pointer">
+						{contest?.name ?? "."}
+					</div>
+				</a>
+
 				<GameTile
 				 key={game.id}
 				 contest={game.contest_id}
@@ -199,10 +205,17 @@ export default function PageUser(props)
 					<div className="flex flex-row flex-wrap justify-evenly gap-20">
 						{Object.entries(medals).map((medal, index)=>
 						(
-							<div key={index} className="flex flex-col items-center">
-								<div className="font-bold text-xl">{medal[0]}</div>
-								<div className="text-xl">{medal[1]? "SI" : "NO"}</div>
-							</div>
+							medal[1] &&
+							(
+								<div key={index} className="flex flex-col items-center">
+									{console.log(medal, MedalsInfo)}
+									<img
+									 style={{width: "80px"}}
+									 src={MedalsInfo[medal[0]].image}
+									 title={MedalsInfo[medal[0]].name}
+									/>
+								</div>
+							)
 						))}
 					</div>
 

@@ -6,7 +6,7 @@ export default function Participation()
 	return (
 		<>
 			<Head>
-				<title>Participation</title>
+				<title>GMI Competizion</title>
 			</Head>
 			<PageEditParticipation />
 		</>

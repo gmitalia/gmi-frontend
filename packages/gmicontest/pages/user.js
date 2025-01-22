@@ -6,7 +6,7 @@ export default function Users()
 	return (
 		<>
 			<Head>
-				<title>Utente</title>
+				<title>GMI Competizion</title>
 			</Head>
 			<PageUser/>
 		</>

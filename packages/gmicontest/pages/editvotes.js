@@ -6,7 +6,7 @@ export default function EditVotes()
 	return (
 		<>
 			<Head>
-				<title>Edit Votes</title>
+				<title>GMI Competizion</title>
 			</Head>
 			<PageEditVotes />
 		</>
