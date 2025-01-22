@@ -37,15 +37,15 @@ type Partecipation =
 
 type Game =
 {
-	id: string; // L'ID del gioco
+	id: number; // L'ID del gioco
 	name: string; // Il nome del gioco
-	contest_id: string; // L'ID della competizione
+	contest_id: number; // L'ID della competizione
 	image_url: string; // L'URL dell'immagine del gioco
 	short_description: string; // La descrizione breve del gioco
 	description: string; // La descrizione dettagliata del gioco
 	authors: string; // Gli autori del gioco
 	download_url: string; // L'URL per il download del gioco
-	placement: string; // La posizione del gioco nella competizione
+	placement: number; // La posizione del gioco nella competizione
 }
 
 type Contest =
@@ -95,13 +95,11 @@ type User =
 
 type UserInfo =
 {
-	id: string
-	name: string
-	discord_id: string
-	forum_id: string
-	approved: boolean
+	user_id: string
+	user_name: string
+	user_discord_id: string
+	user_forum_id: string
 	games: Game[]
-	partecipation: Partecipation[]
 }
 
 type AccountInfo = 
@@ -128,3 +126,13 @@ type AccountInfo =
 		premium_type: number;
 	};
 };
+
+type UserMedals =
+{
+	most_participations: boolean,
+	most_first_places: boolean,
+	most_second_places: boolean,
+	most_third_places: boolean,
+	most_last_places: boolean,
+	participated_first_competition: boolean
+}

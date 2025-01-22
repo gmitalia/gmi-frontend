@@ -146,6 +146,22 @@ export default  class GMIApiProd extends GMIApiParent
 			.catch(error => console.error("GMIApi Error:", error))
 	}
 
+	getUserMedals(userId, callback)
+	{
+		const params = new URLSearchParams(
+		{
+			user: userId
+		})
+
+		fetch(this.apiURL + "get_user_medals.php?" + params.toString(),
+		{
+			credentials: "include",
+			method: "GET"
+		})
+			.then(response => response.json())
+			.then(data=> callback(data))
+			.catch(error => console.error("GMIApi Error:", error))
+	}
 
 	getParticipation(contest, callback)
 	{

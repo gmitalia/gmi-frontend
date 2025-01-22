@@ -102,6 +102,9 @@ export default class GMIApiParent
 	getUserInfo(userId: number, callback: (data: {success: boolean; users: UserInfo[]})=> void)
 	{}
 
+	getUserMedals(userId: number, callback: (data: {success: boolean; users: UserMedals[]})=> void)
+	{}
+
 	/**
 	 * Imposta un voto per un gioco in un contest.
 	 * @param contest ID del contest

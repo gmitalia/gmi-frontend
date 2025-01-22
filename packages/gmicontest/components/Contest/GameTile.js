@@ -6,6 +6,7 @@ import Link from "next/link";
 
 export const GameTile = (props) =>
 {
+	/**@type {Game} */
 	const game = props.game;
 
 	let img_url = GMIApi.getInstance().imageURL + "/thumbnail.png";
@@ -17,17 +18,11 @@ export const GameTile = (props) =>
 			img_url = GMIApi.getInstance().imageURL + game.image_url + "?" + Date.now().toString();
 	}
 
-	let authors = "";
+	let authors = [];
 	try
 	{
 		authors = Buffer.from(game.authors, "base64").toString("ascii");
 		authors = JSON.parse(authors);
-		authors = authors.map((author)=> 
-		(
-			<Link key={author.id} href={`/user?user=${author.id}`}>
-				{author.name}
-			</Link>
-		));
 	} catch(e)
 	{
 		console.error(game.authors, e);
@@ -98,7 +93,7 @@ export const GameTile = (props) =>
 
 	return (
 		<div
-		 className="rounded-lg shadow-lg bg-white overflow-hidden relative flex flex-col justify-between"
+		 className="w-full h-full rounded-lg shadow-lg bg-white overflow-hidden relative flex flex-col justify-between"
 		 data-position={props?.position}
 		>
 			<div className="div-image">
@@ -135,7 +130,14 @@ export const GameTile = (props) =>
 					</div>
 					<div className="author text-sm text-gray-700 text-center">
 						{" "}
-						di {authors}
+						di {authors.map((author, index)=> 
+						(
+							<div key={index}>
+								<Link key={author.id} href={`/user?user=${author.id}`}>
+									<div className="text-blue-500 hover:underline cursor-pointer">{author.name}</div>
+								</Link>	
+							</div>
+						))}
 					</div>
 				</div>
 				<div className="text-gray-700 text-base mb-4">

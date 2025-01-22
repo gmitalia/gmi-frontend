@@ -10,7 +10,6 @@ export default function Votes(props)
 	let [error, setError] = useState()
 	let [showButtonVotes, setShowButtonVotes] = useState(false)
 
-
 	useEffect(() =>
 	{
 		GMIApi.getInstance().getVotes(props.contest, props.game, data =>
