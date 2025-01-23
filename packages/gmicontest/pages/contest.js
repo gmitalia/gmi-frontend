@@ -6,7 +6,7 @@ export default function Contest()
 	return (
 		<>
 			<Head>
-				<title>GMI Competizion</title>
+				<title>GMI Competizioni</title>
 			</Head>
 			<PageContest />
 		</>

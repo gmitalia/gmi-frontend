@@ -116,7 +116,7 @@ export default function PageUser(props)
 		return(
 			<div key={i} className="flex flex-col items-center">
 
-				<a href={`/contest?contest=${contest.id}`}>
+				<a href={`/contest?contest=${contest?.id}`}>
 					<div className="font-bold text-black-500 hover:underline cursor-pointer">
 						{contest?.name ?? "."}
 					</div>
@@ -187,6 +187,36 @@ export default function PageUser(props)
 
 			<div className="flex flex-col gap-3 p-5">
 				
+				<div className="flex flex-row">
+					<div
+					 style={{
+						width: "30%",
+					 }}
+					>
+
+					</div>
+
+				<fieldset style={{width: "70%", height: "250px"}}  className="ml-auto p-5 border-2 border-gray">
+				<legend className="px-4 text-2xl">Inventario</legend>
+					
+					<div className="flex flex-row flex-wrap justify-evenly gap-20">
+						{Object.entries(medals).map((medal, index)=>
+						(
+							medal[1] &&
+							(
+								<div key={index} className="flex flex-col items-center">
+									<img
+									 style={{width: "80px"}}
+									 src={MedalsInfo[medal[0]].image}
+									 title={MedalsInfo[medal[0]].name}
+									/>
+								</div>
+							)
+						))}
+					</div>
+
+				</fieldset>
+				</div>
 				
 				<fieldset className="p-5 border-2 border-gray">
 				<legend className="px-4 text-2xl">Statistiche</legend>
@@ -204,31 +234,11 @@ export default function PageUser(props)
 
 				</fieldset>
 
-				<fieldset className="p-5 border-2 border-gray">
-				<legend className="px-4 text-2xl">Medagliere</legend>
-					
-					<div className="flex flex-row flex-wrap justify-evenly gap-20">
-						{Object.entries(medals).map((medal, index)=>
-						(
-							medal[1] &&
-							(
-								<div key={index} className="flex flex-col items-center">
-									{console.log(medal, MedalsInfo)}
-									<img
-									 style={{width: "80px"}}
-									 src={MedalsInfo[medal[0]].image}
-									 title={MedalsInfo[medal[0]].name}
-									/>
-								</div>
-							)
-						))}
-					</div>
-
-				</fieldset>
+				
 
 				<fieldset className="p-5 border-2 border-gray">
 				<legend className="px-4 text-2xl">Giochi</legend>
-					<div className="flex grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3 overflow-y-scroll">
+					<div className="flex grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3 overflow-y-hidden">
 						{elements}
 					</div>
 				</fieldset>

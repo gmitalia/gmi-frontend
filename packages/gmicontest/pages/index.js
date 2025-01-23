@@ -7,7 +7,7 @@ export default function Home()
 	return (
 		<>
 			<Head>
-				<title>GMI Competizioni</title>
+				<title>GMI Competizionii</title>
 			</Head>
 			<PageHome />
 		</>

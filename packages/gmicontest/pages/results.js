@@ -6,7 +6,7 @@ export default function Results()
 	return (
 		<>
 			<Head>
-				<title>GMI Competizion</title>
+				<title>GMI Competizioni</title>
 			</Head>
 			<PageResults />
 		</>

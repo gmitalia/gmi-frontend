@@ -22,7 +22,7 @@ export const ContestElement = (props)=>
 	const hoverClass = "hover:cursor-pointer hover:border-secondary"
 
 	return (
-		<Link href={`/contest?contest=${contest.id}`}>
+		<a href={`/contest?contest=${contest.id}`}>
 
 			<div className={`flex flex-row items-center border p-2 ${selectedClass} ${hoverClass}`}>
 				
@@ -33,7 +33,7 @@ export const ContestElement = (props)=>
 				{contest.name}
 
 			</div>
-		</Link>
+		</a>
 
 	)
 }
