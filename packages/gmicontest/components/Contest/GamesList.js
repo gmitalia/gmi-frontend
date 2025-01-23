@@ -10,10 +10,14 @@ export default function GamesList(props)
 {
 	const { contest } = props;
 	const router = useRouter();
+
+	/**@type {[Game[], (data: Game[])=> any]} */
 	const [games, setGames] = useState();
+	/**@type {[JudgeData[], (data: JudgeData[])=> any]} */
+	const [judges, setJudges] = useState([]);
+
 	const [error, setError] = useState();
 	const [showVotes, setShowVotes] = useState(false);
-	const [judges, setJudges] = useState([]);
 
 
 	useEffect(()=>
@@ -45,6 +49,17 @@ export default function GamesList(props)
 	const areJudgesLoad = judges == undefined;
 	const showTrophy = props.contestEnded;
 
+	/**@type {(data: JudgeData)=> any} */
+	const judgeTile = (judge)=>
+	(
+		<div key={judge.id}>
+			<a  href={`/user?user=${judge.id}`}>
+			<div className="text-blue-500 hover:underline cursor-pointer">{judge.name}</div>
+		</a>	
+		</div>
+	)
+
+	/**@type {(data: JudgeData[])=> any} */
 	const formatJudges = (array)=>
 	{
 		const names = array.map((item)=> item.name);
@@ -88,8 +103,9 @@ export default function GamesList(props)
 			)
 			:
 			(
-				<p>
-					<b>Giudici:</b> {formatJudges(judges)}
+				<p className="author ">
+					<b>Giudici:</b> 
+					{judges.map(o=> judgeTile(o))}
 				</p>
 			)}
 

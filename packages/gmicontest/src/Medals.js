@@ -39,4 +39,16 @@ export const MedalsInfo =
 		desc: "Questo utente ha collaborato con tantissimi utenti negli anni",
 		image:  basePath+"/img/medal_more_coop.png"
 	},
+	has_been_judge:  
+	{
+		name: "Grande amicone",
+		desc: "Questo utente ha collaborato con tantissimi utenti negli anni",
+		image:  basePath+"/img/medal_more_coop.png"
+	},
+	most_times_judge:  
+	{
+		name: "Grande amicone",
+		desc: "Questo utente ha collaborato con tantissimi utenti negli anni",
+		image:  basePath+"/img/medal_more_coop.png"
+	},
 }

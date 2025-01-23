@@ -6,32 +6,37 @@ export const UserTile = (props) =>
 {
 	/**@type {User} */
 	const user = props.user;
-	const position = props.position;
 
 	return (
-		<Link href={`/user?user=${user.id}`}>
+		
 			<div
-			 className="rounded-lg shadow-lg bg-white overflow-hidden relative flex flex-col justify-between cursor-pointer"
-			 data-position={props?.position}
+			 className="rounded-lg shadow-lg bg-white overflow-hidden relative flex flex-col justify-between cursor-pointer grid grid-cols-[150px_repeat(4,_1fr)] items-center gap-x-4"
+			 style={{width: "100%", height: "35px"}}
 			>
-				<div className="div-image">
+				<div  style={{width: "80px"}} className="div-image">
 					<div
-					 style={{width: "50%"}}
+					 style={{height: "100%", aspectRatio: "1/1"}}
 					 className="m-auto"
 					 dangerouslySetInnerHTML={{ __html: multiavatar("GM_USER_"+user.id) }}
 					/>
 				</div>
 
-				<div style={{height: "fit-content"}} className="p-1 flex flex-col flex-1 justify-start relative">
+				<div style={{width: "50%"}}>
+					{user.name}
+				</div>
 				
-					<div className="overflow-hidden">
-						<div className="text-2xl font-bold text-gray-900 text-center z-10">
-							{user.name}
-						</div>
-					
-					</div>
+
+				<div style={{width: "20%"}}>
+					{user.game_count}
+				</div>
+				
+				<div style={{width: "20%"}}>
+					{user.top_game_count}
+				</div>
+
+				<div style={{width: "20%"}}>
+					{user.judge_count}
 				</div>
 			</div>
-		</Link>
 	);
 };

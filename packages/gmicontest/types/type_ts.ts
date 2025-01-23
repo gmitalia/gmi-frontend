@@ -85,11 +85,13 @@ type Vote =
 
 type User =
 {
-	id: string
-	name: string
-	discord_id: string
-	forum_id: string
-	approved: boolean
+	id: number; // ID dell'utente
+	name: string; // Nome dell'utente
+	discord_id: bigint; // Discord ID
+	forum_id: number | null; // Forum ID (può essere null se non presente)
+	game_count: number; // Numero di giochi presentati
+	judge_count: number; // Numero di volte giudice in contest distinti
+	top_game_count: number; // Numero di giochi con placement = 
 }
 
 
@@ -99,7 +101,8 @@ type UserInfo =
 	user_name: string
 	user_discord_id: string
 	user_forum_id: string
-	games: Game[]
+	games: Game[],
+	votes: [{contest_id: number}]
 }
 
 type AccountInfo = 
@@ -134,5 +137,7 @@ type UserMedals =
 	most_second_places: boolean,
 	most_third_places: boolean,
 	most_last_places: boolean,
-	participated_first_competition: boolean
+	participated_first_competition: boolean,
+	has_been_judge: boolean,
+	most_times_judge: boolean
 }

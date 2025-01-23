@@ -39,6 +39,9 @@ export default function PageUser(props)
 				if(user.games)
 					user.games = JSON.parse(user.games)
 
+				if(user.votes)
+					user.votes = JSON.parse(user.votes)
+
 				setUser(user);
 			}
 			else
@@ -138,23 +141,25 @@ export default function PageUser(props)
 			name: "Partecipazioni",
 			value: user.games.length,
 		},
-		
-		{
-			icon: "🏅",
-			name: "Podi",
-			value: user.games.filter(o=> o.placement < 4 && o.placement != 0).length,
-		},
-		
 		{
 			icon: "🥇",
 			name: "Vittorie",
 			value: user.games.filter(o=> o.placement == 1).length,
 		},
-		
+		{
+			icon: "🏅",
+			name: "Podi",
+			value: user.games.filter(o=> o.placement < 4 && o.placement != 0).length,
+		},
 		{
 			icon: "🤝",
 			name: "Collaborazioni",
 			value: user.games.filter(o=> JSON.parse(Buffer.from(o.authors, "base64").toString("ascii")).length > 1).length,
+		},
+		{
+			icon: "⚖️",
+			name: "Giudizi",
+			value: user.votes?.length ?? 0,
 		}
 	]
 
