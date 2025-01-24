@@ -103,3 +103,17 @@
     margin: 0;
   }
 }
+
+
+.text-full
+{
+	white-space: unset;
+   overflow: unset;
+   text-overflow: unset;
+}
+.text-truncate
+{
+	white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}

@@ -224,6 +224,30 @@ export default  class GMIApiProd extends GMIApiParent
 			.catch(error => console.error("GMIApi Error:", error))
 	}
 
+	setUserValues(user_id, user_name, callback)
+	{
+		const url = this.apiURL + "set_user_values.php"
+
+		fetch(url, 
+		{
+			method: "POST", // *GET, POST, PUT, DELETE, etc.
+			mode: "cors", // no-cors, *cors, same-origin
+			cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+			credentials: "include", // include, *same-origin, omit
+			headers: { "Content-Type": "application/json" },
+			referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+			body: JSON.stringify(
+			{
+				user_id: user_id,
+				user_name: user_name,
+			})
+		})
+			.then(response => response.json())
+			.then(data => callback(data))
+			.catch(error => console.error("GMIApi Error:", error))
+
+	}
+
 	setVote(contest, voteObject, callback)
 	{
 		const params = new URLSearchParams(

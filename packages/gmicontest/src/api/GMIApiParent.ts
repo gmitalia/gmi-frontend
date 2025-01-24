@@ -114,6 +114,9 @@ export default class GMIApiParent
 	setVote(contest: string, voteObject: Vote, callback: (data: {success: boolean, error: any})=> void): void
 	{}
 
+	setUserValues(user_id: number, user_name: string, callback: (data: {success: boolean, error: any})=> void): void
+	{}
+
 	/**
 	 * Imposta i dati di partecipazione a un contest.
 	 * @param contest ID del contest

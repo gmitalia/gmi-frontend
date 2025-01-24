@@ -93,6 +93,12 @@ export default function UserList(props)
 	}, [users, sorting,  search])
 
 
+	const updateSort = function(index)
+	{
+		sorting.sort[index] = !sorting.sort[index]
+		setSort({sortingId: index, sort: sorting.sort})
+	}
+
 	return (
 		<div>
 			<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -114,12 +120,12 @@ export default function UserList(props)
 		</div>
 		
 		<div className="grid gap-y-2 my-3">
-			<div className="grid grid-cols-[150px_repeat(4,_1fr)] items-center gap-x-4">
+			<div className="grid grid-cols-[45px_1fr_50px_50px_50px] lg:grid-cols-[45px_repeat(4,_1fr)] items-center gap-x-4">
 				<div className="font-bold"></div>
-				<div className="font-bold cursor-pointer" onClick={()=> setSort({sortingId: 0, sort: {0: !sorting.sort[0]}})}>Username</div>
-				<div className="font-bold cursor-pointer" onClick={()=> setSort({sortingId: 1, sort: {1: !sorting.sort[1]}})}>Partecipazioni</div>
-				<div className="font-bold cursor-pointer" onClick={()=> setSort({sortingId: 2, sort: {2: !sorting.sort[2]}})}>Vittorie</div>
-				<div className="font-bold cursor-pointer" onClick={()=> setSort({sortingId: 3, sort: {3: !sorting.sort[3]}})}>Giudizi</div>
+				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(0)}>Username</div>
+				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(1)}>Partecipazioni</div>
+				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(2)}>Vittorie</div>
+				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(3)}>Giudizi</div>
 			</div>
 				{isLoading ? <Spinner /> : userList}
 			</div>
