@@ -8,8 +8,7 @@ interface BlogPostProps {
 }
 
 const BlogPost = ({ post }: BlogPostProps) => {
-  const category = post.categories[0].toLowerCase().replace(" ", "-");
-
+  const category = post.categories ? post?.categories[0]?.toLowerCase().replace(" ", "-") : undefined;
   return (
     <div className="blog-post__wrapper">
       <article className={`blog-post blog-post--${category}`}>
