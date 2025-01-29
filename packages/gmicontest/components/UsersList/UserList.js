@@ -24,7 +24,16 @@ export default function UserList(props)
 			if(!data.success)
 				setError(data.error || "invalid results");
 			else 
+			{
+				for(let i=data.users.length-1; i>-1; i--)
+				{
+					let user = data.users[i]
+
+					if(user.game_count == "0" && user.judge_count == "0")
+						data.users.splice(i, 1)
+				}
 				setUsers(data.users);
+			}
 		});
 	}, []);
 
