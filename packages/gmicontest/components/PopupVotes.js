@@ -6,6 +6,7 @@ import StyledButton from "./commons/StyledButton";
 
 export default function Votes(props)
 {
+	/**@type {[Vote[], (value: Vote[])=> any]} */
 	let [votes, setVotes] = useState()
 	let [error, setError] = useState()
 	let [showButtonVotes, setShowButtonVotes] = useState(false)
@@ -92,13 +93,13 @@ export default function Votes(props)
 					</div>
 
 					<div className="flex flex-wrap gap-2 mb-2">
-						<b>Pro</b> {pros}
+						<b style={{width: "70px"}}>Pro</b> {pros}
 					</div>
 					<div className="flex flex-wrap gap-2 mb-2">
-						<b>Contro</b> {cons}
+						<b style={{width: "70px"}}>Contro</b> {cons}
 					</div>
-					<div>
-						<b>Voto:</b> <span className="bg-primary mx-1 px-1 text-slate-50">{vote.score}</span>
+					<div className="flex gap-2 ">
+						<b style={{width: "70px"}}>Voto</b> <span className="bg-primary px-1 text-slate-50">{vote.score}</span>
 					</div>
 				</div>
 			)
