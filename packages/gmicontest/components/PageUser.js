@@ -170,8 +170,8 @@ export default function PageUser(props)
 			
 				<img
 				 className="m-auto"
-				 style={{height: "250px"}}
-				 src={basePath+"/img/profile.png"}
+				 style={{height: "250px", borderRadius: "50px", padding: "20px"}}
+				 src={user.user_avatar ?? basePath+"/img/profile.png"}
 				/>
 
 				<UserInventory

@@ -15,7 +15,8 @@ export const UserTile = (props) =>
 			>
 				<div  style={{height: "35px", aspectRatio: "1/1"}}>
 					<img
-					 src={basePath+"/img/profile.png"}
+					 style={{borderRadius: "50px"}}
+					 src={user.avatar ?? basePath+"/img/profile.png"}
 					/>
 				</div>
 

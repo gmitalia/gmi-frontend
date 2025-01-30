@@ -14,7 +14,7 @@ export default function GameForm(props)
 	const contestId = props.contestId;
 	/**@type {Partecipation} */
 	const partecipation = props.participation || [];
-	const img_url = partecipation.game_thumbnail ? GMIApi.getInstance().imageURL + game.image_url + "?" + Date.now().toString() : "";
+	const img_url = ""//partecipation.game_thumbnail ? GMIApi.getInstance().imageURL + game.image_url + "?" + Date.now().toString() : "";
 
 	let [gameName, setGameName] = useState(partecipation.game_name || "");
 	let [gameUrl, setGameUrl] = useState(partecipation.game_url || "");
@@ -40,13 +40,13 @@ export default function GameForm(props)
 
 	useEffect(()=>
 	{
-		const img_url = partecipation.game_thumbnail? GMIApi.getInstance().imageURL + game.image_url + "?" + Date.now().toString() : "";
+		const img_url = GMIApi.getInstance().imageURL + partecipation.game_thumbnail// ?? GMIApi.getInstance().imageURL + game.image_url + "?" + Date.now().toString();
 
 		setGameName(gameName || partecipation.game_name || "");
 		setGameUrl(gameUrl || partecipation.game_url || "");
 		setGameShortDesc(gameShortDesc || partecipation.game_short_desc || "");
 		setGameDesc(gameDesc || partecipation.game_desc || "");
-		setGameThumbnail(gameThumbnail || img_url);
+		setGameThumbnail(img_url);
 	},
 	[partecipation])
 

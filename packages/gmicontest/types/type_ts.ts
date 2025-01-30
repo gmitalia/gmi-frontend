@@ -88,6 +88,7 @@ type User =
 	id: number; // ID dell'utente
 	name: string; // Nome dell'utente
 	discord_id: bigint; // Discord ID
+	avatar: string;
 	forum_id: number | null; // Forum ID (può essere null se non presente)
 	game_count: number; // Numero di giochi presentati
 	judge_count: number; // Numero di volte giudice in contest distinti
@@ -101,7 +102,8 @@ type UserInfo =
 	user_name: string
 	user_discord_id: string
 	user_forum_id: string
-	games: Game[],
+	games: Game[]
+	user_avatar: string
 	votes: [{contest_id: number}]
 }
 
