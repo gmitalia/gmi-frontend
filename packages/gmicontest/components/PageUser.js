@@ -94,6 +94,7 @@ export default function PageUser(props)
 
 	return (
 		<PageLayout>
+			<div className="w-full h-full flex flex-col">
 			<div className="flex justify-start gap-4 items-center">
 				<IconBtn onClick={() => router.back()}>
 					<svg
@@ -112,6 +113,7 @@ export default function PageUser(props)
 					</svg>
 				</IconBtn>
 				
+				{/** Se la modifica del nome è attiva mostr l'inputbox al posto del solo testo */}
 				{editName?
 				(
 					<>
@@ -159,24 +161,20 @@ export default function PageUser(props)
 						)}
 					</>
 				)}
-
-
-
 			</div>
 
-			<div className="flex flex-col gap-3 p-5">
-				
-				<div className="h-full flex flex-col lg:flex-row">
-			
-				<img
-				 className="m-auto"
-				 style={{height: "250px", borderRadius: "50px", padding: "20px"}}
-				 src={user.user_avatar ?? basePath+"/img/profile.png"}
-				/>
+			<div className="flex flex-col gap-3 p-5 h-full overflow-y-scroll">
+				{console.log("AVATAR",user.user_avatar)}
+				<div className="h-full flex flex-col lg:flex-row">	
+					<img
+					 className="m-auto"
+					 style={{height: "250px", borderRadius: "50px", padding: "20px"}}
+					 src={user.user_avatar ?? basePath+"/img/profile.png"}
+					/>
 
-				<UserInventory
-				 user={query.user}
-				/>
+					<UserInventory
+					 user={query.user}
+					/>
 				</div>
 				
 				<UserStats
@@ -186,6 +184,7 @@ export default function PageUser(props)
 				<UserGames
 				 userInfo={user}
 				/>
+			</div>
 			</div>
 		</PageLayout>
 	);

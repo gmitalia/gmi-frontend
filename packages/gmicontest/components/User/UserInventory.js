@@ -55,7 +55,8 @@ export default function UserInventory(props)
 		<legend className="px-4 text-2xl">Inventario</legend>
 			
 			<div className="flex flex-row flex-wrap justify-evenly  gap-10 lg:gap-20">
-				{Object.entries(medals).map((medal, index)=>
+				{/**
+				 * {Object.entries(medals).map((medal, index)=>
 				(
 					medal[1] &&
 					(
@@ -68,6 +69,7 @@ export default function UserInventory(props)
 						</div>
 					)
 				))}
+				 */}
 			</div>
 
 		</fieldset>

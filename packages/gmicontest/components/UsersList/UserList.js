@@ -109,7 +109,7 @@ export default function UserList(props)
 	}
 
 	return (
-		<div>
+		<div className="h-full flex flex-col">
 			<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
 			<input
 				type="text"
@@ -128,14 +128,16 @@ export default function UserList(props)
 			/>
 		</div>
 		
-		<div className="grid gap-y-2 my-3">
-			<div className="grid grid-cols-[45px_1fr_50px_50px_50px] lg:grid-cols-[45px_repeat(4,_1fr)] items-center gap-x-4">
+		<div className="grid gap-y-2 my-1">
+			<div style={{height: "35px"}} className="grid grid-cols-[45px_1fr_50px_50px_50px] lg:grid-cols-[45px_repeat(4,_1fr)] items-center gap-x-4">
 				<div className="font-bold"></div>
 				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(0)}>Username</div>
 				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(1)}>Partecipazioni</div>
 				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(2)}>Vittorie</div>
 				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(3)}>Giudizi</div>
 			</div>
+		</div>
+		<div className="grid gap-y-2 my-3 overflow-y-scroll">
 				{isLoading ? <Spinner /> : userList}
 			</div>
 		</div>

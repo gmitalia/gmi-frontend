@@ -158,6 +158,7 @@ export default function PageContest(props)
 
 	return (
 		<PageLayout>
+			<div className="w-full h-full flex flex-col">
 			<div className="flex justify-start gap-4 items-center">
 				<IconBtn onClick={() => router.push("/")}>
 					<svg
@@ -189,6 +190,7 @@ export default function PageContest(props)
 			</div>
 			<GamesList contest={contest.id} contestEnded={isComplete} />
 			{rulesModal}
+			</div>
 		</PageLayout>
 	);
 }

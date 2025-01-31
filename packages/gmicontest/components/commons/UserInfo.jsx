@@ -6,6 +6,7 @@ import { ButtonSecondary } from "../library/Buttons/ButtonSecondary";
 
 export const UserInfo = ()=>
 {
+	/**@type {{user: AccountInfo, success: boolean}} */
 	let userInfo = useSelector(root => root.auth.userInfo);
 
 	const dispatch = useDispatch();
@@ -38,11 +39,13 @@ export const UserInfo = ()=>
 		return (
 			<div className="flex flex-row items-center">
 
-				<img src={avatar_url} className="w-12 h-12" alt="" priority="false" />
+				<a href={`/user?user=${user.user_id}`} className="flex flex-row">
+					<img src={avatar_url} className="w-12 h-12" alt="" priority="false" />
 
-				<b className="mx-2">
-					{user.discord_info.username}
-				</b>
+					<b className="mx-2 my-auto">
+						{user.discord_info.username}
+					</b>
+				</a>
 
 				{forum_link}
 				

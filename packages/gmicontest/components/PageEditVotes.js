@@ -177,7 +177,7 @@ export default function PageEditVotes(props)
 	}
 
 	return (
-		<div className="shadow border p-3">
+		<div className="shadow border p-3 h-full overflow-y-scroll">
 
 			<b>Votazione</b>
 			{content}

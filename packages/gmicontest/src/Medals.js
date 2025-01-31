@@ -3,52 +3,64 @@ import { basePath } from "../next.config";
 
 export const MedalsInfo = 
 {
-	most_participations:  
+	gold_trophy:  
 	{
-		name: "Gran Partecipante",
-		desc: "Questo utente ha partecipato a tantissime competizioni",
+		name: "Primo posto",
+		desc: "Premio per la vittoria del primo posto alla compe del ",
+		image:  basePath+"/img/medal_more_coop.png"
+	},
+	silver_trophy:  
+	{
+		name: "Secondo posto",
+		desc: "Premio per la vittoria del secondo posto alla compe del ",
+		image:  basePath+"/img/medal_more_coop.png"
+	},
+	bronze_trophy:  
+	{
+		name: "Terzo posto",
+		desc: "Premio per la vittoria del terzo posto alla compe del ",
+		image:  basePath+"/img/medal_more_coop.png"
+	},
+
+
+	first_participation:  
+	{
+		name: "Ghianda d'argento della partecipazione",
+		desc: "Riconoscimento per un utente che ha partecipato almeno una volta alla compe",
+		image:  basePath+"/img/medal_more_coop.png"
+	},
+	most_participation:  
+	{
+		name: "Ghianda d'oro della partecipazione",
+		desc: "Riconoscimento per un utente che ha partecipato per tantissimi anni alla compe",
 		image: basePath+"/img/medal_more_partecipation.png"
 	},
-	most_first_places:  
+
+
+	first_judge:  
 	{
-		name: "Collezzionista di ori",
-		desc: "Questo utente ha ottenuto più primi posti nella storia di GMI",
-		image:  basePath+"/img/medal_more_first.png"
-	},
-	most_second_places:  
-	{
-		name: "Collezzionista di argenti",
-		desc: "Questo utente ha ottenuto più secondi posti nella storia di GMI",
-		image:  basePath+"/img/medal_more_second.png"
-	},
-	most_third_places:  
-	{
-		name: "Collezzionista di bronzi",
-		desc: "Questo utente ha ottenuto più terzi posti nella storia di GMI",
-		image:  basePath+"/img/medal_more_third.png"
-	},
-	most_last_places:  
-	{
-		name: "Collezzionista di ****",
-		desc: "Questo utente ha ottenuto più ultimi posti nella storia di GMI",
-		image:  basePath+"/img/medal_more_partecipation.png"
-	},
-	participated_first_competition:  
-	{
-		name: "Grande amicone",
-		desc: "Questo utente ha collaborato con tantissimi utenti negli anni",
+		name: "Piuma d'argento del giudizio",
+		desc: "Riconoscimento per un utente che ha fatto da giudice alla compe almeno una volta",
 		image:  basePath+"/img/medal_more_coop.png"
 	},
-	has_been_judge:  
+	most_judge:  
 	{
-		name: "Grande amicone",
-		desc: "Questo utente ha collaborato con tantissimi utenti negli anni",
+		name: "Piuma d'oro del giudizio",
+		desc: "Riconoscimento per un utente che ha fatto da giudcie alla compe per tantissimi anni",
 		image:  basePath+"/img/medal_more_coop.png"
 	},
-	most_times_judge:  
+	
+	
+	first_collaboration:  
 	{
-		name: "Grande amicone",
-		desc: "Questo utente ha collaborato con tantissimi utenti negli anni",
+		name: "Corda d'argento della collaborazione",
+		desc: "Riconoscimento per un utente che ha partecipato insieme a qualcun'altro per la prima volta alla compe",
 		image:  basePath+"/img/medal_more_coop.png"
 	},
+	most_collaboration:  
+	{
+		name: "Corda d'oro della collaborazione",
+		desc: "Riconoscimento per un utente che ha partecipato insieme a qualcun'altro per tantissimi anni alla compe",
+		image: basePath+"/img/medal_more_partecipation.png"
+	}
 }

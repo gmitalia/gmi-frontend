@@ -11,12 +11,16 @@ export const PageLayout = (props)=>
 
 
 	return (
-		<div className="flex flex-grow flex-column bg-backcolor">
-			<div className="fixed w-72 lg:mr-2  lg:inline flex flex-col gap-1 hidden lg:block">
+		<div className="h-full flex flex-grow flex-row bg-backcolor">
+
+			<div className="sticky w-72 h-full  lg:mr-2  lg:inline hidden lg:block">
+				<div className="w-full h-full flex flex-col gap-1 ">
 				<UserButtonMemo />
 				<ContestListMemo />
+				</div>
 			</div>
-			<div className="w-full flex-1 lg:ml-72 lg:pl-2">
+
+			<div className="w-auto h-full flex-1 lg:pl-2">
 				{children}
 			</div>
 		</div>

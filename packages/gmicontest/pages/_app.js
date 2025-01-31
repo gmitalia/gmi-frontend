@@ -21,12 +21,12 @@ function MyApp({ Component, pageProps })
 function AppContainer({ Component, pageProps })
 {
   const showMenu = useSelector(root=>root.main.showMenu)
-  const rootClass = showMenu ? "bg-white flex flex-col min-h-screen h-full overflow-y-hidden" : "bg-white flex flex-col min-h-screen h-full overflow-y-auto"
+  const rootClass = showMenu ? "bg-white flex flex-col h-full overflow-y-hidden" : "bg-white flex flex-col  h-full overflow-y-hidden"
 
   return <>
     <Header />
     <div className={rootClass}>
-      <div className="m-5 min-h-screen h-full">
+      <div className="p-5 h-full">
         <Component {...pageProps} />
       </div>
       {/* <Footer /> */}

@@ -61,7 +61,7 @@ export default function PageEditParticipation(props)
 	function renderBody(body)
 	{
 		return (
-			<div>
+			<div className="h-full flex flex-col">
 				{body}
 				{/* <p>
           <input
@@ -105,12 +105,14 @@ export default function PageEditParticipation(props)
 					Sei iscritto come {isJudge ? "Giudice" : "Partecipante"}
 				</InfoMessage>
 
-				<GameForm
-					participation={participation}
-					onFormSubmit={onFormSubmit}
-					onDelete={onDelete}
-					contestId={query.contest}
-				/>
+				<div className="flex-grow-v">
+					<GameForm
+						participation={participation}
+						onFormSubmit={onFormSubmit}
+						onDelete={onDelete}
+						contestId={query.contest}
+					/>
+				</div>
 			</>
 		);
 	} else return <div>loading</div>;

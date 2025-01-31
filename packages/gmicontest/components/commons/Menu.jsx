@@ -9,7 +9,7 @@ export const Menu = (props)=>
 	return (
 		<div className="bg-black/50 absolute top-0 left-0 w-full min-h-screen h-screen" onClick={onClose}>
 			<div className="bg-white w-fit min-h-screen h-screen overflow-auto">
-				<div className="p-5">
+				<div className="h-full p-5 overflow-y-hidden flex flex-col">
 					<ButtonSecondary icon="fa fa-times fa-2x" onClick={onClose} />
 					<div className="my-4">
 						<h1 className="text-lg font-bold">GameMaker Italia</h1>

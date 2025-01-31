@@ -140,7 +140,7 @@ export default function GameForm(props)
 
 
 	return (
-		<div className="flex flex-col gap-3">
+		<div className="h-full flex flex-col gap-3">
 			<div className="flex justify-start gap-4 items-center">
 				<IconBtn onClick={()=> router.push("/contest?contest=" + contestId)}>
 					<svg
@@ -161,103 +161,106 @@ export default function GameForm(props)
 				<h2 className="text-2xl">Informazioni Gioco</h2>
 			</div>
 			<span className="text-red-600">{error}</span>
-			<label className="block">
-				<span className="block text-md font-medium text-slate-700">Nome</span>
-				<input
-					type="text"
-					value={gameName}
-					placeholder="Inserisci qui il nome del gioco"
-					maxLength={128}
-					className={InputClasses}
-					onChange={(e)=>
-					{
-						setGameName(e.target.value);
-						setSaved(false);
-					}}
-				/>
-			</label>
-			<label className="block">
-				<span className="block text-md font-medium text-slate-700">
-					Link Download
-				</span>
-				<input
-					type="text"
-					maxLength={256}
-					value={gameUrl}
-					placeholder="Link per il download del gioco"
-					className={InputClasses}
-					onChange={(e) =>
-					{
-						setGameUrl(e.target.value);
-						setSaved(false);
-					}}
-				/>
+			
+			<div className="flex-grow-v gap-2 h-full overflow-y-scroll flex flex-col">
+				<label className="block">
+					<span className="block text-md font-medium text-slate-700">Nome</span>
+					<input
+						type="text"
+						value={gameName}
+						placeholder="Inserisci qui il nome del gioco"
+						maxLength={128}
+						className={InputClasses}
+						onChange={(e)=>
+						{
+							setGameName(e.target.value);
+							setSaved(false);
+						}}
+					/>
+				</label>
+				<label className="block">
+					<span className="block text-md font-medium text-slate-700">
+						Link Download
+					</span>
+					<input
+						type="text"
+						maxLength={256}
+						value={gameUrl}
+						placeholder="Link per il download del gioco"
+						className={InputClasses}
+						onChange={(e) =>
+						{
+							setGameUrl(e.target.value);
+							setSaved(false);
+						}}
+					/>
 
-				{urlValid?
-				(
-					" ✓"
-				)
-				:
-				(
-					<span className="text-red-600">Link non valido</span>
-				)}
+					{urlValid?
+					(
+						" ✓"
+					)
+					:
+					(
+						<span className="text-red-600">Link non valido</span>
+					)}
 
-			</label>
-			<label className="block">
-				<span className="block text-md font-medium text-slate-700">
-					Upload Image (max {Config.maxThumbnailSize / 1024}KB)
-				</span>
-				{image}
-				<input
-					type="file"
-					accept=".png,.jpg,.jpeg,.gif"
-					onClick={resetFile}
-					className={InputClasses}
-					onChange={(e)=> handleThumbnail(e.target.files[0])}
-				/>
-			</label>
-			<label className="block">
-				<span className="block text-md font-medium text-slate-700">
-					Descrizione Breve (max 256 caratteri)
-				</span>
-				<textarea
-					value={gameShortDesc}
-					maxLength={256}
-					className={InputClasses}
-					onChange={(e)=>
-					{
-						setGameShortDesc(e.target.value);
-						setSaved(false);
-					}}
-				/>
-			</label>
-			<label className="block">
-				<span className="block text-md font-medium text-slate-700">
-					Descrizione (max 1024 caratteri)
-				</span>
-				<textarea
-					value={gameDesc}
-					style={{ height: 300 }}
-					className={InputClasses}
-					maxLength={Config.descriptionMaxLength}
-					onChange={(e)=>
-					{
-						setGameDesc(e.target.value);
-						setSaved(false);
-					}}
-				/>
-			</label>
+				</label>
+				<label className="block">
+					<span className="block text-md font-medium text-slate-700">
+						Upload Image (max {Config.maxThumbnailSize / 1024}KB)
+					</span>
+					{image}
+					<input
+						type="file"
+						accept=".png,.jpg,.jpeg,.gif"
+						onClick={resetFile}
+						className={InputClasses}
+						onChange={(e)=> handleThumbnail(e.target.files[0])}
+					/>
+				</label>
+				<label className="block">
+					<span className="block text-md font-medium text-slate-700">
+						Descrizione Breve (max 256 caratteri)
+					</span>
+					<textarea
+						value={gameShortDesc}
+						maxLength={256}
+						className={InputClasses}
+						onChange={(e)=>
+						{
+							setGameShortDesc(e.target.value);
+							setSaved(false);
+						}}
+					/>
+				</label>
+				<label className="block">
+					<span className="block text-md font-medium text-slate-700">
+						Descrizione (max 1024 caratteri)
+					</span>
+					<textarea
+						value={gameDesc}
+						style={{ height: 300 }}
+						className={InputClasses}
+						maxLength={Config.descriptionMaxLength}
+						onChange={(e)=>
+						{
+							setGameDesc(e.target.value);
+							setSaved(false);
+						}}
+					/>
+				</label>
 
-			<div className="flex justify-between">
-				{unsubscribe}
-				<StyledButton
-					type="button"
-					value="Salva"
-					disabled={saved || uploading}
-					onClick={handleChange}
-				>
-					Salva
-				</StyledButton>
+				<div className="flex justify-between">
+					{unsubscribe}
+					<StyledButton
+						type="button"
+						value="Salva"
+						disabled={saved || uploading}
+						onClick={handleChange}
+					>
+						Salva
+					</StyledButton>
+				</div>
 			</div>
 
 		</div>

@@ -96,7 +96,7 @@ export default function GamesList(props)
 	)
 
 	return (
-		<div>
+		<div className="w-full h-full flex flex-col">
 			{areJudgesLoad?
 			(
 				<Spinner />
@@ -111,8 +111,10 @@ export default function GamesList(props)
 
 			{actions}
 			
-			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3 overflow-y-scroll">
+			<div className="overflow-y-scroll flex-grow-v">
+			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3">
 				{isLoading ? <Spinner /> : elements}
+			</div>
 			</div>
 		</div>
 	);

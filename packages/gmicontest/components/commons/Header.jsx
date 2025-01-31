@@ -8,8 +8,11 @@ import { Menu } from "./Menu";
 import { UserInfo } from "./UserInfo";
 import { basePath } from "../../next.config";
 import Link from "next/link";
+import UserButton from "../UsersList/UserButton";
 
 
+const UserButtonMemo = React.memo(UserButton, ()=> true)
+const ContestListMemo = React.memo(ContestList, ()=> true)
 export default function Header(props)
 {
 	const showMenu = useSelector(root => root.main.showMenu)
@@ -52,12 +55,15 @@ export default function Header(props)
 					</div>
 				</div>
 
-				<div className="lg:hidden w-full h-full">
+				<div className="lg:hidden w-full h-full" style={{pointerEvents: "none"}}>
 					{showMenu &&
 					(
 						<Portal>
 							<Menu onClose={onCloseMenu}>
-								<ContestList />
+							<div className="w-full h-full flex flex-col gap-1 ">
+				<UserButtonMemo />
+				<ContestListMemo />
+				</div>
 							</Menu>
 						</Portal>
 					)}

@@ -20,10 +20,10 @@ export default function ContestList(props)
 		return (<div>{data.error}</div>)
 
 	return (
-		<div className="h-screen">
+		<div className='h-full flex flex-col'>
 			<AreaTitle title="Competizioni" />
 
-			<div className="h-screen overflow-y-scroll">
+			<div className="h-full overflow-y-scroll flex-grow-v">
 			{data.contests.map((contest)=>
 			(
 				<ContestElement key={contest.id} contest={contest} />
