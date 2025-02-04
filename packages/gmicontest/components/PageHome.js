@@ -9,9 +9,10 @@ export default function PageHome(props)
 
    return (
 	   <PageLayout>
-	      <>
+	      <div className="h-full flex flex-col">
 	        <PageTitle title="Competizione annuale" />
 	 
+			  <div className="h-full flex-grow-v overflow-y-scroll">
 	        <div style={{background: "url('./img/banner.png')", backgroundRepeatX: "repeat",width: "100%", height:"200px"}} />
 			  
 	        <p className="mb-4">
@@ -20,8 +21,9 @@ export default function PageHome(props)
 				</p>
 
 	        <RuleBook />
+			  </div>
 	        
-	      </>
+	      </div>
 	    </PageLayout>
    );
 }

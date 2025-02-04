@@ -4,6 +4,7 @@ import GMIApi from "../../src/api/GMIApi";
 import { GameTile } from "./GameTile";
 import Spinner from "../commons/Spinner";
 import StyledButton from "../commons/StyledButton";
+import { createPortal } from "react-dom";
 
 
 export default function GamesList(props)
@@ -87,16 +88,19 @@ export default function GamesList(props)
 
 	const actions = showVotes && 
 	(
-		<StyledButton
-		 className="my-4"
-		 onClick={()=> router.push("/results?contest=" + contest)}
-		>
-			Classifica Dettagliata
-		</StyledButton>
+		createPortal(
+		(
+			<StyledButton
+			 onClick={()=> router.push("/results?contest=" + contest)}
+			>
+				Classifica Dettagliata
+			</StyledButton>
+		), document.querySelector("#results-portal"))
+		
 	)
 
 	return (
-		<div className="w-full h-full flex flex-col">
+		<div className="w-full h-full flex flex-col ">
 			{areJudgesLoad?
 			(
 				<Spinner />
@@ -111,8 +115,8 @@ export default function GamesList(props)
 
 			{actions}
 			
-			<div className="overflow-y-scroll flex-grow-v">
-			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3">
+			<div className="flex-grow-v">
+			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3 p-3">
 				{isLoading ? <Spinner /> : elements}
 			</div>
 			</div>

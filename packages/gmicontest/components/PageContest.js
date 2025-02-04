@@ -179,17 +179,28 @@ export default function PageContest(props)
 				<h2 className="text-2xl">{contest.name}</h2>
 			</div>
 
-			<div className="my-3">{actions}</div>
+			<div className="my-3 flex flex-row gap-1" style={{height: "32px"}}>
+				{actions}
+				<div id="results-portal" className=" contents"></div>
+			</div>
+
+			<div className=" h-full overflow-y-scroll">
 			<div>
 				<b>Termine Consegna</b>:{" "}
 				{moment(end_date).locale("it").format("DD MMMM HH:mm")}
 			</div>
+
 			<div>
 				<b>Termine Giudizi</b>:{" "}
 				{moment(complete_date).locale("it").format("DD MMMM HH:mm")}
 			</div>
+
 			<GamesList contest={contest.id} contestEnded={isComplete} />
+			
 			{rulesModal}
+			</div>
+			
+
 			</div>
 		</PageLayout>
 	);

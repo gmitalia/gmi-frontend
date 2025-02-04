@@ -33,7 +33,7 @@ export default function Header(props)
 		<>
 			<header className="sticky top-0 bg-white z-10">
 
-				<div className="p-5 flex flex-row items-center justify-between">
+				<div className="p-5 py-2 flex flex-row items-center justify-between">
 					<div className="flex flex-row items-center justify-between">
 						<div className="d-block lg:hidden mr-2">
 							<ButtonSecondary
@@ -61,9 +61,9 @@ export default function Header(props)
 						<Portal>
 							<Menu onClose={onCloseMenu}>
 							<div className="w-full h-full flex flex-col gap-1 ">
-				<UserButtonMemo />
-				<ContestListMemo />
-				</div>
+								<UserButtonMemo />
+								<ContestListMemo />
+							</div>
 							</Menu>
 						</Portal>
 					)}
