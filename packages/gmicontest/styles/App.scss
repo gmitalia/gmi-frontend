@@ -144,3 +144,20 @@ body
 	flex-grow: 1;
 	height: 1px;
 }
+
+
+.vote-tables
+{
+	table
+	{
+		width: 100%;
+	}
+	tbody tr:nth-child(odd)
+	{
+		border-bottom: 1px dashed #dddddd;
+	}
+	tbody tr:nth-child(odd)>td:first-child
+	{
+		font-weight: bold;
+	}
+}

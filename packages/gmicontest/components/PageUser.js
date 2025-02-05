@@ -10,6 +10,7 @@ import UserInventory from "./User/UserInventory";
 import UserStats from "./User/UserStats";
 import UserGames from "./User/UserGames";
 import "moment/locale/it";
+import UserVotes from "./User/UserVotes";
 
 
 //@todo remove "visualizza voti" if not ended
@@ -63,7 +64,10 @@ export default function PageUser(props)
 				let user = data.users[0];
 
 				if(user.games)
+				{
 					user.games = JSON.parse(user.games)
+					user.games = user.games.filter(o=> o.contest_id != null)
+				}
 
 				if(user.votes)
 					user.votes = JSON.parse(user.votes)
@@ -182,6 +186,10 @@ export default function PageUser(props)
 				/>
 
 				<UserGames
+				 userInfo={user}
+				/>
+				
+				<UserVotes
 				 userInfo={user}
 				/>
 			</div>

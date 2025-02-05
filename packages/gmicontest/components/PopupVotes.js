@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { prosList, consList } from "../src/Constants";
 import GMIApi from "../src/api/GMIApi";
 import StyledButton from "./commons/StyledButton";
+import { marked } from "../src/marked"
 
 export default function Votes(props)
 {
@@ -83,21 +84,26 @@ export default function Votes(props)
 					</h5>
 
 					<div className="mb-2">
-						{vote.comment.trim().split("\n").map((item, idx)=>
-						(
-							<span key={idx}>
-								{item}
+				
+							<span >
+								<div className="content vote-tables" dangerouslySetInnerHTML={{__html: marked.parse(vote.comment,{})}}></div>
 								<br />
 							</span>
-						))}
 					</div>
 
-					<div className="flex flex-wrap gap-2 mb-2">
-						<b style={{width: "70px"}}>Pro</b> {pros}
-					</div>
-					<div className="flex flex-wrap gap-2 mb-2">
-						<b style={{width: "70px"}}>Contro</b> {cons}
-					</div>
+					{vote.pros.length > 0 &&
+					(
+						<div className="flex flex-wrap gap-2 mb-2">
+							<b style={{width: "70px"}}>Pro</b> {pros}
+						</div>
+					)}
+					{vote.cons.length > 0 &&
+					(
+						<div className="flex flex-wrap gap-2 mb-2">
+							<b style={{width: "70px"}}>Contro</b> {cons}
+						</div>
+					)}
+
 					<div className="flex gap-2 ">
 						<b style={{width: "70px"}}>Voto</b> <span className="bg-primary px-1 text-slate-50">{vote.score}</span>
 					</div>
