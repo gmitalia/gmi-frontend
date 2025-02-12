@@ -107,10 +107,10 @@ export default function GamesList(props)
 			)
 			:
 			(
-				<p className="author ">
+				<div className="author ">
 					<b>Giudici:</b> 
 					{judges.map(o=> judgeTile(o))}
-				</p>
+				</div>
 			)}
 
 			{actions}

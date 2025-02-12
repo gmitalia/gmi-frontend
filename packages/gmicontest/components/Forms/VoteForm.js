@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { prosList, consList } from "../../src/Constants"
 import StyledButton from "../commons/StyledButton";
+import { marked } from "../../src/marked"
 
 const VoteFormValidationRules =
 {
@@ -17,7 +18,10 @@ export default function VoteForm(props)
 	const [comment, setComment] = useState(props.comment)
 	const [voted, setVoted] = useState(props.voted)
 	const [saved, setSaved] = useState(true)
+	const [textareaInfo, setTextareaInfo] = useState({size: "", scroll: 0})
 	const [formError, setFormError] = useState(null);
+
+	const refTextarea = useRef();
 
 	function changeScore(event)
 	{
@@ -151,16 +155,9 @@ export default function VoteForm(props)
 		</div>
 	))
 
-	let vote_required_warning = voted?
-		"" 
-	:
-		<div className="h5">DA VOTARE</div>
 
 	return (
 		<div >
-			<div className="my-3">
-				{vote_required_warning}
-			</div>
 			<div className="my-3">
 				<label className="h6">Voto</label>
 				<div>
@@ -171,7 +168,27 @@ export default function VoteForm(props)
 
 			<div className="my-3">
 				<div className="h6">Commento</div>
-				<textarea className="p-3 border w-full" defaultValue={comment} onChange={changeComment} rows={8} />
+				<div className="flex flex-row gap-1">
+
+					<textarea
+					 style={{width: "50%"}}
+					 className="p-3 border"
+					 defaultValue={comment}
+					 onChange={changeComment}
+					 rows={8}
+					 onScroll={(e)=> setTextareaInfo({size: textareaInfo.size, scroll: e.target.scrollTop})}
+					 onWheel={(e)=> setTextareaInfo({size: textareaInfo.size, scroll: e.target.scrollTop})}
+					 //onmousedown={(e)=>setTextareaInfo({size: e.target.offsetHeight, scroll: textareaInfo.scroll})}
+  					 onMouseUp={(e)=> {refTextarea.current.scrollTop = textareaInfo.scroll; setTextareaInfo({size: e.target.offsetHeight, scroll: textareaInfo.scroll})}}
+					/>
+
+					<div
+					 ref={refTextarea}
+					 style={{width: "50%", height: textareaInfo.size+"px"}}
+					 className="vote-tables p-3 border overflow-y-scroll"
+					 dangerouslySetInnerHTML={{__html: marked.parse(comment.replaceAll("\n", "⠀⠀\n"), {breaks: true})}}
+					/>
+				</div>
 			</div>
 
 			<div className="my-3 flex flex-row">

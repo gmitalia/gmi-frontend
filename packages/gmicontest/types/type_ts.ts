@@ -80,6 +80,7 @@ type Vote =
 	pros: string[]; // I punti positivi menzionati nel voto
 	cons: string[]; // I punti negativi menzionati nel voto
 	judge_name: string; // Il nome del giudice
+	voted: boolean;
 }
 
 

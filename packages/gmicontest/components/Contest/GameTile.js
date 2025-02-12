@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GMIApi from "../../src/api/GMIApi";
 import IconBtn from "../commons/IconBtn";
-import Votes from "../PopupVotes";
+import PopupVotes from "../PopupVotes";
 import Link from "next/link";
 
 export const GameTile = (props) =>
@@ -80,7 +80,7 @@ export const GameTile = (props) =>
 
 	let votes = props.showVotes?
 	(
-		<Votes
+		<PopupVotes
 		 contest={props.contest}
 		 game={game?.id}
 		 gamename={game?.name}

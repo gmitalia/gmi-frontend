@@ -13,8 +13,11 @@ export default function PageEditVotes(props)
 	let query = getQuery(router)
 
 	let [loaded, setLoaded] = useState(false)
+	/**@type {[Game[], (data: Game[])=> any]} */
 	let [games, setGames] = useState()
+	/**@type {[Vote[], (data: Vote[])=> any]} */
 	let [votes, setVotes] = useState()
+	let [gameIndex, setGameIndex] = useState(0)
 	let [error, setError] = useState()
 
 	useEffect(()=>
@@ -76,7 +79,11 @@ export default function PageEditVotes(props)
 		})
 	}, [games, query.contest]); //triggered when "games" changes (received data from API)
 
+	if(!games)
+		return <div>Loading</div>;
 
+	if(!votes)
+		return <div>Loading</div>;
 
 	function onVoteUpdate(newVote, index, callback)
 	{
@@ -97,8 +104,26 @@ export default function PageEditVotes(props)
 				setError(data.error);
 		})
 	}
+
+let o = (
+	
+
+	<><br />
+	<hr />
+	
+	<b>La tua classifica</b>
+	<ul>
+		{yourLeaderboard}
+	</ul>
+	<br />
+
+	<StyledButton onClick={()=> router.push("/contest?contest=" + query.contest)}>
+		Indietro
+	</StyledButton></>
+)
 	let yourLeaderboard = "Loading";
 	let content = "Loading";
+	let gamePages = []
 
 	if(error)
 	{
@@ -125,7 +150,7 @@ export default function PageEditVotes(props)
 			)
 		});
 
-		content = games.map((game, index)=>
+		gamePages = games.map((game, index)=>
 		{
 			const vote = votes[index];
 
@@ -156,18 +181,31 @@ export default function PageEditVotes(props)
 			}
 
 			return (
-				<div key={game.id} className="shadow border p-3 mb-3">
+				<div key={game.id} className="shadow border p-3 mb-3 h-full overflow-y-scroll">
 					<div>
-						<div className="div-image">
-							<img className="image-centered h-60" alt="" src={img_url} layout={'fill'} objectfit={'cover'} />
+
+						<div className="flex flex-row" style={{gap: "30px"}}>
+
+							<div className="div-image">
+								<img className="image-centered h-48" alt="" src={img_url} layout={'fill'} objectfit={'cover'} />
+							</div>
+
+							<div className="">
+								<p>
+									<b>{game.name}</b> <span className="author"> di {authors}</span>
+								</p>
+
+								<p>{game.short_description}</p>
+
+								<p><b>Download</b>: <a href={game.download_url}>{game.download_url}</a></p>
+
+								<div className="h5" style={{color: vote.voted? "green" : "red"}}>{vote.voted? "VOTATO" : "DA VOTARE"}</div>
+							</div>
+
+							
+					
 						</div>
-						<div className="">
-							<p>
-								<b>{game.name}</b> <span className="author"> di {authors}</span>
-							</p>
-							<p>{game.short_description}</p>
-							<p><b>Download</b>: <a href={game.download_url}>{game.download_url}</a></p>
-						</div>
+
 						<VoteForm {...vote} onChange={onVoteUpdate} index={index} />
 					</div>
 				</div>
@@ -177,22 +215,36 @@ export default function PageEditVotes(props)
 	}
 
 	return (
-		<div className="shadow border p-3 h-full overflow-y-scroll">
+		<div className="shadow border p-3 h-full">
 
-			<b>Votazione</b>
-			{content}
-			<br />
-			<hr />
-			
-			<b>La tua classifica</b>
-			<ul>
-				{yourLeaderboard}
-			</ul>
-			<br />
-
-			<StyledButton onClick={()=> router.push("/contest?contest=" + query.contest)}>
-				Indietro
-			</StyledButton>
+			<div className="h-full flex flex-col px-2 pb-2 md:px-10 md:pb-10 border-1 border-solid">
+				<div className="flex flex-row">
+					{games.map((o, index)=> 
+					(
+						<div
+						 key={index}
+						 className="px-3 py-1 relative flex flex-row"
+						 style={
+						 {
+							gap: "5px",
+							top: "1px",
+							zIndex: 1,
+							cursor: "pointer",
+							width: "auto", 
+							border: "1px solid black",
+							borderBottom: index == gameIndex? "2px solid white" : "1px solid black",
+							backgroundColor: index == gameIndex? "white" : "lightgray",
+						 }}
+						 onClick={()=> setGameIndex(index)}
+						>
+							{o.name}
+						</div>
+					))}
+				</div>
+				<div className="h-full " style={{border: "1px solid"}}>
+					{gamePages[gameIndex]}
+				</div>
+			</div>
 
 		</div>
 	);
