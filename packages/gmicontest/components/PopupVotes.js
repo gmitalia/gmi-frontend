@@ -59,6 +59,13 @@ export default function PopupVotes(props)
 	if(error)
 		return <div>{error}</div>
 
+	const escButton = function()
+	{
+		if(votes != null)
+			toggleVotes()
+	}
+	document.addEventListener("keydown", escButton)
+
 	const scaleIcon = 
 	(
 		<svg style={{width: "15px", height: "15px", margin: "auto"}} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -86,14 +93,14 @@ export default function PopupVotes(props)
 			return (
 				<div key={vote.user_id} className="h-full flex flex-col p-5">
 			
-					<div className="mb-2 overflow-y-scroll" style={{flexGrow: "1", height: "1px"}}>
+					<div className="mb-2 overflow-y-scroll" style={{flexGrow: "1", maxHeight: "450px"}}>
 						<span className="">
 							<div className="content vote-tables" dangerouslySetInnerHTML={{__html: marked.parse(comment, {breaks: isOldContest? false : true})}}></div>
 							<br />
 						</span>
 					</div>
 					
-					<div>
+					<div className="mt-auto">
 						{vote.pros.length > 0 &&
 						(
 							<div className="flex flex-wrap gap-2 mb-2">
@@ -116,10 +123,12 @@ export default function PopupVotes(props)
 			)
 		})
 
+		
+
 		votesContent =
 		(
-			<div className="bg-neutral-700/[.75] fixed top-0 left-0 right-0 h-full z-10">			
-				<div className="flex flex-col modalVotes relative bg-white max-w-screen-lg mx-auto h-full my-auto  md:h-5/6 md:my-10" style={{height: "90%"}}>
+			<div className="bg-neutral-700/[.75] fixed top-0 left-0 right-0 h-full z-10 flex items-center">			
+				<div className="flex flex-col modalVotes relative bg-white max-w-screen-lg mx-auto h-auto my-auto  md:h-5/6 md:my-10" style={{height: "80%", width: "90%"}}>
 					
 					<div className="sticky bg-white top-0 left-0 w-full z-20 pt-5 pb-2 px-10 flex justify-end">
 						<h2 className="mx-auto text-2xl font-bold text-gray-900 text-center">
@@ -135,8 +144,8 @@ export default function PopupVotes(props)
 
 					
 
-					<div style={{flexGrow: "1", height: "1px"}} className="flex flex-col px-2 pb-2 md:px-10 md:pb-10 border-1 border-solid">
-						<div className="flex flex-row">
+					<div style={{flexGrow: "1"}} className="h-auto flex flex-col px-2 pb-2 md:px-10 md:pb-10 border-1 border-solid">
+						<div className="flex flex-row flex-wrap">
 							{votes.map((o, index)=> 
 							(
 								<div
@@ -160,7 +169,7 @@ export default function PopupVotes(props)
 								</div>
 							))}
 						</div>
-						<div className="h-full " style={{border: "1px solid"}}>
+						<div style={{border: "1px solid", flexGrow: "1", height: "1px"}}>
 							{votesElements[voteIndex]}
 						</div>
 					</div>

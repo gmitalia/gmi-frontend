@@ -18,7 +18,6 @@ export default function VoteForm(props)
 	const [comment, setComment] = useState(props.comment)
 	const [voted, setVoted] = useState(props.voted)
 	const [saved, setSaved] = useState(true)
-	const [textareaInfo, setTextareaInfo] = useState({size: "", scroll: 0})
 	const [formError, setFormError] = useState(null);
 
 	const refTextarea = useRef();
@@ -158,40 +157,54 @@ export default function VoteForm(props)
 
 	return (
 		<div >
-			<div className="my-3">
-				<label className="h6">Voto</label>
-				<div>
-					<input type="number" className="pl-2 border" min="0" max="100" value={score} onChange={changeScore} />
-					<input type="range" className="ml-3" min="0" max="100" value={score} onChange={changeScore} />
+			<div className="my-3 flex flex-row items-end flex-wrap gap-1">
+				
+				<div className="flex flex-col">
+					<label className="h6">Voto</label>
+					<div className="flex flex-row">
+						<input type="number" className="pl-2 border" min="0" max="100" value={score} onChange={changeScore} />
+						<input type="range" className="ml-3" min="0" max="100" value={score} onChange={changeScore} />
+					</div>
+				</div>
+
+				<div className="md:ml-auto">
+					<StyledButton disabled={saved} onClick={onSave}>Salva</StyledButton>
+					<span className="ml-3" style={{ color: "green" }}>{saved && "Salvato"}</span>
+					<span className="ml-3" style={{ color: "red" }}>{formError}</span>
 				</div>
 			</div>
 
 			<div className="my-3">
-				<div className="h6">Commento</div>
-				<div className="flex flex-row gap-1">
+				
+				<div className="flex flex-row gap-1 flex-wrap md:flex-nowrap">
 
-					<textarea
-					 style={{width: "50%"}}
-					 className="p-3 border"
-					 defaultValue={comment}
-					 onChange={changeComment}
-					 rows={8}
-					 onScroll={(e)=> setTextareaInfo({size: textareaInfo.size, scroll: e.target.scrollTop})}
-					 onWheel={(e)=> setTextareaInfo({size: textareaInfo.size, scroll: e.target.scrollTop})}
-					 //onmousedown={(e)=>setTextareaInfo({size: e.target.offsetHeight, scroll: textareaInfo.scroll})}
-  					 onMouseUp={(e)=> {refTextarea.current.scrollTop = textareaInfo.scroll; setTextareaInfo({size: e.target.offsetHeight, scroll: textareaInfo.scroll})}}
-					/>
+					<div className="flex flex-col w-full md:w-1/2">
+						<div className="h6">Commento</div>
+						<textarea
+						 className="w-full p-3 border shadow-md"
+						 defaultValue={comment}
+						 onChange={changeComment}
+						 rows={8}
+						 onScroll={(e)=> refTextarea.current.scrollTop = e.target.scrollTop}
+						 onWheel={(e)=> refTextarea.current.scrollTop = e.target.scrollTop}
+	  					 onMouseMove={(e)=> refTextarea.current.style.height = e.target.offsetHeight+"px"}
+						/>
+					</div>
+					
 
-					<div
-					 ref={refTextarea}
-					 style={{width: "50%", height: textareaInfo.size+"px"}}
-					 className="vote-tables p-3 border overflow-y-scroll"
-					 dangerouslySetInnerHTML={{__html: marked.parse(comment.replaceAll("\n", "⠀⠀\n"), {breaks: true})}}
-					/>
+					<div className="flex flex-col w-full md:w-1/2">
+						<div className="h6">Markdown</div>
+						<div
+						 ref={refTextarea}
+						 style={{height: "218px"}}
+						 className="w-full vote-tables p-3 border overflow-y-scroll shadow-md"
+						 dangerouslySetInnerHTML={{__html: marked.parse(comment.replaceAll("\n", "⠀⠀\n"), {breaks: true})}}
+						/>
+					</div>
 				</div>
 			</div>
 
-			<div className="my-3 flex flex-row">
+			<div className="my-3 flex flex-row flex-wrap md:flex-nowrap">
 				<div className="border p-2 mb-2 mr-2">
 					<div className="flex flex-col grow">
 						<div className="h6" >Pro</div>
@@ -207,13 +220,6 @@ export default function VoteForm(props)
 						{/* <input type="button" className="bg-gray" value="Aggiungi" onClick={addCons} /> */}
 					</div>
 					<StyledButton disabled={saved} onClick={addCons}><i className="fa fa-plus fa-1x" /></StyledButton>
-				</div>
-			</div>
-			<div className="my-3 row">
-				<div>
-					<StyledButton disabled={saved} onClick={onSave}>Salva</StyledButton>
-					<span className="ml-3" style={{ color: "green" }}>{saved && "Salvato"}</span>
-					<span className="ml-3" style={{ color: "red" }}>{formError}</span>
 				</div>
 			</div>
 		</div >
