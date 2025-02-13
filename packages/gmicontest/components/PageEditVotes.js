@@ -105,11 +105,7 @@ export default function PageEditVotes(props)
 		})
 	}
 
-let o = (
-	
 
-	<div></div>
-)
 	let yourLeaderboard = "Loading";
 	let content = "Loading";
 	let gamePages = []

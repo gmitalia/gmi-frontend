@@ -49,6 +49,7 @@ const consList = [
 	"Sonoro",
 	"Giocabilità",
 	"Trama Inefficace",
+	"Poco User Friendly"
 ]
 
 module.exports = {

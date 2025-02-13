@@ -4,6 +4,8 @@ import { prosList, consList } from "../src/Constants";
 import GMIApi from "../src/api/GMIApi";
 import StyledButton from "./commons/StyledButton";
 import { marked } from "../src/marked"
+import { Awards } from "../src/Awards";
+import { AwardBadge } from "./Contest/AwardsBadge";
 
 export default function PopupVotes(props)
 {
@@ -23,7 +25,6 @@ export default function PopupVotes(props)
 			}
 		})
 	}, [])
-
 
 	function toggleVotes()
 	{
@@ -59,12 +60,12 @@ export default function PopupVotes(props)
 	if(error)
 		return <div>{error}</div>
 
-	const escButton = function()
+	
+	document.addEventListener("keydown", (ev)=>
 	{
-		if(votes != null)
+		if(votes != null && ev.code == "Escape")
 			toggleVotes()
-	}
-	document.addEventListener("keydown", escButton)
+	})
 
 	const scaleIcon = 
 	(
@@ -78,7 +79,59 @@ export default function PopupVotes(props)
 	if(votes)
 	{
 		//build judges array
-		let votesElements = votes.map((vote) =>
+		let votesElements = 
+		[
+			(
+				<div key={"general"} className="h-full flex flex-col p-5">
+					<div className="flex flex-col gap-5">
+						<div>
+						{votes.map((vote, index)=>
+						(
+							<li key={index} className="grid grid-cols-2 md:grid-cols-6">
+
+								<div className="flex flex-row">
+									<b>{vote.judge_name}</b> 
+								</div>
+
+								<div style={{marginLeft: "10px"}}>
+									<span className="bg-primary px-1 text-slate-50">
+										{vote.score}
+									</span>
+								</div>
+
+							</li>
+						))}
+						</div>
+
+						<li  className="grid grid-cols-2 md:grid-cols-6 mt-4">
+
+							<div className="flex flex-row">
+								<b>Media</b> 
+							</div>
+
+							<div style={{marginLeft: "10px"}}>
+								<span className="bg-primary px-1 text-slate-50">
+									{Math.round(votes.reduce((a,b)=> a + parseInt(b.score), 0)/votes.length)}
+								</span>
+							</div>
+
+						</li>
+					</div>
+
+					<hr className="my-8"/>
+
+					<div className="flex flex-row flex-wrap gap-5">
+					{(Awards[props.game] ?? []).map((award, index)=>
+					(
+						<AwardBadge key={index} award={award} gameId={props.game} contestId={props.contest}/>
+					))}
+					</div>
+
+				</div>
+			)
+		]
+		
+		votesElements = votesElements.concat(votes.map((vote) =>
 		{
 			let pros = vote.pros.map((pro) => <span key={pro} className="bg-lime-200 px-1">{prosList[pro]}</span>)
 			let cons = vote.cons.map((con) => <span key={con} className="bg-red-200 px-1">{consList[con]}</span>)
@@ -120,7 +173,7 @@ export default function PopupVotes(props)
 
 				</div>
 			)
-		})
+		}))
 
 		
 
@@ -145,6 +198,23 @@ export default function PopupVotes(props)
 
 					<div style={{flexGrow: "1"}} className="h-auto flex flex-col px-2 pb-2 md:px-10 md:pb-10 border-1 border-solid">
 						<div className="flex flex-row flex-wrap">
+							<div
+							 className="px-3 py-1 relative flex flex-row"
+							 style={
+							 {
+								gap: "5px",
+								top: "1px",
+								zIndex: 1,
+								cursor: "pointer",
+								width: "auto", 
+								border: "1px solid black",
+								borderBottom: 0 == voteIndex? "2px solid white" : "1px solid black",
+								backgroundColor: 0 == voteIndex? "white" : "lightgray",
+							 }}
+							 onClick={()=> setVoteIndex(0)}
+							>
+								Generale
+							</div>
 							{votes.map((o, index)=> 
 							(
 								<div
@@ -158,10 +228,10 @@ export default function PopupVotes(props)
 									cursor: "pointer",
 									width: "auto", 
 									border: "1px solid black",
-									borderBottom: index == voteIndex? "2px solid white" : "1px solid black",
-									backgroundColor: index == voteIndex? "white" : "lightgray",
+									borderBottom: index+1 == voteIndex? "2px solid white" : "1px solid black",
+									backgroundColor: index+1 == voteIndex? "white" : "lightgray",
 								 }}
-								 onClick={()=> setVoteIndex(index)}
+								 onClick={()=> setVoteIndex(index+1)}
 								>
 									{scaleIcon}
 									{o.judge_name}

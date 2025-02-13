@@ -64,9 +64,9 @@ export default function PageContest(props)
 		return <div>Loading</div>;
 
 	
-	document.addEventListener("keydown", ()=>
+	document.addEventListener("keydown", (ev)=>
 	{
-		if(rules)
+		if(rules && ev.code == "Escape")
 			toggleRules()
 	})
 
