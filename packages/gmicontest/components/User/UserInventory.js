@@ -21,15 +21,10 @@ export default function UserInventory(props)
 		//fetch contest
 		console.debug("fetching user medals", userId);
 		GMIApi.getInstance().getUserMedals(userId, (data) =>
-		{console.log(data)
+		{
 			if(data.success)
 			{
-				let medals = data.medals[0];
-				
-				Object.entries(medals).forEach(o=>
-				{
-					medals[o[0]] = o[1] == "1"? true : false
-				})
+				let medals = data.medals;
 				setMedals(medals);
 			}
 			else
@@ -48,28 +43,64 @@ export default function UserInventory(props)
 	if(!medals) 
 		return <div>Loading</div>;
 
+	/**@param {[string, boolean | MedalGame[]]} medal */
+	const renderMedal = function(medal, index)
+	{
+		let name = medal[0];
+		let value = medal[1];
+
+		if(Array.isArray(value))
+		{
+			return value.map((item, subindex)=>
+			{
+				let info = MedalsInfo[name]
+
+				return(
+					<div key={index+"_"+subindex} className="flex flex-col items-center">
+						<button className="medal-button">
+						<img
+						 style={{width: "80px"}}
+						 src={info.image}
+						/>
+						<div className="medal-popover">
+							<b>{item.contest_name}</b>
+							{info.desc}
+						</div>
+					</button>
+					</div>
+				)
+			})
+		}
+		else if(value == true)
+		{
+			let info = MedalsInfo[name];
+
+			return(
+				<div key={index} className="flex flex-col items-center">
+					<button className="medal-button">
+						<img
+						 style={{width: "80px"}}
+						 src={info.image}
+						/>
+						<div className="medal-popover">
+							<b>{info.name}</b>
+							{info.desc}
+						</div>
+					</button>
+				</div>
+			)
+		}
+	}
+
 
 	return (
 		
-		<fieldset style={{width: "100%", height: "250px"}}  className="ml-auto p-5 border-2 border-gray">
+		<fieldset style={{width: "100%"}}  className="ml-auto p-5 border-2 border-gray h-250">
 		<legend className="px-4 text-2xl">Inventario</legend>
-			
-			<div className="flex flex-row flex-wrap justify-evenly  gap-10 lg:gap-20">
-				{/**
-				 * {Object.entries(medals).map((medal, index)=>
-				(
-					medal[1] &&
-					(
-						<div key={index} className="flex flex-col items-center">
-							<img
-							 style={{width: "80px"}}
-							 src={MedalsInfo[medal[0]].image}
-							 title={MedalsInfo[medal[0]].name}
-							/>
-						</div>
-					)
-				))}
-				 */}
+		
+			<div className="flex flex-row flex-wrap justify-evenly " style={{gap: "10px"}}>
+				
+				{Object.entries(medals).map(renderMedal)}
 			</div>
 
 		</fieldset>

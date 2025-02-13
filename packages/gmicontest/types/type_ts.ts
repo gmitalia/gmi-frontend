@@ -135,12 +135,15 @@ type AccountInfo =
 
 type UserMedals =
 {
-	most_participations: boolean,
-	most_first_places: boolean,
-	most_second_places: boolean,
-	most_third_places: boolean,
-	most_last_places: boolean,
-	participated_first_competition: boolean,
-	has_been_judge: boolean,
-	most_times_judge: boolean
+	first_contest: boolean,
+	most_contest: boolean,
+	first_judge: boolean,
+	most_judge: boolean,
+	first_coop: boolean,
+	most_coop: boolean,
+	gold_trophy: MedalGame[],
+	silver_trophy: MedalGame[],
+	bronze_trophy: MedalGame[]
 }
+
+type MedalGame = { 'game_id': number, 'game_name': string, 'contest_id': number, 'contest_name': string, 'completed_at': string}
