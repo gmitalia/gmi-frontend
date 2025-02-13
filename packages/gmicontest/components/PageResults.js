@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { getQuery } from "../src/Utils";
-import Link from "next/link";
 import GMIApi from "../src/api/GMIApi";
 import { PageLayout } from "./../components/library/Layouts/PageLayout";
 import IconBtn from "./commons/IconBtn";

@@ -52,6 +52,7 @@ export default function PageContest(props)
 		setRules(!rules);
 	}
 
+
 	if(error)
 		return (
 			<div>
@@ -61,6 +62,13 @@ export default function PageContest(props)
 
 	if(!contest) 
 		return <div>Loading</div>;
+
+	
+	document.addEventListener("keydown", ()=>
+	{
+		if(rules)
+			toggleRules()
+	})
 
 	//judge section
 	const complete_date = new Date(Date.parse(contest.completed_at));
@@ -131,8 +139,8 @@ export default function PageContest(props)
 	) 
 	: 
 	(
-		<div className="bg-neutral-700/[.75] fixed top-0 left-0 right-0 h-full z-10">
-			<div className="modalVotes relative bg-white max-w-screen-lg mx-auto h-full md:h-5/6 md:my-10 overflow-y-scroll">
+		<div className="bg-neutral-700/[.75] fixed top-0 left-0 right-0 h-full z-10" onClick={toggleRules}>
+			<div className="modalVotes relative bg-white max-w-screen-lg mx-auto h-full md:h-5/6 md:my-10 overflow-y-scroll" onClick={(e)=> {e.preventDefault(); e.stopPropagation()}}>
 				<div className="sticky bg-white top-0 left-0 w-full z-20 pt-5 px-10 flex justify-end">
 					<button className="md:top-5 md:right-5" onClick={toggleRules}>
 						<svg

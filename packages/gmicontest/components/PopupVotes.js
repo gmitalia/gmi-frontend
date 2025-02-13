@@ -83,7 +83,6 @@ export default function PopupVotes(props)
 			let pros = vote.pros.map((pro) => <span key={pro} className="bg-lime-200 px-1">{prosList[pro]}</span>)
 			let cons = vote.cons.map((con) => <span key={con} className="bg-red-200 px-1">{consList[con]}</span>)
 			
-
 			let isOldContest = props.contest < 19
 			let comment = vote.comment;
 
@@ -127,8 +126,8 @@ export default function PopupVotes(props)
 
 		votesContent =
 		(
-			<div className="bg-neutral-700/[.75] fixed top-0 left-0 right-0 h-full z-10 flex items-center">			
-				<div className="flex flex-col modalVotes relative bg-white max-w-screen-lg mx-auto h-auto my-auto  md:h-5/6 md:my-10" style={{height: "80%", width: "90%"}}>
+			<div className="bg-neutral-700/[.75] fixed top-0 left-0 right-0 h-full z-10 flex items-center" onClick={toggleVotes}>			
+				<div className="flex flex-col modalVotes relative bg-white max-w-screen-lg mx-auto h-auto my-auto  md:h-5/6 md:my-10" style={{height: "80%", width: "90%"}} onClick={(e)=> {e.stopPropagation(); e.preventDefault()}}>
 					
 					<div className="sticky bg-white top-0 left-0 w-full z-20 pt-5 pb-2 px-10 flex justify-end">
 						<h2 className="mx-auto text-2xl font-bold text-gray-900 text-center">

@@ -21,7 +21,7 @@ export default function UserInventory(props)
 		//fetch contest
 		console.debug("fetching user medals", userId);
 		GMIApi.getInstance().getUserMedals(userId, (data) =>
-		{
+		{console.log(data)
 			if(data.success)
 			{
 				let medals = data.medals[0];

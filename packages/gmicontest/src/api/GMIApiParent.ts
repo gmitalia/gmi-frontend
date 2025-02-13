@@ -102,7 +102,7 @@ export default class GMIApiParent
 	getUserInfo(userId: number, callback: (data: {success: boolean; users: UserInfo[]})=> void)
 	{}
 
-	getUserMedals(userId: number, callback: (data: {success: boolean; users: UserMedals[]})=> void)
+	getUserMedals(userId: number, callback: (data: {success: boolean; medals: UserMedals[]})=> void)
 	{}
 
 	/**
