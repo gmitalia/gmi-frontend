@@ -13,7 +13,7 @@ const AwardsInfo =
 	},
 	silver:
 	{
-		name: "Quarto posto",
+		name: "Secondo posto",
 		image: (anno)=> imgpath+anno+"/2.png"
 	},
 	bronze:
@@ -33,12 +33,12 @@ const AwardsInfo =
 	best_sound: 
 	{
 		name: "Miglior Sonoro",
-		descdesc: "Nomination come miglior sonoro"
+		desc: "Nomination come miglior sonoro"
 	},
 	
 	best_gamepaly: 
 	{
-		name: "Migliore Giocabilità",
+		name: "Miglior Giocabilità",
 		desc: "Nomination come miglior giocabilità"
 	},
 	

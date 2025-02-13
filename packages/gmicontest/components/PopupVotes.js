@@ -103,7 +103,7 @@ export default function PopupVotes(props)
 						))}
 						</div>
 
-						<li  className="grid grid-cols-2 md:grid-cols-6 mt-4">
+						<li className="grid grid-cols-2 md:grid-cols-6 mt-4">
 
 							<div className="flex flex-row">
 								<b>Media</b> 
@@ -120,7 +120,7 @@ export default function PopupVotes(props)
 
 					<hr className="my-8"/>
 
-					<div className="flex flex-row flex-wrap gap-5">
+					<div className="flex flex-row flex-wrap gap-5 overflow-y-auto">
 					{(Awards[props.game] ?? []).map((award, index)=>
 					(
 						<AwardBadge key={index} award={award} gameId={props.game} contestId={props.contest}/>

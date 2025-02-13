@@ -168,8 +168,8 @@ export default function PageUser(props)
 			</div>
 
 			<div className="flex flex-col gap-3 p-5 h-full overflow-y-scroll">
-				{console.log("AVATAR",user.user_avatar)}
-				<div className="h-full flex flex-col lg:flex-row">	
+			
+				<div className="flex flex-col lg:flex-row">	
 					<img
 					 className="m-auto"
 					 style={{height: "250px", borderRadius: "50px", padding: "20px"}}

@@ -89,7 +89,7 @@ export default function PageResults(props)
 
 	return (
 		<PageLayout>
-			<div className="">
+			<div className="h-full flex flex-col">
 				<div className="relative">
 					<IconBtn
 						className="absolute top-0 left-0"
@@ -112,29 +112,35 @@ export default function PageResults(props)
 					</IconBtn>
 					<h2 className="flex-1 text-3xl text-center mb-2">CLASSIFICA</h2>
 				</div>
-				<table className="charts w-full max-w-screen-md mx-auto">
-					<thead>
-						<tr>
-							<td></td>
-							<td className="text-left">Gioco</td>
-							<td className="text-center">Punteggio</td>
-						</tr>
-					</thead>
-					<tbody>{leaderboard}</tbody>
-				</table>
-				<hr />
-				<h2 className="text-2xl text-center my-2">
-					Stato completamento giudizi
-				</h2>
-				<table className="mx-auto max-w-xl w-full">
-					<thead>
-						<tr>
-							<td>Giudice</td>
-							<td className="text-center">Giochi votati</td>
-						</tr>
-					</thead>
-					<tbody>{judges_report}</tbody>
-				</table>
+
+				<div className="h-full overflow-y-auto">
+					<table className="charts w-full max-w-screen-md mx-auto">
+						<thead>
+							<tr>
+								<td></td>
+								<td className="text-left">Gioco</td>
+								<td className="text-center">Punteggio</td>
+							</tr>
+						</thead>
+						<tbody>{leaderboard}</tbody>
+					</table>
+
+					<hr />
+					<h2 className="text-2xl text-center my-2">
+						Stato completamento giudizi
+					</h2>
+
+					<table className="mx-auto max-w-xl w-full">
+						<thead>
+							<tr>
+								<td>Giudice</td>
+								<td className="text-center">Giochi votati</td>
+							</tr>
+						</thead>
+						<tbody>{judges_report}</tbody>
+					</table>
+				</div>
+
 				<hr />
 			</div>
 		</PageLayout>

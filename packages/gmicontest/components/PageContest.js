@@ -10,13 +10,15 @@ import { PageLayout } from "./library/Layouts/PageLayout";
 import IconBtn from "./commons/IconBtn";
 import StyledButton from "./commons/StyledButton";
 import RuleBook from "./commons/RuleBook";
+import { basePath } from "../next.config";
+import { GetRulebook, Rulesets } from "../src/Rulesets";
 
 //@todo remove "visualizza voti" if not ended
 export default function PageContest(props)
 {
 	let router = useRouter();
 	let query = getQuery(router);
-	
+
 	/**@type {[Participant, (obj: Participant)=> any]} */
 	let [participant, setParticipant] = useState(false);
 	/**@type {[Contest, (obj: Contest)=> any]} */
@@ -52,6 +54,15 @@ export default function PageContest(props)
 		setRules(!rules);
 	}
 
+	if(query.contest == 0)
+	{
+		return(
+			<div className="w-full h-full">
+				<img className="ball" src={basePath+"/img/gmicomp.png"}/>
+			</div>
+		)
+	}
+		
 
 	if(error)
 		return (
@@ -159,7 +170,7 @@ export default function PageContest(props)
 						</svg>
 					</button>
 				</div>
-				<RuleBook />
+				{GetRulebook(parseInt(query.contest))}
 			</div>
 		</div>
 	);

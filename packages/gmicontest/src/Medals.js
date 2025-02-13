@@ -46,7 +46,7 @@ export const MedalsInfo =
 	most_judge:  
 	{
 		name: "Piuma d'oro del giudizio",
-		desc: "Riconoscimento per un utente che ha fatto da giudcie alla compe per tantissimi anni",
+		desc: "Riconoscimento per un utente che ha fatto da giudice alla compe per tantissimi anni",
 		image:  basePath+"/img/medals/feather_gold.png"
 	},
 	

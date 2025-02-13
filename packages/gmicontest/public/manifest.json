@@ -1,6 +1,8 @@
 {
   "short_name": "GMI Contest",
   "name": "GameMaker Italia Contest",
+  "version": "2.0.0",
+  "description": "L'incredibile sito che raccoglie tutte le competizioni di GameMaker Italia",
   "icons": 
   [
 		{
