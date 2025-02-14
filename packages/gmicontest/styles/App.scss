@@ -86,20 +86,166 @@
   }
 }
 
-.author div {
-  display: inline-block;
 
-  &:before {
-    content: ", "
-  }
+.author div
+{
+	display: inline-block;
 
-  &:last-child:before {
-    content: "e";
-    margin: 0 5px;
-  }
+	&:before 
+	{
+		content: ", "
+	}
 
-  &:first-child:before {
-    content: "";
-    margin: 0;
-  }
+	&:last-child:before 
+	{
+		content: "e";
+		margin: 0 5px;
+	}
+
+	&:first-child:before 
+	{
+		content: "";
+		margin: 0;
+		margin-left: 5px;
+	}
 }
+
+
+.text-full
+{
+	white-space: unset;
+   overflow: unset;
+   text-overflow: unset;
+}
+.text-truncate
+{
+	white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+
+
+html
+{
+	height: 100vh !important;
+	overflow: hidden;
+}
+
+body
+{
+	height: 100% !important;
+	overflow: hidden;
+}
+
+#__next
+{
+	height: 100% !important;
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-grow-v
+{
+	flex-grow: 1;
+	height: 1px;
+}
+
+
+.vote-tables
+{
+	table
+	{
+		width: 100%;
+	}
+	tbody tr:nth-child(odd)
+	{
+		border-bottom: 1px dashed #dddddd;
+	}
+	tbody tr:nth-child(odd)>td:first-child
+	{
+		font-weight: bold;
+	}
+
+	li
+	{
+		margin-left: 20px;
+		list-style-type: circle;
+	}
+}
+
+.medal-popover
+{
+	background-color: white;
+	padding: 10px;
+	width: 400px;
+	position: absolute;
+	z-index: 10000;
+	display: none;
+	flex-direction: column;
+	box-shadow: 0px 0px 15px -3px rgba(0,0,0,0.5);
+	top: 100%;
+}
+.medal-button
+{
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	position: relative;
+}
+
+.medal-button:hover
+{
+	.medal-popover
+	{
+		display: flex;
+	}
+}
+
+
+.text-outline
+{
+	text-shadow:  -1px 0 #ffff, 1px -1px 0 #ffff, -1px 1px 0 #ffff, 1px 1px 0 #ffff
+}
+
+
+:root {
+	--width:719px;
+	--height:185px
+ }
+ 
+ 
+ .ball {
+	width: var(--width);
+	height: var(--height);
+	position:absolute;
+ 
+	animation: toRight linear 6.8s infinite alternate, bounce linear 17s infinite alternate;
+ }
+ 
+ @keyframes bounce {
+	0% {
+	  top:0;
+	}
+	48% {
+	}
+	50% {
+	  top: calc(100% - var(--height));
+	}
+	52% {
+	}
+	100% {
+	  top: 0;
+	}
+ }
+ 
+ @keyframes toRight {
+ 
+	0% {
+	  left: 0;
+	}
+ 
+	100% {
+	  left: calc(100% - var(--width));
+	}
+ }

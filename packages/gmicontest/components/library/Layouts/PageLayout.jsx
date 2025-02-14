@@ -1,15 +1,28 @@
-import { Footer } from "../../commons/Footer";
+import React from "react";
+import UserButton from "../../UsersList/UserButton";
 import ContestList from "./../../../components/Contest/ContestList"
 
-export const PageLayout = (props) => {
-    const { children } = props;
+const UserButtonMemo = React.memo(UserButton, ()=> true)
+const ContestListMemo = React.memo(ContestList, ()=> true)
 
-    return <div className="flex flex-grow flex-column bg-backcolor">
-        <div className="w-72 lg:mr-2 hidden lg:inline">
-            <ContestList />
-        </div>
-        <div className="flex-1 lg:ml-2">
-            {children}
-        </div>
-    </div>
+export const PageLayout = (props)=>
+{
+	const { children } = props;
+
+
+	return (
+		<div className="h-full flex flex-grow flex-row bg-backcolor">
+
+			<div className="sticky w-72 h-full  lg:mr-2  lg:inline hidden lg:block">
+				<div className="w-full h-full flex flex-col gap-1 ">
+				<UserButtonMemo />
+				<ContestListMemo />
+				</div>
+			</div>
+
+			<div className="w-auto h-full flex-1 lg:pl-2">
+				{children}
+			</div>
+		</div>
+	)
 }

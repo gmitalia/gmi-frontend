@@ -1,6 +1,7 @@
 {/* prettier-ignore */}
 
-const RuleBook = () => {
+const RuleBook = ()=>
+{
   return (
     <article className="prose max-w-none">
       <div className="px-2 pb-2 md:px-10 md:pb-10">
@@ -141,11 +142,13 @@ const RuleBook = () => {
           </li>
           <li>Non deve far parte della giuria.</li>
         </ul>
-      </div>
-      <div>
+
+		  <div>
         <b>Per iscriverti entra nel server discord al seguente link:</b><br/>
         <a href="https://discord.gg/0wKBBPIbX2r3S32a">https://discord.gg/0wKBBPIbX2r3S32a</a>
       </div>
+      </div>
+      
       <br/>
     </article>
   );

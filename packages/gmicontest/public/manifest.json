@@ -1,13 +1,23 @@
 {
-  "short_name": "GMIContest",
+  "short_name": "GMI Contest",
   "name": "GameMaker Italia Contest",
-  "icons": [
-    {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
-    }
-  ],
+  "version": "2.0.0",
+  "description": "L'incredibile sito che raccoglie tutte le competizioni di GameMaker Italia",
+  "icons": 
+  [
+		{
+         "purpose": "maskable",
+         "sizes": "512x512",
+         "src": "img/icon512_maskable.png",
+         "type": "image/png"
+      },
+		{
+         "purpose": "any",
+         "sizes": "512x512",
+         "src": "img/icon512_rounded.png",
+         "type": "image/png"
+        }
+   ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
