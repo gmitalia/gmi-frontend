@@ -54,9 +54,9 @@ export default function GamesList(props)
 	const judgeTile = (judge)=>
 	(
 		<div key={judge.id}>
-			<a  href={`/user?user=${judge.id}`}>
-			<div className="text-blue-500 hover:underline cursor-pointer">{judge.name}</div>
-		</a>	
+			<a href={`/user?user=${judge.id}`} className="text-blue-500 hover:underline cursor-pointer">
+				{judge.name}
+			</a>
 		</div>
 	)
 
@@ -107,9 +107,11 @@ export default function GamesList(props)
 			)
 			:
 			(
-				<div className="author ">
+				<div className="flex flex-row">
 					<b>Giudici:</b> 
-					{judges.map(o=> judgeTile(o))}
+					<div className="author ">
+						{judges.map(o=> judgeTile(o))}
+					</div>
 				</div>
 			)}
 

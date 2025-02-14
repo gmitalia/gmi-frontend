@@ -128,18 +128,21 @@ export const GameTile = (props) =>
 					<div className="text-2xl font-bold text-gray-900 text-center z-10">
 						{game.name}
 					</div>
-					<div className="author text-sm text-gray-700 text-center">
-						{" "}
-						di {authors.map((author, index)=> 
+					<div className="flex flex-row items-center justify-center">
+					{" "}
+					di 
+					<div className="author">
+						{authors.map((author, index)=> 
 						(
 							<div key={index}>
-								<a key={author.id} href={`/user?user=${author.id}`}>
-									<div className="text-blue-500 hover:underline cursor-pointer">{author.name}</div>
-								</a>	
+								<a href={`/user?user=${author.id}`} className="text-blue-500 hover:underline cursor-pointer text-sm">
+									{author.name}
+								</a>
 							</div>
 						))}
 					</div>
 				</div>
+					</div>
 				<div className="text-gray-700 text-base mb-4">
 					{game.short_description}
 				</div>
