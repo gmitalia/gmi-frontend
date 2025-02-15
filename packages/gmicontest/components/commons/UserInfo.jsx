@@ -41,7 +41,7 @@ export const UserInfo = ()=>
 			<div className="flex flex-row items-center">
 
 				<Link href={`/user?user=${user.user_id}`} >
-					<div className="flex flex-row">
+					<div className="flex flex-row" style={{cursor: "pointer"}}>
 						<img src={avatar_url} className="w-12 h-12" alt="" priority="false" />
 
 						<b className="mx-2 my-auto">
