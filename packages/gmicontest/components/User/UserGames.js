@@ -38,7 +38,7 @@ export default function UserGames(props)
 
 	userInfo.games.sort((a,b)=> a.contest_id - b.contest_id)
 
-	const elements = userInfo.games?.map((game, i)=>
+	const elements = userInfo.games?.reverse()?.map((game, i)=>
 	{
 		let contest = contestInfo[game.id]
 
