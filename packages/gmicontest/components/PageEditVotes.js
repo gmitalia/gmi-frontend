@@ -5,6 +5,7 @@ import VoteForm from "./Forms/VoteForm";
 import GMIApi from "../src/api/GMIApi";
 
 import StyledButton from "./commons/StyledButton";
+import Link from "next/link";
 
 //@todo don't load if not judge
 export default function PageEditVotes(props)
@@ -171,12 +172,12 @@ export default function PageEditVotes(props)
 				authors = JSON.parse(authors);
 				authors = authors.map((author)=>
 				(
-					<a
+					<Link
 					 key={author.id}
 					 href={`/user?user=${author.id}`}
 					>
 						<div className="text-blue-500 hover:underline cursor-pointer">{author.name}</div>
-					</a>
+					</Link>
 				));
 			}
 			catch(e) { console.error(game.authors, e); }

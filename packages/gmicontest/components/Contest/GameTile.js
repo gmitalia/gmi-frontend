@@ -135,9 +135,11 @@ export const GameTile = (props) =>
 						{authors.map((author, index)=> 
 						(
 							<div key={index}>
-								<a href={`/user?user=${author.id}`} className="text-blue-500 hover:underline cursor-pointer text-sm">
-									{author.name}
-								</a>
+								<Link href={`/user?user=${author.id}`}>
+									<div  className="text-blue-500 hover:underline cursor-pointer text-sm">
+										{author.name}
+									</div>
+								</Link>
 							</div>
 						))}
 					</div>

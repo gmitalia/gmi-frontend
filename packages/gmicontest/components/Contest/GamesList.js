@@ -5,6 +5,7 @@ import { GameTile } from "./GameTile";
 import Spinner from "../commons/Spinner";
 import StyledButton from "../commons/StyledButton";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 
 
 export default function GamesList(props)
@@ -54,9 +55,11 @@ export default function GamesList(props)
 	const judgeTile = (judge)=>
 	(
 		<div key={judge.id}>
-			<a href={`/user?user=${judge.id}`} className="text-blue-500 hover:underline cursor-pointer">
-				{judge.name}
-			</a>
+			<Link href={`/user?user=${judge.id}`}>
+				<div  className="text-blue-500 hover:underline cursor-pointer">
+					{judge.name}
+				</div>
+			</Link>
 		</div>
 	)
 

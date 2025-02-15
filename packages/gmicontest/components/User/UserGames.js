@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import GMIApi from "../../src/api/GMIApi";
 import { GameTile } from "../Contest/GameTile";
 import "moment/locale/it";
+import Link from "next/link";
 
 
 //@todo remove "visualizza voti" if not ended
@@ -44,11 +45,11 @@ export default function UserGames(props)
 		return(
 			<div key={i} className="flex flex-col items-center">
 
-				<a href={`/contest?contest=${contest?.id}`}>
+				<Link href={`/contest?contest=${contest?.id}`}>
 					<div className="font-bold text-black-500 hover:underline cursor-pointer">
 						{contest?.name ?? "."}
 					</div>
-				</a>
+				</Link>
 
 				<GameTile
 				 key={game.id}
