@@ -13,21 +13,27 @@ export default function ContestList(props)
 		GMIApi.getInstance().getContests(setData)
 	}, [])
 
-	if(!data)
-		return (<div>Loading...</div>)
+	const renderList = function()
+	{
+		if(!data)
+			return (<div>Loading...</div>)
+	
+		if(!data.success)
+			return (<div>{data.error}</div>)
 
-	if(!data.success)
-		return (<div>{data.error}</div>)
+		return data.contests.map((contest)=>
+		(
+			<ContestElement key={contest.id} contest={contest} />
+		))
+	}
+
 
 	return (
 		<div className='h-full flex flex-col'>
 			<AreaTitle title="Competizioni" />
 
 			<div className="h-full overflow-y-scroll flex-grow-v">
-			{data.contests.map((contest)=>
-			(
-				<ContestElement key={contest.id} contest={contest} />
-			))}
+			{renderList()}
 			</div>
 		</div>
 	)

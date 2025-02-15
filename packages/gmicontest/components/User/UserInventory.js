@@ -33,15 +33,7 @@ export default function UserInventory(props)
 	},
 	[userId]); 
 
-	if(error)
-		return (
-			<div>
-				<div>ERROR: {error}</div>
-			</div>
-		);
-
-	if(!medals) 
-		return <div>Loading</div>;
+	
 
 	/**@param {[string, boolean | MedalGame[]]} medal */
 	const renderMedal = function(medal, index)
@@ -92,15 +84,26 @@ export default function UserInventory(props)
 		}
 	}
 
+	const renderInventory = function()
+	{
+		if(error)
+			return (
+				<div>ERROR: {error}</div>
+			);
+	
+		if(!medals) 
+			return <div>Loading</div>;
 
+		return Object.entries(medals).map(renderMedal)
+	}
+
+	
 	return (
-		
 		<fieldset style={{width: "100%"}}  className="ml-auto p-5 border-2 border-gray h-250">
 		<legend className="px-4 text-2xl">Inventario</legend>
 		
 			<div className="flex flex-row flex-wrap justify-evenly " style={{gap: "10px"}}>
-				
-				{Object.entries(medals).map(renderMedal)}
+				{renderInventory()}
 			</div>
 
 		</fieldset>
