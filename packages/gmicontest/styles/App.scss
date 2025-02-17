@@ -86,30 +86,27 @@
   }
 }
 
+.author {
+	margin-left: .2rem;
+	padding: 0;
 
-.author div
-{
-	display: inline-block;
+	li {
+		display: inline;
 
-	&:before 
-	{
-		content: ", "
-	}
+		&:before {
+			content: ", ";	
+		}
 
-	&:last-child:before 
-	{
-		content: "e";
-		margin: 0 5px;
-	}
+		// Le prossime due regole vanno in quest'ordine per coprire il caso in cui l'autore sia singolo
+		&:nth-last-child(1):before {
+			content: " e ";
+		}
 
-	&:first-child:before 
-	{
-		content: "";
-		margin: 0;
-		margin-left: 5px;
+		&:first-child:before {
+			content: "";
+		}
 	}
 }
-
 
 .text-full
 {

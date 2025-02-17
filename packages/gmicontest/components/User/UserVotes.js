@@ -13,7 +13,6 @@ export default function UserVotes(props)
 
 	/**@type {[{[game_id: number]: Contest}, (obj: {[game_id: number]: Contest})=> any]} */
 	let [contestInfo, setContestInfo] = useState();
-	let [error, setError] = useState();
 
 	if(userInfo.votes == undefined || userInfo.votes.length == 0)
 		return <div></div>
