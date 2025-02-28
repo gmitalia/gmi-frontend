@@ -5,6 +5,7 @@ import { GameTile } from "./GameTile";
 import Spinner from "../commons/Spinner";
 import StyledButton from "../commons/StyledButton";
 import { createPortal } from "react-dom";
+import Link from "next/link";
 
 
 export default function GamesList(props)
@@ -53,26 +54,12 @@ export default function GamesList(props)
 	/**@type {(data: JudgeData)=> any} */
 	const judgeTile = (judge)=>
 	(
-		<div key={judge.id}>
-			<a href={`/user?user=${judge.id}`} className="text-blue-500 hover:underline cursor-pointer">
-				{judge.name}
-			</a>
-		</div>
+		<li key={judge.id}>
+			<Link href={`/user?user=${judge.id}`}>
+				<span className="text-blue-500 hover:underline cursor-pointer">{judge.name}</span>
+			</Link>
+		</li>
 	)
-
-	/**@type {(data: JudgeData[])=> any} */
-	const formatJudges = (array)=>
-	{
-		const names = array.map((item)=> item.name);
-
-		if(names.length === 0) return "";
-		if(names.length === 1) return names[0];
-
-		const allExceptLast = names.slice(0, -1).join(", ");
-		const last = names[names.length - 1];
-
-		return `${allExceptLast} e ${last}`;
-	};
 
 	const elements = games?.map((game, i)=>
 	(
@@ -109,16 +96,16 @@ export default function GamesList(props)
 			(
 				<div className="flex flex-row">
 					<b>Giudici:</b> 
-					<div className="author ">
+					<ul className="author">
 						{judges.map(o=> judgeTile(o))}
-					</div>
+					</ul>
 				</div>
 			)}
 
 			{actions}
 			
 			<div className="flex-grow-v">
-			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3 p-3">
+			<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3">
 				{isLoading ? <Spinner /> : elements}
 			</div>
 			</div>

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { authAsyncThunk } from "../../src/slices/authAsyncThunk";
 import GMIApi from "../../src/api/GMIApi";
 import { ButtonSecondary } from "../library/Buttons/ButtonSecondary";
+import Link from "next/link";
 
 export const UserInfo = ()=>
 {
@@ -39,13 +40,15 @@ export const UserInfo = ()=>
 		return (
 			<div className="flex flex-row items-center">
 
-				<a href={`/user?user=${user.user_id}`} className="flex flex-row">
-					<img src={avatar_url} className="w-12 h-12" alt="" priority="false" />
+				<Link href={`/user?user=${user.user_id}`} >
+					<div className="flex flex-row" style={{cursor: "pointer"}}>
+						<img src={avatar_url} className="w-12 h-12" alt="" priority="false" />
 
-					<b className="mx-2 my-auto">
-						{user.discord_info.username}
-					</b>
-				</a>
+						<b className="mx-2 my-auto">
+							{user.discord_info.username}
+						</b>
+					</div>
+				</Link>
 
 				{forum_link}
 				

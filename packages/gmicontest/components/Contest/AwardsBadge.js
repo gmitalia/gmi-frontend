@@ -45,7 +45,7 @@ export const AwardBadge = (props = { award: { name: "", image: undefined, desc: 
 		>
 			{image ?
 			(
-				<img src={image} alt={props.award.name} />
+				<img src={image} alt={props.award.name} style={{height: "100%"}}/>
 			)
 			:
 			(
