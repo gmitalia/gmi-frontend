@@ -4,7 +4,14 @@ import GMIApi from "../../src/api/GMIApi";
 import Spinner from "../commons/Spinner";
 import { UserTile } from "./UserTile";
 
-
+const sortingId = 
+{
+	"default": 0,
+	"name": 1,
+	"game_count": 2,
+	"top_game_count": 3,
+	"judge_count": 4,
+}
 export default function UserList(props)
 {
 	const router = useRouter();
@@ -13,7 +20,7 @@ export default function UserList(props)
 	const [users, setUsers] = useState();
 	const [error, setError] = useState();
 	const [search, setSearch] = useState("");
-	const [sorting, setSort] = useState({sortingId: null, sort:{}});
+	const [sorting, setSort] = useState({sortingId: sortingId.default, sort:{}});
 	const [userList, setUserList] = useState([]);
 
 
@@ -43,30 +50,35 @@ export default function UserList(props)
 	/**@type {(a: User, b: User)=> number} */
 	const sortingFunction = (a, b)=>
 	{
-		if(sorting.sortingId == 0)
+		if(sorting.sortingId == sortingId.default)
 		{
-			if(sorting.sort[0])
+			return (parseInt(b.game_count) + parseInt(b.judge_count) + parseInt(b.top_game_count))
+					- (parseInt(a.game_count)  + parseInt(a.judge_count)  + parseInt(a.top_game_count))
+		}
+		if(sorting.sortingId == sortingId.name)
+		{
+			if(sorting.sort[sorting.sortingId])
 				return a.name.localeCompare(b.name)
 			else
-			 return b.name.localeCompare(a.name)
+			 	return b.name.localeCompare(a.name)
 		}
-		if(sorting.sortingId == 1)
+		if(sorting.sortingId == sortingId.game_count)
 		{
-			if(sorting.sort[1])
+			if(sorting.sort[sorting.sortingId])
 				return parseInt(a.game_count) - parseInt(b.game_count)
 			else
 				return parseInt(b.game_count) - parseInt(a.game_count)
 		}
-		if(sorting.sortingId == 2)
+		if(sorting.sortingId == sortingId.top_game_count)
 		{
-			if(sorting.sort[2])
+			if(sorting.sort[sorting.sortingId])
 				return parseInt(a.top_game_count) - parseInt(b.top_game_count)
 			else
 				return parseInt(b.top_game_count) - parseInt(a.top_game_count)
 		}
-		if(sorting.sortingId == 3)
+		if(sorting.sortingId == sortingId.judge_count)
 		{
-			if(sorting.sort[2])
+			if(sorting.sort[sorting.sortingId])
 				return parseInt(a.judge_count) - parseInt(b.judge_count)
 			else
 				return parseInt(b.judge_count) - parseInt(a.judge_count)
@@ -86,6 +98,8 @@ export default function UserList(props)
 				elements = elements.filter(o=> o.name.toLowerCase().includes(search.toLowerCase()))
 
 			if(sorting.sortingId != null)
+				elements = elements.sort(sortingFunction)
+			else
 				elements = elements.sort(sortingFunction)
 
 			elements = elements.map((user, i)=>
@@ -131,10 +145,10 @@ export default function UserList(props)
 		<div className="grid gap-y-2 my-1">
 			<div style={{height: "35px"}} className="grid grid-cols-[45px_1fr_50px_50px_50px] lg:grid-cols-[45px_repeat(4,_1fr)] items-center gap-x-4">
 				<div className="font-bold"></div>
-				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(0)}>Username</div>
-				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(1)}>Partecipazioni</div>
-				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(2)}>Vittorie</div>
-				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(3)}>Giudizi</div>
+				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(sortingId.name)}>Username</div>
+				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(sortingId.game_count)}>Partecipazioni</div>
+				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(sortingId.top_game_count)}>Vittorie</div>
+				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(sortingId.judge_count)}>Giudizi</div>
 			</div>
 		</div>
 		<div className="grid gap-y-2 my-3 overflow-y-scroll">
