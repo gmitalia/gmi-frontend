@@ -56,6 +56,8 @@ export default function MyDocument()
 
 			</Head>
 
+
+			
 			<body className='container bg-gray-100 shadow-xl'>
 				<Main />
 				<NextScript />
