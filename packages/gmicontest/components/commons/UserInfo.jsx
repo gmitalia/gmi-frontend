@@ -41,13 +41,15 @@ export const UserInfo = ()=>
 			<div className="flex flex-row items-center">
 
 				<Link href={`/user?user=${user.user_id}`} >
-					<a><div className="flex flex-row" style={{cursor: "pointer"}}>
+					<a>
+						<div className="flex flex-row" style={{cursor: "pointer", width: "max-content"}}>
 						<img src={avatar_url} className="w-12 h-12" alt="" priority="false" />
 
 						<b className="mx-2 my-auto">
 							{user.discord_info.username}
 						</b>
-					</div></a>
+					</div>
+					</a>
 				</Link>
 
 				{forum_link}

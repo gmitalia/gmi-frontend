@@ -20,12 +20,12 @@ export default function Header(props)
 
 	const onClickMenu = (event)=>
 	{
-		dispatch(mainSlice.actions.showMenu())
+		dispatch(mainSlice.actions.toggleMenu())
 		document.getElementsByTagName("body")[0].style.overflow = "hidden"
 	}
 	const onCloseMenu = (event)=>
 	{
-		dispatch(mainSlice.actions.hideMenu())
+		dispatch(mainSlice.actions.toggleMenu())
 		document.getElementsByTagName("body")[0].style.overflow = null
 	}
 
@@ -33,7 +33,7 @@ export default function Header(props)
 		<>
 			<header className="sticky top-0 bg-white z-10">
 
-				<div className="p-5 py-2 flex flex-row items-center justify-between">
+				<div className="p-5 py-2 flex flex-row items-center justify-between" style={{gap: "20px"}}>
 					<div className="flex flex-row items-center justify-between">
 						<div className="d-block lg:hidden mr-2">
 							<ButtonSecondary
@@ -42,7 +42,7 @@ export default function Header(props)
 							/>
 						</div>
 						<div>
-							<Link href={"/"} >
+							<Link href={"/"}>
 								<a><img
 								 className="w-24 cursor-pointer"
 								 src={`${basePath}/img/logo.png`}
