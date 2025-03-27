@@ -13,7 +13,7 @@ export default function HeaderDesktop(props)
 				<div className="flex flex-row items-center justify-between">
 					<div>
 					<Link href={"/"}>
-						<img className="w-24" src={`${basePath}/img/logo.png`} />
+						<a><img className="w-24" src={`${basePath}/img/logo.png`} /></a>
 					</Link>
 					</div>
 				</div>

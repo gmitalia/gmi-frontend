@@ -42,11 +42,11 @@ export default function Header(props)
 							/>
 						</div>
 						<div>
-							<Link href={"/"}>
-								<img
+							<Link href={"/"} >
+								<a><img
 								 className="w-24 cursor-pointer"
 								 src={`${basePath}/img/logo.png`}
-								/>
+								/></a>
 							</Link>
 						</div>
 					</div>

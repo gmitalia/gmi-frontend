@@ -7,9 +7,9 @@ export default function UserButton(props)
 
 	return (
 		<Link  href={`/users`}>
-			<div className='cursor-pointer '>
+			<a><div className='cursor-pointer '>
 			<AreaTitle title="Utenti" inverted={true} />
-			</div>
+			</div></a>
 		</Link>
 	)
 }

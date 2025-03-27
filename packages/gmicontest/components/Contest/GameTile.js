@@ -136,16 +136,16 @@ export const GameTile = (props) =>
 						(
 							<li key={index}>
 								<Link href={`/user?user=${author.id}`}>
-									<span  className="text-blue-500 hover:underline cursor-pointer text-sm">
+								<a><span  className="text-blue-500 hover:underline cursor-pointer text-sm">
 										{author.name}
-									</span>
+									</span></a>
 								</Link>
 							</li>
 						))}
 					</ul>
 				</div>
 					</div>
-				<div className="text-gray-700 text-base mb-4">
+				<div className="text-gray-700 text-base mb-4" style={{overflowErap: "break-word"}}>
 					{game.short_description}
 				</div>
 			</div>

@@ -24,7 +24,7 @@ export const ContestElement = (props)=>
 	return (
 		<Link href={`/contest?contest=${contest.id}`}>
 
-			<div className={`flex flex-row items-center border p-2 ${selectedClass} ${hoverClass}`}>
+			<a><div className={`flex flex-row items-center border p-2 ${selectedClass} ${hoverClass}`}>
 				
 				<div className='mr-2'>
 					<i className={`fa ${icon}`} aria-hidden="true" />
@@ -32,7 +32,7 @@ export const ContestElement = (props)=>
 				
 				{contest.name}
 
-			</div>
+			</div></a>
 		</Link>
 
 	)

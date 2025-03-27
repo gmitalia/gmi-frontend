@@ -25,7 +25,7 @@ export default function HeaderMobile(props)
 					</div>
 					<div>
 					<Link href={"/"}>
-						<img className="w-24" src={`${basePath}/img/logo.png`} />
+					<a>	<img className="w-24" src={`${basePath}/img/logo.png`} /></a>
 					</Link>
 					</div>
 				</div>

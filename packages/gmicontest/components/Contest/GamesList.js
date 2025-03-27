@@ -56,7 +56,7 @@ export default function GamesList(props)
 	(
 		<li key={judge.id}>
 			<Link href={`/user?user=${judge.id}`}>
-				<span className="text-blue-500 hover:underline cursor-pointer">{judge.name}</span>
+				<a><span className="text-blue-500 hover:underline cursor-pointer">{judge.name}</span></a>
 			</Link>
 		</li>
 	)

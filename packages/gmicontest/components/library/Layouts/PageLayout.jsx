@@ -20,7 +20,7 @@ export const PageLayout = (props)=>
 				</div>
 			</div>
 
-			<div className="w-auto h-full flex-1 lg:pl-2">
+			<div className="w-full h-full flex-1 lg:pl-2">
 				{children}
 			</div>
 		</div>
