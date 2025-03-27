@@ -145,7 +145,7 @@ export const GameTile = (props) =>
 					</ul>
 				</div>
 					</div>
-				<div className="text-gray-700 text-base mb-4" style={{overflowErap: "break-word"}}>
+				<div className="text-gray-700 text-base mb-4" style={{overflowWrap: "anywhere"}}>
 					{game.short_description}
 				</div>
 			</div>
