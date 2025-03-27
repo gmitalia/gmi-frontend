@@ -20,7 +20,7 @@ export default function UserList(props)
 	const [users, setUsers] = useState();
 	const [error, setError] = useState();
 	const [search, setSearch] = useState("");
-	const [sorting, setSort] = useState({sortingId: sortingId.default, sort:{}});
+	const [sorting, setSort] = useState({sortingId: sortingId.default, sort:{[sortingId.default]: true}});
 	const [userList, setUserList] = useState([]);
 
 
@@ -52,8 +52,12 @@ export default function UserList(props)
 	{
 		if(sorting.sortingId == sortingId.default)
 		{
-			return (parseInt(b.game_count) + parseInt(b.judge_count) + parseInt(b.top_game_count))
-					- (parseInt(a.game_count)  + parseInt(a.judge_count)  + parseInt(a.top_game_count))
+			if(sorting.sort[sorting.sortingId])
+				return (parseInt(b.game_count) + parseInt(b.judge_count) + parseInt(b.top_game_count))
+						- (parseInt(a.game_count)  + parseInt(a.judge_count)  + parseInt(a.top_game_count))
+			else
+				return (parseInt(a.game_count) + parseInt(a.judge_count) + parseInt(a.top_game_count))
+						- (parseInt(b.game_count)  + parseInt(b.judge_count)  + parseInt(b.top_game_count))
 		}
 		if(sorting.sortingId == sortingId.name)
 		{
@@ -144,11 +148,30 @@ export default function UserList(props)
 		
 		<div className="grid gap-y-2 my-1">
 			<div style={{height: "35px"}} className="grid grid-cols-[45px_1fr_50px_50px_50px] lg:grid-cols-[45px_repeat(4,_1fr)] items-center gap-x-4">
-				<div className="font-bold"></div>
-				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(sortingId.name)}>Username</div>
-				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(sortingId.game_count)}>Partecipazioni</div>
-				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(sortingId.top_game_count)}>Vittorie</div>
-				<div className="font-bold cursor-pointer lg:text-full text-truncate" onClick={()=> updateSort(sortingId.judge_count)}>Giudizi</div>
+
+				<div className="font-bold cursor-pointer flex flex-col items-center" onClick={()=> updateSort(sortingId.default)}>
+				<i className={"fas "+(sorting.sort[sortingId.default]? "fa-caret-up" : "fa-caret-down")}></i>
+				</div>
+
+				<div className="font-bold cursor-pointer lg:text-full text-truncate flex gap-2 items-center" onClick={()=> updateSort(sortingId.name)}>
+					Username
+					<i className={"fas "+(sorting.sort[sortingId.name]? "fa-caret-up" : "fa-caret-down")}></i>
+				</div>
+
+				<div className="font-bold cursor-pointer lg:text-full text-truncate flex gap-2 items-center" onClick={()=> updateSort(sortingId.game_count)}>
+					Partecipazioni
+					<i className={"fas "+(sorting.sort[sortingId.game_count]? "fa-caret-up" : "fa-caret-down")}></i>
+				</div>
+
+				<div className="font-bold cursor-pointer lg:text-full text-truncate flex gap-2 items-center" onClick={()=> updateSort(sortingId.top_game_count)}>
+					Vittorie
+					<i className={"fas "+(sorting.sort[sortingId.top_game_count]? "fa-caret-up" : "fa-caret-down")}></i>
+				</div>
+
+				<div className="font-bold cursor-pointer lg:text-full text-truncate flex gap-2 items-center" onClick={()=> updateSort(sortingId.judge_count)}>
+					Giudizi
+					<i className={"fas "+(sorting.sort[sortingId.judge_count]? "fa-caret-up" : "fa-caret-down")}></i>
+				</div>
 			</div>
 		</div>
 		<div className="grid gap-y-2 my-3 overflow-y-scroll">

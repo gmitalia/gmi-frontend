@@ -20,6 +20,12 @@ export const UserTile = (props) =>
 						<img
 						 style={{borderRadius: "50px", height: "35px", width: "35px",}}
 						 src={user.avatar ?? basePath+"/img/profile.png"}
+   					 onError={(ev)=> 
+						 {
+							(ev.target).src = basePath+"/img/profile.png"
+							
+						 }
+						 }
 						/>
 					</div>
 

@@ -4,6 +4,7 @@ import ContestList from "../Contest/ContestList";
 import { ButtonSecondary } from "../library/Buttons/ButtonSecondary";
 import { Menu } from "./Menu";
 import { UserInfo } from "./UserInfo";
+import Link from "next/link";
 
 export default function HeaderMobile(props)
 {
@@ -23,7 +24,9 @@ export default function HeaderMobile(props)
 						<ButtonSecondary icon="fa fa-bars fa-2x" onClick={onClickMenu} />
 					</div>
 					<div>
+					<Link href={"/"}>
 						<img className="w-24" src={`${basePath}/img/logo.png`} />
+					</Link>
 					</div>
 				</div>
 				<div>

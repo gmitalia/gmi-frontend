@@ -3,6 +3,7 @@ import { basePath } from "../../next.config";
 import ContestList from "../Contest/ContestList";
 import { Menu } from "./Menu";
 import { UserInfo } from "./UserInfo";
+import Link from "next/link";
 
 export default function HeaderDesktop(props)
 {
@@ -11,7 +12,9 @@ export default function HeaderDesktop(props)
 			<div className="m-5 flex flex-row items-center justify-between">
 				<div className="flex flex-row items-center justify-between">
 					<div>
+					<Link href={"/"}>
 						<img className="w-24" src={`${basePath}/img/logo.png`} />
+					</Link>
 					</div>
 				</div>
 				<div>
