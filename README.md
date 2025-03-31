@@ -37,11 +37,11 @@ To set an environment run `npx firebase use <environment>`
 
 ### Deploy to production 
 
-Run `firebase deploy -P default`
+Run `npx firebase deploy -P default`
 
 ### Deploy to staging
 
-Run `firebase deploy -P staging`
+Run `npx firebase deploy -P staging`
 
 ### Troubleshooting
 
