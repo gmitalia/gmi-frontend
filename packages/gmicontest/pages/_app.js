@@ -26,6 +26,7 @@ function AppContainer({ Component, pageProps })
   return <>
     <Header />
     <div className={rootClass}>
+	 <meta name="viewport"  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
       <div className="p-5 h-full">
         <Component {...pageProps} />
       </div>

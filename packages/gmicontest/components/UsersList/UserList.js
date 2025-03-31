@@ -52,12 +52,18 @@ export default function UserList(props)
 	{
 		if(sorting.sortingId == sortingId.default)
 		{
+			let aGame = parseInt(a.game_count)*1;
+			let aTop = parseInt(a.top_game_count)* 3;
+			let aJudge = parseInt(a.judge_count)*1;
+
+			let bGame = parseInt(b.game_count)*1;
+			let bTop = parseInt(b.top_game_count)*3;
+			let bJudge = parseInt(b.judge_count)*1;
+
 			if(sorting.sort[sorting.sortingId])
-				return (parseInt(b.game_count) + parseInt(b.judge_count) + parseInt(b.top_game_count))
-						- (parseInt(a.game_count)  + parseInt(a.judge_count)  + parseInt(a.top_game_count))
+				return  (bGame + bTop + bJudge) - (aGame + aTop + aJudge)
 			else
-				return (parseInt(a.game_count) + parseInt(a.judge_count) + parseInt(a.top_game_count))
-						- (parseInt(b.game_count)  + parseInt(b.judge_count)  + parseInt(b.top_game_count))
+				return (aGame + aTop + aJudge) - (bGame + bTop + bJudge)
 		}
 		if(sorting.sortingId == sortingId.name)
 		{

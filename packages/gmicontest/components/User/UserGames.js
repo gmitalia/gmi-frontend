@@ -65,9 +65,9 @@ export default function UserGames(props)
 
 
 	return (
-		<fieldset className="w-full p-5 border-2 border-gray">
+		<fieldset className="w-full md:p-5 p-0 border-2 border-gray">
 		<legend className="px-4 text-2xl">Giochi</legend>
-			<div className="flex grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3 p-3 overflow-y-hidden">
+			<div className="flex grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3 p-4 md:p-3  overflow-y-hidden">
 				{elements}
 			</div>
 		</fieldset>

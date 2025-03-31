@@ -167,7 +167,7 @@ export default function PageUser(props)
 				)}
 			</div>
 
-			<div className="flex flex-col gap-3 p-5 h-full overflow-y-scroll">
+			<div className="flex flex-col gap-3 md:p-5 p-0 h-full overflow-y-scroll">
 			
 				<div className="flex flex-col lg:flex-row">	
 					<img

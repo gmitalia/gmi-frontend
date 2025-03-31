@@ -65,7 +65,7 @@ export default function UserVotes(props)
 
 
 	return (
-		<fieldset className="w-full p-5 border-2 border-gray">
+		<fieldset className="w-full p-0 md:p-5 border-2 border-gray">
 		<legend className="px-4 text-2xl">Giudizi</legend>
 			<div className="flex grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:gap-8 my-3 p-3 overflow-y-hidden">
 				{elements}
