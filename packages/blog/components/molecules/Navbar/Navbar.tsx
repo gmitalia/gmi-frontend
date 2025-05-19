@@ -41,9 +41,7 @@ const Navbar = ({ openMenu, setOpenMenu }: NavbarProps) => {
             <Link href="https://gmiscores.altervista.org">GMIScores</Link>
           </li>
           <li className="border-transparent w-full md:w-auto hover:underline decoration-2 duration-500 my-6 md:my-0">
-            <Link href="https://gmitalia.altervista.org/site/risorse-2/">
-              Risorse
-            </Link>
+            <Link href="/resources">Risorse</Link>
           </li>
           <li className="my-6 md:my-0">
             <div className="items-center justify-end">
