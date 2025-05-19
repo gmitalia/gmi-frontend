@@ -26,7 +26,7 @@ const Navbar = ({ openMenu, setOpenMenu }: NavbarProps) => {
     <>
       {((isMobile && openMenu) || !isMobile) && (
         <ul
-          className={`ml-0 text-md flex overflow-hidden w-full flex-col items-start md:flex-row md:justify-end md:items-center space-x-5 flex-1 z-1 md:z-auto absolute md:static w-full bg-white left-0`}
+          className={`ml-0 text-md flex overflow-hidden w-full flex-col items-start md:flex-row md:justify-end md:items-center space-x-5 flex-1 z-1 md:z-auto absolute md:static bg-white left-0`}
         >
           <li className="border-transparent w-full md:w-auto hover:underline decoration-2 duration-500 my-6 ml-5 md:my-0">
             <Link href="/blog">Blog</Link>
