@@ -92,7 +92,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
               className={`px-5 py-2 rounded-full border font-medium focus:outline-none transition-all duration-200 ${
                 selectedCategories.includes(cat._id)
                   ? 'bg-primary text-white shadow'
-                  : 'bg-white text-primary border-primary hover:bg-primary hover:text-white'
+                  : 'bg-white text-primary border-primary'
               }`}
               onClick={() => toggleCategory(cat._id)}
               aria-pressed={selectedCategories.includes(cat._id)}
