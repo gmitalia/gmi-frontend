@@ -10,12 +10,13 @@ interface Resource {
   name: string
   description: string
   url: string
-  resourceCategories: { _id: string; title: string }[]
+  resourceCategories: { _id: string; title: string; color?: string }[]
 }
 
 interface ResourceCategory {
   _id: string
   title: string
+  color?: string
 }
 
 interface ResourcesPageProps {
@@ -95,6 +96,11 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
               }`}
               onClick={() => toggleCategory(cat._id)}
               aria-pressed={selectedCategories.includes(cat._id)}
+              style={cat.color ? {
+                borderColor: cat.color,
+                color: selectedCategories.includes(cat._id) ? '#ffffff' : cat.color,
+                backgroundColor: selectedCategories.includes(cat._id) ? cat.color : '#ffffff'
+              } : {}}
             >
               {cat.title}
             </button>
@@ -127,7 +133,16 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
                   {resource.resourceCategories.map(cat => (
                     <span
                       key={cat._id}
-                      className="inline-block bg-primary/10 text-primary text-xs font-semibold px-3 py-1 rounded-full border border-primary/20"
+                      className="inline-block text-xs font-semibold px-3 py-1 rounded-full border"
+                      style={cat.color ? {
+                        backgroundColor: `${cat.color}1A`, // 10% opacity
+                        color: cat.color,
+                        borderColor: `${cat.color}33` // 20% opacity
+                      } : {
+                        backgroundColor: 'rgba(107, 114, 128, 0.1)', // fallback gray-500/10
+                        color: '#6b7280', // fallback gray-500
+                        borderColor: 'rgba(107, 114, 128, 0.2)' // fallback gray-500/20
+                      }}
                     >
                       {cat.title}
                     </span>
@@ -148,8 +163,8 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const resourcesQuery = groq`*[_type == "resource"]{_id, name, description, url, resourceCategories[]->{_id, title}} | order(name asc)`
-  const categoriesQuery = groq`*[_type == "resourceCategories"]{_id, title} | order(title asc)`
+  const resourcesQuery = groq`*[_type == "resource"]{_id, name, description, url, resourceCategories[]->{_id, title, color}} | order(name asc)`
+  const categoriesQuery = groq`*[_type == "resourceCategories"]{_id, title, color} | order(title asc)`
   const resources = await sanityClient.fetch(resourcesQuery)
   const categories = await sanityClient.fetch(categoriesQuery)
   return { props: { resources, categories } }
