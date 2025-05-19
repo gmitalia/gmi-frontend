@@ -25,6 +25,12 @@ export default defineType({
         invert: false,
         message: 'Inserisci un colore HEX valido, es: #FF0000'
       })
+    }),
+    defineField({
+      name: 'group',
+      title: 'Ordine gruppo (numero intero, usato per ordinamento chip)',
+      type: 'number',
+      description: 'Numero intero per ordinare le categorie nel filtro (es: 0, 1, 2, ...). Lascia vuoto per mettere all\'inizio.'
     })
   ]
 })

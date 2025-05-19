@@ -17,6 +17,7 @@ interface ResourceCategory {
   _id: string
   title: string
   color?: string
+  group?: number
 }
 
 interface ResourcesPageProps {
@@ -48,9 +49,26 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
         ? true
         : (
           r.name.toLowerCase().includes(search.toLowerCase()) ||
-          r.description.toLowerCase().includes(search.toLowerCase())
+          r.description.toLowerCase().includes(search.toLowerCase()) ||
+          r.resourceCategories.some(cat =>
+            cat.title.toLowerCase().includes(search.toLowerCase())
+          )
         );
     return matchesCategory && matchesSearch;
+  });
+
+  // Funzione per normalizzare il titolo: lascia solo lettere, numeri e spazi
+  function stripEmojiAndTrim(str: string) {
+    return (str.match(/[A-Za-z0-9\s]+/g) || []).join('').trim();
+  }
+
+  // Ordina le categorie: quelle senza group (undefined/null) prima, poi per valore numerico crescente
+  const orderedCategories = categories.slice().sort((a, b) => {
+    const groupA = typeof a.group === "number" ? a.group : -1;
+    const groupB = typeof b.group === "number" ? b.group : -1;
+    if (groupA !== groupB) return groupA - groupB;
+    // Ordina alfabeticamente ignorando emoji e spazi iniziali
+    return stripEmojiAndTrim(a.title).localeCompare(stripEmojiAndTrim(b.title));
   });
 
   return (
@@ -86,7 +104,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
           >
             Tutte
           </button>
-          {categories.map(cat => (
+          {orderedCategories.map(cat => (
             <button
               key={cat._id}
               className={`px-5 py-2 rounded-full border font-medium focus:outline-none transition-all duration-200 ${
@@ -164,7 +182,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
 
 export const getStaticProps: GetStaticProps = async () => {
   const resourcesQuery = groq`*[_type == "resource"]{_id, name, description, url, resourceCategories[]->{_id, title, color}} | order(name asc)`
-  const categoriesQuery = groq`*[_type == "resourceCategories"]{_id, title, color} | order(title asc)`
+  const categoriesQuery = groq`*[_type == "resourceCategories"]{_id, title, color, group} | order(title asc)`
   const resources = await sanityClient.fetch(resourcesQuery)
   const categories = await sanityClient.fetch(categoriesQuery)
   return { props: { resources, categories } }
