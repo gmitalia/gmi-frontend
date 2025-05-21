@@ -71,6 +71,27 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
     return stripEmojiAndTrim(a.title).localeCompare(stripEmojiAndTrim(b.title));
   });
 
+  const macroCategoryBadge: Record<string, string> = {
+    tools: "bg-blue-500",
+    assets: "bg-green-500",
+    tutorial: "bg-yellow-400"
+  };
+
+  const macroCategoryEmoji: Record<string, string> = {
+    tools: "🛠️",
+    assets: "📦",
+    tutorial: "📖"
+  };
+
+  function getMacroCategory(resource: Resource): string | null {
+    const macroCats = ["tools", "assets", "tutorial"];
+    for (const cat of resource.resourceCategories) { 
+      const category = stripEmojiAndTrim(cat.title).toLowerCase();
+      if (macroCats.includes(category)) return category;
+    }
+    return null;
+  }
+
   return (
     <div>
       <Header />
@@ -130,49 +151,66 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
               Nessuna risorsa trovata per questa categoria.
             </div>
           )}
-          {filteredResources.map(resource => (
-            <div
-              key={resource._id}
-              className="bg-white border border-gray-100 rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between p-7 group focus-within:ring-2 focus-within:ring-primary"
-              tabIndex={0}
-              aria-label={`Risorsa: ${resource.name}`}
-            >
-              <div>
-                <a
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xl font-bold mb-2 text-primary group-hover:underline group-focus:underline transition-all duration-200 block"
-                  aria-label={`Vai alla risorsa: ${resource.name}`}
-                >
-                  {resource.name}
-                </a>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {resource.resourceCategories.map(cat => (
-                    <span
-                      key={cat._id}
-                      className="inline-block text-xs font-semibold px-3 py-1 rounded-full border"
-                      style={cat.color ? {
-                        backgroundColor: `${cat.color}1A`, // 10% opacity
-                        color: cat.color,
-                        borderColor: `${cat.color}33` // 20% opacity
-                      } : {
-                        backgroundColor: 'rgba(107, 114, 128, 0.1)', // fallback gray-500/10
-                        color: '#6b7280', // fallback gray-500
-                        borderColor: 'rgba(107, 114, 128, 0.2)' // fallback gray-500/20
-                      }}
-                    >
-                      {cat.title}
-                    </span>
-                  ))}
+          {filteredResources.map(resource => {
+            const macroCat = getMacroCategory(resource); 
+            const cardStyle = "bg-white border-gray-100";
+            return (
+              <a
+                key={resource._id}
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`relative rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between p-7 group focus-within:ring-2 focus-within:ring-primary border ${cardStyle} cursor-pointer`}
+                tabIndex={0}
+                aria-label={`Risorsa: ${resource.name}`}
+              >
+                {/* Emoji macro categoria in alto a destra, fuori dal padding */}
+                {macroCat && (
+                  <span
+                    className="absolute top-3 right-3 text-2xl select-none pointer-events-none"
+                    title={macroCat.charAt(0).toUpperCase() + macroCat.slice(1)}
+                    aria-label={macroCat.charAt(0).toUpperCase() + macroCat.slice(1)}
+                  >
+                    {macroCategoryEmoji[macroCat]}
+                  </span>
+                )}
+                <div>
+                  {/* Titolo e resto del contenuto */}
+                  <div className="text-xl font-bold mb-2 text-primary group-hover:underline group-focus:underline transition-all duration-200 block">
+                    {resource.name}
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {resource.resourceCategories
+                      .filter(cat => {
+                        const normalized = stripEmojiAndTrim(cat.title).toLowerCase();
+                        return !["tools", "assets", "tutorial"].includes(normalized);
+                      })
+                      .map(cat => (
+                        <span
+                          key={cat._id}
+                          className="inline-block text-xs font-semibold px-3 py-1 rounded-full border"
+                          style={cat.color ? {
+                            backgroundColor: `${cat.color}1A`, // 10% opacity
+                            color: cat.color,
+                            borderColor: `${cat.color}33` // 20% opacity
+                          } : {
+                            backgroundColor: 'rgba(107, 114, 128, 0.1)', // fallback gray-500/10
+                            color: '#6b7280', // fallback gray-500
+                            borderColor: 'rgba(107, 114, 128, 0.2)' // fallback gray-500/20
+                          }}
+                        >
+                          {cat.title}
+                        </span>
+                    ))}
+                  </div>
+                  <p className="mb-4 text-gray-700 text-base leading-relaxed">
+                    {resource.description}
+                  </p>
                 </div>
-                <p className="mb-4 text-gray-700 text-base leading-relaxed">
-                  {resource.description}
-                </p>
-              </div>
-              {/* Bottone rimosso */}
-            </div>
-          ))}
+                {/* Bottone rimosso */}
+              </a>
+            );
+          })}
         </div>
       </div>
       <Footer />
