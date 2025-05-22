@@ -15,7 +15,7 @@ export const GameTile = (props) =>
 		if(game.image_url.indexOf("http") >= 0)
 			img_url = game.image_url;
 		else
-			img_url = GMIApi.getInstance().imageURL + game.image_url + "?" + Date.now().toString();
+			img_url = GMIApi.getInstance().imageURL + game.image_url;
 	}
 
 	let authors = [];
@@ -103,6 +103,7 @@ export const GameTile = (props) =>
 					 className="image-centered object-cover w-full md:h-52"
 					 alt="thumbnail"
 					 src={img_url}
+					 loading="lazy"
 					 layout={"fill"}
 					 objectfit={"cover"}
 					/>

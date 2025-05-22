@@ -7,17 +7,14 @@ import StyledButton from "../commons/StyledButton";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 
-
 export default function GamesList(props)
 {
 	const { contest } = props;
 	const router = useRouter();
-
 	/**@type {[Game[], (data: Game[])=> any]} */
 	const [games, setGames] = useState();
 	/**@type {[JudgeData[], (data: JudgeData[])=> any]} */
-	const [judges, setJudges] = useState([]);
-
+	const [judges, setJudges] = useState(undefined);
 	const [error, setError] = useState();
 	const [showVotes, setShowVotes] = useState(false);
 
@@ -31,7 +28,10 @@ export default function GamesList(props)
 		});
 
 		//cleanup on unmount
-		return ()=> setGames(null);
+		return ()=>{
+			setGames(null);
+			setJudges(undefined); // reset judges when contest changes
+		};
 	},
 	[contest]); 
 
@@ -90,7 +90,9 @@ export default function GamesList(props)
 		<div className="w-full h-full flex flex-col ">
 			{areJudgesLoad?
 			(
-				<Spinner />
+				<div className="flex flex-row">
+					<b>Giudici:</b> 
+				</div>
 			)
 			:
 			(
