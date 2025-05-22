@@ -37,12 +37,14 @@ export default function GamesList(props)
 
 	useEffect(()=>
 	{
-		GMIApi.getInstance().getResults(contest, (results_data) =>
+		GMIApi.getInstance().getParticipants(contest, false, (data) =>
 		{
-			if(!results_data.success)
-				setError(results_data.error || "invalid results");
+			if(!data.success)
+				setError(data.error || "invalid participants");
 			else 
-				setJudges(results_data?.judges_data);
+				setJudges(data?.participants
+					.filter(part => part.kind == "1")
+					.map(part => ({id: part.id, name: part.user_name, votes_count: 0})));
 		});
 	},
 	[contest]);
