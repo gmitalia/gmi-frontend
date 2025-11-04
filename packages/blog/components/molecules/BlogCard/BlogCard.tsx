@@ -15,7 +15,7 @@ const BlogCard = ({post}: BlogCardProps) => {
       {category && <div className="blog-card__category">{category}</div>}
       <div className="blog-card__body">
         <div>
-          <a className="blog-card__link" href={`/posts/${post?.slug.current}`} title={post?.title}>
+          <a className="blog-card__link" href={post?.slug?.current ? `/posts/${post.slug.current}` : "#"} title={post?.title}>
             <h2 className="blog-card__title">{post?.title}</h2>
           </a>
         </div>

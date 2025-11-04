@@ -69,22 +69,24 @@ const Post = ({ post }: Props) => {
   );
 };
 export async function getStaticPaths() {
-  const query = `*[_type == 'post']{
-        _id,
-        slug  {
-        current
-      }
-      }`;
+  const query = `*[_type == "post" && defined(slug.current)]{
+    _id,
+    slug {
+      current
+    }
+  }`;
+
   const posts = await sanityClient.fetch(query);
 
-  const paths = posts.map((post: PostInterface) => ({
-    params: {
-      slug: post.slug.current,
-    },
-  }));
+  const paths = posts
+    .filter((post: any) => post.slug && post.slug.current)
+    .map((post: PostInterface) => ({
+      params: { slug: post.slug.current },
+    }));
+
   return {
     paths,
-    fallback: "blocking", // false or 'blocking'
+    fallback: "blocking",
   };
 }
 
