@@ -1,0 +1,59 @@
+
+name: Deploy to Firebase (Production)
+
+on:
+  push:
+    branches:
+    - main
+  repository_dispatch:
+    types:
+    - blog
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20' # Match this version to the version in functions/package.json
+
+    - name: Install Firebase CLI
+      run: npm install -g firebase-tools
+
+    - name: Create public directory
+      run: mkdir public
+
+    - name: (Blog) Install dependencies
+      run: npm install
+      working-directory: ./packages/blog
+
+    - name: (Blog) build and export
+      run: npm run export
+      working-directory: ./packages/blog
+
+    - name: (Blog) copy artifact
+      run: cp -r . ../../../public
+      working-directory: ./packages/blog/out
+
+    - name: (Gmicontest) install dependencies
+      run: npm ci
+      working-directory: ./packages/gmicontest
+
+    - name: (Gmicontest) build and export
+      run: npm run build && npm run export
+      working-directory: ./packages/gmicontest
+
+    - name: (Gmicontest) rename and copy artifact
+      run: mv out competizioni && cp -r competizioni ../../public
+      working-directory: ./packages/gmicontest
+
+
+    - name: Deploy to Firebase
+      env:
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      run: firebase deploy --token "$FIREBASE_TOKEN" -P default
