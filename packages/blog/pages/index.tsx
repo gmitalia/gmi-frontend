@@ -37,7 +37,10 @@ export default function Home({ posts }: Props) {
       <Hero />
 
       <div className="max-w-7xl mx-auto p-5 blog-section">
-        <h2 className="text-3xl mb-3">Blog</h2>
+        <div className="flex items-center justify-between mt-5 mb-4">
+        <h2 className="text-3xl">Ultimi articoli</h2>
+        <a href="/blog" title="Vai alla pagina Blog" className="hover:underline">Vedi tutti gli articoli →</a>
+        </div>
         {/* posts */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 py-3">
           {posts.map((post) => {
