@@ -4,14 +4,25 @@ import Hero from "../components/molecules/Hero/Hero";
 import Link from "next/link";
 import Header from "../components/molecules/Header/Header";
 import { sanityClient, urlFor } from "../sanity";
-import { PostInterface } from "../typings";
+import { PostInterface, Game } from "../typings";
 import BlogCard from "../components/molecules/BlogCard/BlogCard";
+import ShowcaseCard from "../components/molecules/ShowcaseCard/ShowcaseCard";
 import Footer from "../components/molecules/Footer/Footer";
+import { useEffect, useState } from "react";
 
 interface Props {
   posts: [PostInterface];
+  games: [Game];
 }
-export default function Home({ posts }: Props) {
+export default function Home({ posts, games }: Props) {
+
+  const [gamesArray, setGamesArray] = useState<Game[]>(games);
+
+  useEffect(() => {
+    const shuffledGames = [...games].sort(() => Math.random() - 0.5);
+    setGamesArray(shuffledGames);
+  }, [games]);
+
   return (
     <div>
       <Head>
@@ -37,9 +48,9 @@ export default function Home({ posts }: Props) {
       <Hero />
 
       <div className="max-w-7xl mx-auto p-5 blog-section">
-        <div className="flex items-center justify-between mt-5 mb-4">
-        <h2 className="text-3xl">Ultimi articoli</h2>
-        <a href="/blog" title="Vai alla pagina Blog" className="hover:underline">Vedi tutti gli articoli →</a>
+      <div className="flex flex-col items-start mt-5 mb-4 md:flex-row md:items-center md:justify-between">
+        <h2 className="text-3xl mb-2 md:mb-0">Ultimi articoli</h2>
+        <Link href="/blog" title="Vai alla pagina Blog" className="hover:underline">Vedi tutti gli articoli →</Link>
         </div>
         {/* posts */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 py-3">
@@ -49,6 +60,21 @@ export default function Home({ posts }: Props) {
             );
           })}
 
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto p-5 blog-section">
+      <div className="flex flex-col items-start mt-5 mb-4 md:flex-row md:items-center md:justify-between">
+        <h2 className="text-3xl mb-2 md:mb-0">Giochi dalla community</h2>
+        <Link href="/showcase" title="Vai alla pagina Showcase" className="hover:underline">Vedi tutti i giochi →</Link>
+        </div>
+        {/* games */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 py-3">
+        {gamesArray.map((game, i) => {
+              if (i<6) {
+                return <ShowcaseCard game={game} key={game._id} />;
+              }
+        })}
         </div>
       </div>
       <Footer />
@@ -70,8 +96,18 @@ export async function getStaticProps() {
   description
   }`;
 
+  const queryGames = `*[_type == 'game'] | order(title asc) {
+    _id,
+    title,
+    author,
+    banner,
+    url
+  }`;
+
+  const games = await sanityClient.fetch(queryGames)
+
   const posts = await sanityClient.fetch(query);
   return {
-    props: { posts }, // will be passed to the page component as props
+    props: { posts, games }, // will be passed to the page component as props
   };
 }

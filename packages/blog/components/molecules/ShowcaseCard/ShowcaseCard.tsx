@@ -11,7 +11,9 @@ const ShowcaseCard = ({ game }: ShowcaseCardProps) => {
     <div className="showcaseCard__wrapper">
       <a
         className="showcaseCard"
-        style={{ backgroundImage: `url(${urlFor(game.banner)?.url()!}` }}
+        style={{
+          backgroundImage: game.banner ? `url(${urlFor(game.banner)?.url()})` : undefined,
+        }}
         title={game.title}
         href={game.url}
         target="_blank"
