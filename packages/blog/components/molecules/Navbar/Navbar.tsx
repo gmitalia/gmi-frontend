@@ -32,6 +32,9 @@ const Navbar = ({ openMenu, setOpenMenu }: NavbarProps) => {
             <Link href="/blog">Blog</Link>
           </li>
           <li className="border-transparent w-full md:w-auto hover:underline decoration-2 duration-500 my-6 ml-5 md:my-0">
+            <Link href="/tutorial">Tutorial</Link>
+          </li>
+          <li className="border-transparent w-full md:w-auto hover:underline decoration-2 duration-500 my-6 ml-5 md:my-0">
             <Link href="/showcase">Showcase</Link>
           </li>
           <li className="border-transparent w-full md:w-auto hover:underline decoration-2 duration-500 my-6 md:my-0">
