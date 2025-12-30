@@ -37,7 +37,7 @@ export default function Tutorial({ posts }: Props) {
         <h2 className="text-3xl mb-3">Tutorial</h2>
         {/* posts */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 py-3">
-          {posts.filter((post) => post.categories.includes("Tutorial")).map((post) => {
+          {posts.filter((post) => post.categories?.includes("Tutorial")).map((post) => {
             return (
               <BlogCard post={post} key={post?._id} />
             );
