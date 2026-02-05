@@ -31,8 +31,8 @@ jobs:
       run: npm ci
       working-directory: ./packages/blog
 
-    - name: (Blog) build and export
-      run: npm run export
+    - name: (Blog) build
+      run: npm run build
       working-directory: ./packages/blog
 
     - name: (Blog) copy artifact
