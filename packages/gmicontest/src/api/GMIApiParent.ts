@@ -85,7 +85,7 @@ export default class GMIApiParent
 	 * @param game ID del gioco
 	 * @param callback Funzione di callback con i dati dei voti
 	 */
-	getVotes(contest: string, game: string, callback: (data: {success: boolean; votes: Vote[]})=> void): void
+	getVotes(contest: string, game: string, callback: (data: VotesResponse)=> void): void
 	{}
 
 	/**
@@ -97,6 +97,17 @@ export default class GMIApiParent
 	{}
 
 	getUsers(callback: (data: {success: boolean; users: User[]})=> void)
+	{}
+
+	getStats(callback: (data: {success: boolean; stats: {games_count: number; participants: number; competitions: number}})=> void): void
+	{}
+
+	/**
+	 * Cerca giochi e utenti.
+	 * @param q Query di ricerca (min 2 caratteri)
+	 * @param callback Funzione di callback con i risultati
+	 */
+	getSearchResults(q: string, callback: (data: {success: boolean; games: any[]; users: any[]; error?: string})=> void): void
 	{}
 
 	getUserInfo(userId: number, callback: (data: {success: boolean; users: UserInfo[]})=> void)

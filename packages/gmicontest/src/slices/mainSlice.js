@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { authAsyncThunk } from "./authAsyncThunk";
 
 export const mainSlice = createSlice({
   name: 'main',
   initialState: {
-    showMenu: undefined
+    showMenu: undefined,
+    theme: 'light'
   },
   reducers: {
     showMenu: (state) => {
@@ -15,6 +15,12 @@ export const mainSlice = createSlice({
     },
     toggleMenu: (state) => {
       state.showMenu = !state.showMenu
+    },
+    setTheme: (state, action) => {
+      state.theme = action.payload
+    },
+    toggleTheme: (state) => {
+      state.theme = state.theme === 'light' ? 'dark' : 'light'
     }
   },
   extraReducers: (builder) => {

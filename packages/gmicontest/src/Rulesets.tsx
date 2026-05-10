@@ -1,5 +1,5 @@
 import React from "react";
-import RuleBook from "../components/commons/RuleBook";
+import PageRuleBook from "../components/PageRuleBook";  
 
 export const Rulesets =
 {
@@ -73,7 +73,7 @@ export const Rulesets =
 					<li>devono funzionare su windows</li>
 					<li>non devono essere già stati presentati in una competizione di GMItalia.tk precedente o già presentati alla comunità;</li>
 					<li>devono essere in lingua Inglese o Italiana;</li>
-					<li>non devono contenere virus o istruzioni che possono danneggiare pc altrui;</li>
+					<li>non devono contenere malware o istruzioni che possono danneggiare pc altrui;</li>
 					<li>non devono contenere materiale pornografico, altamente offensivo o adatto ad un solo pubblico adulto;</li>
 					<li>possono essere in 3d o 2d e avere il supporto di DLL (citate gli autori dei materiali se non siete voi);</li>
 					<li>possono essere anche multigiocatore e con supporto al gioco online, ma solo se è anche disponibile una modalità a gioco singolo. Possono partecipare anche i giochi che necessitano di due giocatori (umano vs umano) nello stesso pc.</li>
@@ -145,7 +145,7 @@ export const Rulesets =
 					<li>Devono essere esportati e consegnati sotto forma di archivio zip(opzione di export disponibile per Game Maker: Studio). Nel caso si utilizzi Game Maker 6(o versioni successive) sarà accettato il classico file exe purchè zippato. In ogni caso si eviti completamente l'export sotto forma di installer;</li>
 					<li>Devono essere in lingua Inglese o Italiana;</li>
 					<li>Non devono essere già stati presentati in una competizione di GMItalia precedente o già rilasciati in giro per il web;</li>
-					<li>Non devono contenere virus o istruzioni che possono danneggiare pc altrui;</li>
+					<li>Non devono contenere malware o istruzioni che possono danneggiare pc altrui;</li>
 					<li>Non devono resi pubblici sul web prima dei giudizi finali pena esclusione. (se volete presentare demo parziali, iniziali e non complessive del gioco va bene, ma fate a vostro rischio e pericolo);</li>
 					<li>Possono essere in 3d o 2d e avere il supporto di DLL (citate gli autori dei materiali se non siete voi);</li>
 					<li>Possono essere anche multi giocatore e con supporto al gioco online. Possono anche partecipare anche i giochi che necessitano di due giocatori (umano VS umano) nello stesso pc;</li>
@@ -212,7 +212,7 @@ export const Rulesets =
 		contest: [0],	
 		rules: "",
 		method: "Il sistema moderno e attualmente in uso, prevede un unico voto e commento a giudice, più dei pro e contro segnalabili",
-		rulebook: RuleBook()
+		rulebook: PageRuleBook()
 	},
 
 }
@@ -220,5 +220,5 @@ export const Rulesets =
 
 export function GetRulebook(contest_id: number)
 {
-	return Object.values(Rulesets).find(o=> o.contest.includes(contest_id))?.rulebook ?? RuleBook()
+	return Object.values(Rulesets).find(o=> o.contest.includes(contest_id))?.rulebook ?? PageRuleBook()
 }

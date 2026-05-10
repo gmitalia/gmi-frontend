@@ -8,6 +8,7 @@ export default class GMIApiMock extends GMIApiParent
 {
 	apiURL = "https://gmitalia.altervista.org/competizioni/api/v1/";
 	imageURL = "https://gmitalia.altervista.org/competizioni/thumbnails/";
+	awardsURL = "https://gmitalia.altervista.org/competizioni/awards/";
 	forumProfileURL ="https://gmitalia.altervista.org/forum/memberlist.php?mode=viewprofile&u=";
 
 	getMe()
@@ -119,6 +120,14 @@ export default class GMIApiMock extends GMIApiParent
 		},100)
 	}
 
+	getSearchResults(q, callback) {
+		callback({
+			success: true,
+			games: [],
+			users: [],
+		})
+	}
+
 	getUsers(callback)
 	{
 		callback(
@@ -130,6 +139,18 @@ export default class GMIApiMock extends GMIApiParent
 							acc.push(obj)
 						return acc
 					}, [])
+		});
+	}
+
+	getStats(callback)
+	{
+		callback({
+			success: true,
+			stats: {
+				games_count: 123,
+				participants: 456,
+				competitions: 78,
+			},
 		});
 	}
 

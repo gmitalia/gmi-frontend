@@ -81,7 +81,7 @@ const Navbar = ({ id, openMenu, setOpenMenu }: NavbarProps) => {
               tabIndex={isVisible ? 0 : -1}
               target="_blank"
               rel="noopener noreferrer"
-              className="block mx-2 md:mx-0 text-center text-white bg-gray-800 px-4 py-3 md:py-2 rounded-full text-sm font-medium hover:shadow-lg hover:bg-gray-700 transition-all duration-200 whitespace-nowrap"
+              className="block mx-2 md:mx-0 text-center text-content bg-gray-800 px-4 py-3 md:py-2 rounded-full text-sm font-medium hover:shadow-lg hover:bg-gray-700 transition-all duration-200 whitespace-nowrap"
               title="Vai al server Discord di GMI"
             >
               Entra su Discord
