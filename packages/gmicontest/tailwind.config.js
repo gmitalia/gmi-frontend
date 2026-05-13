@@ -14,9 +14,35 @@ module.exports = {
       "2xl": "1536px",
     },
     colors: ({ colors }) => ({
-      primary: "#002c47",
-      secondary: "#4185AD",
+      // Dynamic theme colors - reference CSS variables set by .theme-light / .theme-dark
+      primary: "rgba(var(--ds-rgb-primary), <alpha-value>)",
+      "primary-light": "rgba(var(--ds-rgb-primary-light), <alpha-value>)",
+      secondary: "rgba(var(--ds-rgb-secondary), <alpha-value>)",
+      accent: "rgba(var(--ds-rgb-accent), <alpha-value>)",
+      "accent-warm": "rgba(var(--ds-rgb-accent-warm), <alpha-value>)",
 
+      // Semantic colors (use theme-aware values, keep exact colors for opacity)
+      success: "rgba(var(--ds-rgb-success), <alpha-value>)",
+      error: "rgba(var(--ds-rgb-error), <alpha-value>)",
+      warning: "rgba(var(--ds-rgb-warning), <alpha-value>)",
+      info: "rgba(var(--ds-rgb-info), <alpha-value>)",
+
+      // Text colors
+      content: "rgba(var(--ds-rgb-content), <alpha-value>)",
+      "content-muted": "rgba(var(--ds-rgb-content-muted), <alpha-value>)",
+      "content-disabled": "var(--ds-color-content-muted)",
+      "on-primary": "var(--ds-color-on-primary)",
+      "on-secondary": "var(--ds-color-on-secondary)",
+
+      // Surface system — theme-aware via CSS variables
+      surface: {
+        DEFAULT: "rgba(var(--ds-rgb-surface), <alpha-value>)",
+        solid: "rgba(var(--ds-rgb-surface-solid), <alpha-value>)",
+        muted: "rgba(var(--ds-rgb-surface-muted), <alpha-value>)",
+        elevated: "rgba(var(--ds-rgb-surface-elevated), <alpha-value>)",
+      },
+
+      // Standard Tailwind palette
       inherit: colors.inherit,
       current: colors.current,
       transparent: colors.transparent,
@@ -190,7 +216,7 @@ module.exports = {
     },
     borderColor: ({ theme }) => ({
       ...theme("colors"),
-      DEFAULT: theme("colors.gray.200", "currentColor"),
+      DEFAULT: "var(--ds-color-border)",
     }),
     borderOpacity: ({ theme }) => theme("opacity"),
     borderRadius: {
@@ -203,6 +229,10 @@ module.exports = {
       "2xl": "1rem",
       "3xl": "1.5rem",
       full: "9999px",
+      card: "var(--ds-radius-card)",
+      "lg-card": "var(--ds-radius-lg)",
+      "xl-card": "var(--ds-radius-xl)",
+      cta: "var(--ds-radius-cta)",
     },
     /*
     borderSpacing: ({ theme }) => ({
@@ -215,6 +245,8 @@ module.exports = {
       2: "2px",
       4: "4px",
       8: "8px",
+      thin: "var(--ds-border-thin)",
+      thick: "var(--ds-border-thick)",
     },
     boxShadow: {
       sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",

@@ -119,7 +119,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
         </div>
         <nav aria-label="Categorie risorse" className="flex flex-wrap gap-2 mb-8">
           <button
-            className={`px-5 py-2 rounded-full border font-medium focus:outline-none transition-all duration-200 ${selectedCategories.length === 0 ? 'bg-primary text-white shadow' : 'bg-white text-primary border-primary hover:bg-primary hover:text-white'}`}
+            className={`px-5 py-2 rounded-full border font-medium focus:outline-none transition-all duration-200 ${selectedCategories.length === 0 ? 'bg-primary text-content shadow' : 'bg-white text-primary border-primary hover:bg-primary hover:text-content'}`}
             onClick={() => setSelectedCategories([])}
             aria-pressed={selectedCategories.length === 0}
           >
@@ -130,7 +130,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
               key={cat._id}
               className={`px-5 py-2 rounded-full border font-medium focus:outline-none transition-all duration-200 ${
                 selectedCategories.includes(cat._id)
-                  ? 'bg-primary text-white shadow'
+                  ? 'bg-primary text-content shadow'
                   : 'bg-white text-primary border-primary'
               }`}
               onClick={() => toggleCategory(cat._id)}
@@ -160,7 +160,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
                 href={resource.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`relative rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between p-7 group focus-within:ring-2 focus-within:ring-primary border ${cardStyle} cursor-pointer`}
+                className={`relative rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between p-7 group focus-within:ring-2 focus-within:ring-primary border ${cardStyle} cursor-pointer`}
                 tabIndex={0}
                 aria-label={`Risorsa: ${resource.name}`}
               >

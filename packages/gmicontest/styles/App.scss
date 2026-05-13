@@ -1,6 +1,7 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import "./design-system";
 
 @media screen and (min-width: 769px) {
   .is-mobile {
@@ -125,51 +126,118 @@
 
 html
 {
-	height: 100% !important;
-	min-height: -webkit-fill-available;
-	overflow: hidden;
+	height: 100%;
+	min-height: 100%;
+	scroll-behavior: smooth;
 }
 
 body
 {
-	height: 100% !important;
-	overflow: hidden;
+	min-height: 100%;
+	background: var(--ds-color-app-bg);
+	color: var(--ds-color-content);
 }
 
 #__next
 {
-	height: 100% !important;
-	display: flex;
-	flex-direction: column;
+	min-height: 100vh;
 }
 
 .flex-grow-v
 {
 	flex-grow: 1;
-	height: 1px;
+	min-height: 1px;
+}
+
+.surface-card {
+	background: var(--ds-color-surface);
+	border: 1px solid var(--ds-color-border);
+	border-radius: var(--ds-radius-card);
+	box-shadow: var(--ds-shadow-card);
+}
+
+.section-title {
+	font-size: 1.5rem;
+	line-height: 2rem;
+	font-weight: 700;
+	color: var(--ds-color-content);
+}
+
+.section-subtitle {
+	color: var(--ds-color-content-muted);
+	max-width: 65ch;
 }
 
 
-.vote-tables
-{
-	table
-	{
-		width: 100%;
-	}
-	tbody tr:nth-child(odd)
-	{
-		border-bottom: 1px dashed #dddddd;
-	}
-	tbody tr:nth-child(odd)>td:first-child
-	{
-		font-weight: bold;
-	}
+.vote-tables {
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0 0 1.5rem 0;
+    border: 1px solid var(--ds-color-border);
+    border-radius: 1rem;
+    overflow: hidden;
+    background: var(--ds-color-surface-elevated);
 
-	li
-	{
-		margin-left: 20px;
-		list-style-type: circle;
-	}
+    thead {
+      display: none;
+    }
+
+    th, td {
+      padding: 0.75rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid var(--ds-color-border);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    tbody tr:nth-child(odd) {
+      background: rgba(var(--ds-rgb-content), 0.02);
+
+      & > td:first-child {
+        color: var(--ds-color-content);
+      }
+    }
+
+    tbody tr:nth-child(even) {
+      & > td:first-child {
+        color: var(--ds-color-content);
+      }
+    }
+
+    td:last-child {
+      color: var(--ds-color-secondary);
+      text-align: right;
+    }
+
+    td strong, td b {
+      font-weight: 800;
+      color: var(--ds-color-content);
+    }
+  }
+
+  li {
+    margin-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    list-style-type: none;
+    position: relative;
+    padding-left: 0.5rem;
+
+    &:before {
+      content: "";
+      position: absolute;
+      left: -1rem;
+      top: 0.6em;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--ds-color-secondary);
+      box-shadow: 0 0 8px var(--ds-color-secondary);
+    }
+  }
 }
 
 .medal-popover

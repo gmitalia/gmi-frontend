@@ -10,6 +10,7 @@ type GameData =
 	id: string;
 	name: string;
 	votes_count: string;
+	avg_score: string;
  };
  
  type Results = 
@@ -67,6 +68,20 @@ type Participant =
 	user_discord_id: string; // L'ID Discord del partecipante
 	contest_id: string; // L'ID della competizione
 	kind: string; // Tipo di partecipante
+}
+
+type Award =
+{
+	text: string; // Il testo del premio (es. "Primo Posto", "Miglior Grafica")
+	url: string | null; // L'URL dell'immagine del premio, null se non c'è immagine
+	type: number; // Type ID (0-255) per lo stile del badge
+}
+
+type VotesResponse =
+{
+	success: boolean;
+	votes: Vote[];
+	awards: Record<string, Award[]>; // Mappa game_id -> array di award
 }
 
 type Vote =
