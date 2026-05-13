@@ -93,10 +93,6 @@ export const GameTile = (props) => {
 						src={img_url}
 						loading="lazy"
 					/>
-					{/* Gradient overlay */}
-					<div className="opacity-40 absolute inset-0" style={{
-						 background: 'linear-gradient(to top, var(--ds-color-primary), rgba(var(--ds-rgb-primary), 0.01), transparent)' 
-					}} />
 
 					{/* Position badge */}
 					{showTrophy && resultsPublic && position && (
