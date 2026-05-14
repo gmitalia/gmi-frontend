@@ -136,6 +136,7 @@ const ModernSidebar = ({ isOpen, onClose }) => {
               <SidebarItem href="/" icon={HomeIcon} label="Home" isActive={currentPath === "/"} onClick={onClose} />
               <SidebarItem href="/search" icon={SearchIcon} label="Cerca" isActive={currentPath === "/search"} onClick={onClose} />
               <SidebarItem href="/users" icon={UsersIcon} label="Utenti" isActive={currentPath === "/users"} onClick={onClose} />
+              <SidebarItem href="/premi" icon={TrophyIcon} label="Premi" isActive={currentPath === "/premi"} onClick={onClose} />
               <SidebarItem href="/rules" icon={BookIcon} label="Regolamento" isActive={currentPath === "/rules"} onClick={onClose} />
             </div>
 

@@ -1,0 +1,131 @@
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { PageLayout } from "./WebsiteLayout/PageLayout";
+import { TrophyIcon, ClockIcon } from "./commons/Icons";
+import GMIApi from "../src/api/GMIApi";
+import Link from "next/link";
+import ImageModal from "./commons/ImageModal";
+
+export default function PagePremi() {
+  const router = useRouter();
+  const [prizes, setPrizes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    GMIApi.getInstance().getPrizes(undefined, (data) => {
+      if (data.success) {
+        setPrizes(data.prizes);
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  const handleCardClick = (contestId) => {
+    router.push(`/contest?contest=${contestId}`);
+  };
+
+  const formatPrizeImage = (url) => {
+    if (!url) return "";
+    if (url.startsWith("http")) return url;
+    return GMIApi.getInstance().prizesURL + url;
+  };
+
+  const parseAuthors = (authorsBase64) => {
+    if (!authorsBase64) return [];
+    try {
+      return JSON.parse(atob(authorsBase64));
+    } catch (e) {
+      return [];
+    }
+  };
+
+  return (
+    <PageLayout>
+      <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col gap-8">
+          
+          {/* Header */}
+          <div className="border-b border-default pb-6">
+            <h1 className="text-3xl font-bold text-content">Galleria Premi</h1>
+            <p className="text-content-muted mt-2">
+              L'archivio dei premi assegnati ai vincitori delle competizioni.
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                <div key={i} className="h-72 bg-surface-elevated animate-pulse rounded-lg" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {prizes.map((prize) => {
+                const authors = parseAuthors(prize.authors);
+                const imageUrl = formatPrizeImage(prize.image_url);
+                return (
+                  <div
+                    key={prize.id}
+                    className="flex flex-col bg-surface-elevated border border-default ds-rounded-card overflow-hidden shadow-md hover:border-secondary transition-colors"
+                  >
+                    {/* Image Section - Clicks to open Large View */}
+                    <div 
+                      className="aspect-square bg-black/5 flex items-center justify-center cursor-zoom-in"
+                      onClick={() => setSelectedImage({ src: imageUrl, alt: prize.description || prize.game_name })}
+                    >
+                      <img
+                        src={imageUrl}
+                        alt={prize.description || prize.game_name}
+                        className="w-full h-full object-cover pointer-events-none"
+                      />
+                    </div>
+
+                    {/* Info Section Below - Clicks to navigate to Contest */}
+                    <div 
+                      className="p-4 flex flex-col gap-2 flex-1 cursor-pointer"
+                      onClick={() => handleCardClick(prize.contest_id)}
+                    >
+                      <div className="space-y-1">
+                        <h3 className="text-base font-bold text-content line-clamp-2 group-hover:text-secondary">
+                          {prize.description || prize.game_name || "Premio"}
+                        </h3>
+                        <div className="flex items-center gap-1.5 text-xs text-content-muted">
+                           <span className="font-medium">{prize.contest_name}</span>
+                        </div>
+                      </div>
+
+                      {authors.length > 0 && (
+                        <div className="pt-2 border-t border-default flex flex-wrap items-center gap-1">
+                          <span className="text-[10px] text-content-muted uppercase font-bold mr-1">di</span>
+                          {authors.map((author, idx) => (
+                            <Link key={idx} href={`/user?user=${author.id}`}>
+                              <a 
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-xs font-semibold text-secondary hover:underline"
+                              >
+                                {author.name}{idx < authors.length - 1 ? "," : ""}
+                              </a>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {selectedImage && (
+        <ImageModal 
+          src={selectedImage.src} 
+          alt={selectedImage.alt} 
+          onClose={() => setSelectedImage(null)} 
+        />
+      )}
+    </PageLayout>
+  );
+}

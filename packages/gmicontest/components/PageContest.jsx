@@ -12,6 +12,7 @@ import ContestJudgingProgressSection from "./Contest/ContestJudgingProgressSecti
 import { Button } from "./commons/Button";
 import { BookIcon, UploadIcon, EyeIcon, TrophyIcon, EditIcon } from "./commons/Icons";
 import { PageLayout } from "./WebsiteLayout/PageLayout";
+import ContestPrizesSection from "./Contest/ContestPrizesSection";
 
 export default function PageContest(props) {
 	let router = useRouter();
@@ -288,6 +289,8 @@ export default function PageContest(props) {
 				<ContestJudgesSection judges={judges} />
 
 				{isJudging && <ContestJudgingProgressSection judgingProgress={judgingProgress} judges={judges} />}
+
+				<ContestPrizesSection contestId={contest.id} />
 			</div>
 		</PageLayout>
 	);
