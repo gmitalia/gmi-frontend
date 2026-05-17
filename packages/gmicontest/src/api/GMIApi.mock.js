@@ -9,6 +9,7 @@ export default class GMIApiMock extends GMIApiParent
 	apiURL = "https://gmitalia.altervista.org/competizioni/api/v1/";
 	imageURL = "https://gmitalia.altervista.org/competizioni/thumbnails/";
 	awardsURL = "https://gmitalia.altervista.org/competizioni/awards/";
+	prizesURL = "https://gmitalia.altervista.org/competizioni/prizes/";
 	forumProfileURL ="https://gmitalia.altervista.org/forum/memberlist.php?mode=viewprofile&u=";
 
 	getMe()
@@ -291,6 +292,20 @@ export default class GMIApiMock extends GMIApiParent
 			contest: contest,
 		});
 		fetch(this.apiURL + "delete_participation_data.php?" + params.toString(),
+		{
+			credentials: "include",
+			method: "GET",
+		})
+			.then((response) => response.json())
+			.then((data) => callback(data))
+			.catch((error) => console.error("GMIApi Error:", error));
+	}
+
+	getPrizes(contestId, callback)
+	{
+		const params = contestId ? new URLSearchParams({ id: contestId }) : null;
+		const url = this.apiURL + "get_prizes.php" + (params ? "?" + params.toString() : "");
+		fetch(url,
 		{
 			credentials: "include",
 			method: "GET",

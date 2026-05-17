@@ -5,6 +5,8 @@ export default class GMIApiParent
 {
 	apiURL = "";
 	imageURL = "";
+	awardsURL = "";
+	prizesURL = "";
 	forumProfileURL ="";
 
 	/**
@@ -143,5 +145,13 @@ export default class GMIApiParent
 	 * @param callback Funzione di callback con la risposta del server
 	 */
 	deleteParticipationData(contest: string, callback: (data: {success: boolean, error: any})=> void): void
+	{}
+
+	/**
+	 * Ottiene la lista dei premi (galleria).
+	 * @param contestId ID del contest (opzionale)
+	 * @param callback Funzione di callback con i dati dei premi
+	 */
+	getPrizes(contestId: number | undefined, callback: (data: {success: boolean; prizes: Prize[]})=> void): void
 	{}
 }

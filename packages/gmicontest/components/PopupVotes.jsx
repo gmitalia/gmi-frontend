@@ -256,7 +256,7 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
 										<div className="space-y-8">
 											<div className="flex items-center gap-4">
 												<div className="h-px flex-1 bg-content/5" />
-												<h3 className="text-xs md:text-sm font-black text-content-muted uppercase tracking-[0.2em] md:tracking-[0.4em] text-center px-4">Feedback Globale della Giuria</h3>
+												<h3 className="text-xs md:text-sm font-black text-content-muted uppercase tracking-[0.2em] md:tracking-[0.4em] text-center px-4">Cosa dicono i giudici</h3>
 												<div className="h-px flex-1 bg-content/5" />
 											</div>
 

@@ -5,6 +5,7 @@ export default class GMIApiProd extends GMIApiParent {
 	apiURL = "https://gmitalia.altervista.org/competizioni/api/v1/"
 	imageURL = "https://gmitalia.altervista.org/competizioni/thumbnails/"
 	awardsURL = "https://gmitalia.altervista.org/competizioni/awards/";
+	prizesURL = "https://gmitalia.altervista.org/competizioni/prizes/";
 	forumProfileURL = "https://gmitalia.altervista.org/forum/memberlist.php?mode=viewprofile&u="
 
 	// Cache in RAM - si svuota al refresh
@@ -273,5 +274,12 @@ export default class GMIApiProd extends GMIApiParent {
 			.then(response => response.json())
 			.then(data => callback(data))
 			.catch(error => console.error("GMIApi Error:", error))
+	}
+
+	getPrizes(contestId, callback) {
+		const params = contestId ? new URLSearchParams({ id: contestId }) : null;
+		const cacheKey = this._getCacheKey("get_prizes", params);
+		const url = this.apiURL + "get_prizes.php" + (params ? "?" + params.toString() : "");
+		this._fetchWithCache(cacheKey, url, callback);
 	}
 }

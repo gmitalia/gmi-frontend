@@ -52,7 +52,7 @@ const ContestJudgesSection = ({ judges }) => {
 
       {judges.length === 0 && (
         <div className="py-12 flex flex-col items-center justify-center text-content-muted italic">
-          <p>Nessun giudice assegnato ancora per questa edizione.</p>
+          <p>Ancora nessun giudice per questa edizione.</p>
         </div>
       )}
     </section>

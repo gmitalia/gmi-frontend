@@ -21,7 +21,7 @@ const ContestHeroSection = ({ contest, actions, isComplete, isJudging, canSubmit
             />
             <h1 className="text-3xl md:text-5xl font-extrabold text-content tracking-tight">{contest.name}</h1>
           </div>
-          <p className="text-content-muted mt-3 md:mt-4 text-lg max-w-2xl leading-relaxed">Scopri i giochi in gara, i giudici e i risultati dell&apos;edizione.</p>
+          <p className="text-content-muted mt-3 md:mt-4 text-lg max-w-2xl leading-relaxed">Tutti i giochi, i giudici e i risultati dell&apos;edizione.</p>
         </div>
 
         {!isComplete && timeLeft !== "Scaduto" && (

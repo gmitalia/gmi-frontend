@@ -119,6 +119,7 @@ const MainNav = () => {
       <NavItem href="/" icon={HomeIcon} label="Home" isActive={currentPath === "/"} />
       <NavItem href="/search" icon={SearchIcon} label="Cerca" isActive={currentPath === "/search"} />
       <NavItem href="/users" icon={UsersIcon} label="Utenti" isActive={currentPath === "/users"} />
+      <NavItem href="/premi" icon={TrophyIcon} label="Premi" isActive={currentPath === "/premi"} />
       <NavItem href="/rules" icon={BookIcon} label="Regolamento" isActive={currentPath === "/rules"} />
     </nav>
   );

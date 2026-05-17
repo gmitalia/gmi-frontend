@@ -216,7 +216,7 @@ export default function PageEditVotes(props)
 					
 					<div className="flex-1">
 						<h1 className="text-2xl font-bold ds-text-gradient">Area Giudizi</h1>
-						<p className="ds-text-muted text-sm mt-1">Valuta i giochi e costruisci la tua classifica</p>
+						<p className="ds-text-muted text-sm mt-1">Vota i giochi e crea la tua classifica</p>
 					</div>
 
 					{/* Progress stats */}

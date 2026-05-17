@@ -12,6 +12,7 @@ import ContestJudgingProgressSection from "./Contest/ContestJudgingProgressSecti
 import { Button } from "./commons/Button";
 import { BookIcon, UploadIcon, EyeIcon, TrophyIcon, EditIcon } from "./commons/Icons";
 import { PageLayout } from "./WebsiteLayout/PageLayout";
+import ContestPrizesSection from "./Contest/ContestPrizesSection";
 
 export default function PageContest(props) {
 	let router = useRouter();
@@ -116,7 +117,7 @@ export default function PageContest(props) {
 		});
 	}, [contest, query.contest]);
 
-	if (query.contest == 0) {
+		if (query.contest == 0) {
 		return (
 			<div className="w-full h-full flex items-center justify-center">
 				<img className="max-w-md w-full animate-pulse" src={basePath + "/img/gmicomp.png"} />
@@ -288,6 +289,8 @@ export default function PageContest(props) {
 				<ContestJudgesSection judges={judges} />
 
 				{isJudging && <ContestJudgingProgressSection judgingProgress={judgingProgress} judges={judges} />}
+
+				<ContestPrizesSection contestId={contest.id} />
 			</div>
 		</PageLayout>
 	);

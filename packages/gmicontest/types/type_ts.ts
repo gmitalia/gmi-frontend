@@ -123,10 +123,11 @@ type UserInfo =
 	votes: [{contest_id: number}]
 }
 
-type AccountInfo = 
+type AccountInfo =
 {
 	user_id: string;
 	forum_id: string | null;
+	admin: boolean;
 	discord_info:
 	{
 		id: string;
@@ -162,3 +163,15 @@ type UserMedals =
 }
 
 type MedalGame = { 'game_id': number, 'game_name': string, 'contest_id': number, 'contest_name': string, 'completed_at': string}
+
+type Prize = {
+	id: number;
+	image_url: string;
+	description: string;
+	contest_id: number;
+	contest_name: string;
+	game_id: number | null;
+	game_name: string | null;
+	placement: number | null;
+	authors: string | null;
+}
