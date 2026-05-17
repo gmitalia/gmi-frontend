@@ -49,7 +49,7 @@ export default function PagePremi() {
           <div className="border-b border-default pb-6">
             <h1 className="text-3xl font-bold text-content">Galleria Premi</h1>
             <p className="text-content-muted mt-2">
-              L'archivio dei premi assegnati ai vincitori delle competizioni.
+              I premi assegnati ai vincitori delle competizioni (quando si ricordano di mandarci una foto)
             </p>
           </div>
 

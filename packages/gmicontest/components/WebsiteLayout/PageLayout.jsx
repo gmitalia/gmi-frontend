@@ -78,6 +78,10 @@ const ModernSidebar = ({ isOpen, onClose }) => {
   const router = useRouter();
   const { query } = router;
   const [contests, setContests] = React.useState([]);
+  const [showAllContests, setShowAllContests] = React.useState(false);
+  const [maxHeight, setMaxHeight] = React.useState(null);
+  const contestListRef = React.useRef(null);
+  const sidebarRef = React.useRef(null);
 
   const dispatch = useDispatch();
   const userInfo = useSelector(root => root.auth.userInfo);
@@ -96,6 +100,48 @@ const ModernSidebar = ({ isOpen, onClose }) => {
     });
   }, []);
 
+  // Measure available height for contest list
+  React.useLayoutEffect(() => {
+    const list = contestListRef.current;
+    if (!list) return;
+
+    if (showAllContests || contests.length === 0) {
+      list.style.maxHeight = "";
+      setMaxHeight(null);
+      return;
+    }
+
+    const measure = () => {
+      const sidebar = sidebarRef.current;
+      if (!sidebar || !list) return;
+
+      // Solo su desktop (lg = 1024px)
+      if (window.innerWidth < 1024) {
+        list.style.maxHeight = "";
+        setMaxHeight(null);
+        return;
+      }
+
+      // Unconstrain to get natural height
+      list.style.maxHeight = "";
+      const naturalHeight = list.scrollHeight;
+
+      const sidebarRect = sidebar.getBoundingClientRect();
+      const listRect = list.getBoundingClientRect();
+      const showMoreButtonSpace = 70;
+      const available = sidebarRect.bottom - listRect.top - showMoreButtonSpace;
+      const constrainedHeight = Math.max(60, available);
+
+      if (naturalHeight > constrainedHeight) {
+        setMaxHeight(constrainedHeight);
+      } else {
+        setMaxHeight(null);
+      }
+    };
+
+    measure();
+  }, [contests, showAllContests]);
+
   const currentPath = router.pathname;
 
   return (
@@ -110,12 +156,13 @@ const ModernSidebar = ({ isOpen, onClose }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:sticky top-0 lg:top-16 left-0 h-screen rounded-md lg:h-[calc(100vh-6rem)] 
+        ref={sidebarRef}
+        className={`fixed lg:sticky top-0 lg:top-16 left-0 h-screen rounded-md lg:h-[calc(100vh-6rem)]
           w-full lg:w-72 z-[60] lg:z-10
           ds-sidebar-panel
           transition-all duration-300 ease-in-out
           ${isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full lg:opacity-100 lg:translate-x-0"}
-          ds-scrollbar-hide overflow-y-auto
+          ds-scrollbar-modern overflow-y-auto
         `}
       >
         {/* Mobile Header in Sidebar */}
@@ -126,7 +173,7 @@ const ModernSidebar = ({ isOpen, onClose }) => {
           <Button variant="ghost" size="icon" onClick={onClose}><CloseIcon /></Button>
         </div>
 
-        <div className="p-6 lg:py-0 flex flex-col gap-8">
+        <div className="p-6 lg:pt-0 pb-6 flex flex-col gap-8">
           {/* Mobile Main Navigation */}
           <div className="lg:hidden space-y-2">
             <p className="px-4 text-[10px] font-black text-content-muted uppercase tracking-[0.2em] mb-4">
@@ -160,7 +207,11 @@ const ModernSidebar = ({ isOpen, onClose }) => {
             <p className="pt-4 px-4 text-[12px] font-black text-content-muted uppercase tracking-[0.2em] mb-4">
               Competizioni
             </p>
-            <div className="space-y-1">
+            <div
+              ref={contestListRef}
+              className="space-y-1 overflow-hidden transition-all duration-300"
+              style={{ maxHeight: showAllContests ? "none" : (maxHeight ? maxHeight + "px" : undefined) }}
+            >
               {contests.map((contest) => (
                 <ContestItem
                   key={contest.id}
@@ -170,6 +221,14 @@ const ModernSidebar = ({ isOpen, onClose }) => {
                 />
               ))}
             </div>
+            {maxHeight !== null && contests.length > 0 && (
+              <button
+                onClick={() => setShowAllContests(!showAllContests)}
+                className="w-full flex items-center justify-center gap-1.5 px-3 py-2.5 mt-2 rounded-lg text-xs font-semibold text-content-muted hover:text-secondary hover:bg-content/5 transition-all duration-200"
+              >
+                {showAllContests ? "Mostra meno" : "Vedi altre"}
+              </button>
+            )}
           </div>
 
           {/* User Section - Mobile Only */}

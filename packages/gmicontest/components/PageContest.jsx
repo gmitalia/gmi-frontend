@@ -117,7 +117,7 @@ export default function PageContest(props) {
 		});
 	}, [contest, query.contest]);
 
-	if (query.contest == 0) {
+		if (query.contest == 0) {
 		return (
 			<div className="w-full h-full flex items-center justify-center">
 				<img className="max-w-md w-full animate-pulse" src={basePath + "/img/gmicomp.png"} />

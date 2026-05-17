@@ -101,7 +101,7 @@ export default function GameForm(props) {
 					/>
 					<div>
 						<h2 className="text-2xl md:text-3xl font-black text-content tracking-tight">Informazioni Gioco</h2>
-						<p className="text-content-muted text-sm mt-1">Completa i campi per {props.participation?.id ? "aggiornare" : "inviare"} la tua partecipazione</p>
+						<p className="text-content-muted text-sm mt-1">Completa i campi per {props.participation?.id ? "aggiornare" : "partecipare"}</p>
 					</div>
 				</div>
 

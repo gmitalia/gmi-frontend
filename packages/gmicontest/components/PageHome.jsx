@@ -58,7 +58,7 @@ export default function PageHome(props) {
 				<RandomGameSection contests={contests} />
 
 				<section className="">
-					<h2 className="text-2xl font-bold text-content mb-4">I numeri della community</h2>
+					<h2 className="text-2xl font-bold text-content mb-4">I numeri di GMI</h2>
 					<div className="grid sm:grid-cols-3 gap-4">
 						<div className="rounded-md bg-secondary/5 border border-secondary/30 p-5 text-center">
 							<p className="text-sm text-secondary font-semibold mb-1">Competizioni</p>
@@ -76,7 +76,7 @@ export default function PageHome(props) {
 				</section>
 
 				<section className="ds-card-section">
-					<h2 className="text-2xl font-bold text-content mb-4">Come funziona la competizione</h2>
+					<h2 className="text-2xl font-bold text-content mb-4">Come funziona?</h2>
 					<ol className="grid gap-3 md:grid-cols-2">
 						<li className="flex gap-3 rounded-md bg-surface-elevated border border-default p-4">
 							<span className="flex-shrink-0 w-8 h-8 rounded-lg bg-secondary/20 text-secondary font-bold flex items-center justify-center">1</span>
@@ -88,11 +88,11 @@ export default function PageHome(props) {
 						</li>
 						<li className="flex gap-3 rounded-md bg-surface-elevated border border-default p-4">
 							<span className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent-warm/20 text-accent-warm font-bold flex items-center justify-center">3</span>
-							<span className="text-content/80">Partecipa a un evento live di premiazione</span>
+							<span className="text-content/80">Segui la live di premiazione</span>
 						</li>
 						<li className="flex gap-3 rounded-md bg-surface-elevated border border-default p-4">
 							<span className="flex-shrink-0 w-8 h-8 rounded-lg bg-bronze/20 text-bronze font-bold flex items-center justify-center">4</span>
-							<span className="text-content/80">Vengono pubblicati: classifica, giochi e votazioni</span>
+							<span className="text-content/80">Pubblicheremo classifica, giochi e votazioni</span>
 						</li>
 					</ol>
 				</section>
@@ -103,7 +103,7 @@ export default function PageHome(props) {
 
 					<div className="relative">
 						<h2 className="text-2xl font-bold text-content mb-3">Partecipa alla community</h2>
-						<p className="text-content-muted max-w-lg mx-auto mb-6">Unisciti al server Discord o esplora le creazioni della community</p>
+						<p className="text-content-muted max-w-lg mx-auto mb-6">Vieni a fare quattro chiacchiere con noi</p>
 						<div className="flex flex-wrap justify-center gap-4">
 							<Button variant="accent" size="lg" href="https://discord.gg/0wKBBPIbX2r3S32a" icon={<DiscordIcon size={20} />}>Entra su Discord</Button>
 							{latestContest && (
