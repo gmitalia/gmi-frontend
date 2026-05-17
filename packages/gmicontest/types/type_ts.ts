@@ -123,10 +123,11 @@ type UserInfo =
 	votes: [{contest_id: number}]
 }
 
-type AccountInfo = 
+type AccountInfo =
 {
 	user_id: string;
 	forum_id: string | null;
+	admin: boolean;
 	discord_info:
 	{
 		id: string;
