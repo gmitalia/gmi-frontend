@@ -175,3 +175,13 @@ type Prize = {
 	placement: number | null;
 	authors: string | null;
 }
+
+type ContestVideo = {
+	id: number;
+	contest_id: number;
+	title: string;
+	url: string;
+	is_highlighted: boolean;
+	sort_order: number;
+	contest_name: string;
+}

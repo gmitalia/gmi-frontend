@@ -13,6 +13,7 @@ import { Button } from "./commons/Button";
 import { BookIcon, UploadIcon, EyeIcon, TrophyIcon, EditIcon } from "./commons/Icons";
 import { PageLayout } from "./WebsiteLayout/PageLayout";
 import ContestPrizesSection from "./Contest/ContestPrizesSection";
+import ContestVideosSection from "./Contest/ContestVideosSection";
 
 export default function PageContest(props) {
 	let router = useRouter();
@@ -285,6 +286,8 @@ export default function PageContest(props) {
 					contestEnded={isComplete}
 					onPublicResults={setResultsPublic}
 				/>
+
+				<ContestVideosSection contestId={contest.id} />
 
 				<ContestJudgesSection judges={judges} />
 

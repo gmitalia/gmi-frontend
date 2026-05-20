@@ -1,7 +1,7 @@
 import { Config } from "../Constants";
 import { store } from "../store";
 import GMIApiParent from "./GMIApiParent"
-import { MockContest, MockGames, MockPartecipants, MockUsers } from "./MockDatabase";
+import { MockContest, MockGames, MockPartecipants, MockUsers, MockVideos } from "./MockDatabase";
 import { useDispatch, useSelector } from "react-redux";
 
 export default class GMIApiMock extends GMIApiParent
@@ -313,5 +313,25 @@ export default class GMIApiMock extends GMIApiParent
 			.then((response) => response.json())
 			.then((data) => callback(data))
 			.catch((error) => console.error("GMIApi Error:", error));
+	}
+
+	getVideos(contestId, callback)
+	{
+		const allVideos = MockVideos || [];
+		const filtered = contestId
+			? allVideos.filter(v => String(v.contest_id) === String(contestId))
+			: allVideos;
+		
+		const sorted = [...filtered].sort((a, b) => {
+			if (a.is_highlighted !== b.is_highlighted) {
+				return a.is_highlighted ? -1 : 1;
+			}
+			return a.sort_order - b.sort_order;
+		});
+
+		callback({
+			success: true,
+			videos: sorted
+		});
 	}
 }

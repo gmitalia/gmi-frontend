@@ -154,4 +154,12 @@ export default class GMIApiParent
 	 */
 	getPrizes(contestId: number | undefined, callback: (data: {success: boolean; prizes: Prize[]})=> void): void
 	{}
+
+	/**
+	 * Ottiene la lista dei video per un contest.
+	 * @param contestId ID del contest (opzionale)
+	 * @param callback Funzione di callback con la risposta
+	 */
+	getVideos(contestId: number | undefined, callback: (data: {success: boolean; videos: ContestVideo[]})=> void): void
+	{}
 }
