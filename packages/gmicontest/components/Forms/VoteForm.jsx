@@ -4,9 +4,9 @@ import { Button } from "../commons/Button";
 import { marked } from "../../src/marked"
 
 const VoteFormValidationRules = {
-	prosMax: function(pros) { return pros.length > 3; },
-	consMax: function(cons) { return cons.length > 3; },
-	prosConsMin: function(pros, cons) { return pros.length + cons.length < 2 }
+	prosMax: function (pros) { return pros.length > 3; },
+	consMax: function (cons) { return cons.length > 3; },
+	prosConsMin: function (pros, cons) { return pros.length + cons.length < 2 }
 }
 
 export default function VoteForm(props) {
@@ -21,99 +21,89 @@ export default function VoteForm(props) {
 
 	const refTextarea = useRef();
 
-	function changeScore(event)
-	{
+	function changeScore(event) {
 		setScore(Math.max(0, Math.min(100, event.target.value)))
 		setSaved(false)
 	}
 
-	function changeComment(event)
-	{
+	function changeComment(event) {
 		setComment(event.target.value)
 		setSaved(false)
 	}
 
-	function addPros()
-	{
-		if(pros.length >= 3)
+	function addPros() {
+		if (pros.length >= 3)
 			return;
-		
+
 		setPros([...pros, 0])
 		setSaved(false)
 
 	}
 
-	function deletePros(index)
-	{
+	function deletePros(index) {
 		let newPros = [...pros]
 		newPros.splice(index, 1)
 		setPros(newPros)
 		setSaved(false)
 	}
 
-	function changePros(event, index)
-	{
+	function changePros(event, index) {
 		let newPros = [...pros]
 		newPros[index] = event.target.value
 		setPros(newPros)
 		setSaved(false)
 	}
 
-	function addCons()
-	{
-		if(cons.length >= 3)
+	function addCons() {
+		if (cons.length >= 3)
 			return;
 
 		setCons([...cons, 0])
 		setSaved(false)
 	}
 
-	function deleteCons(index)
-	{
+	function deleteCons(index) {
 		let newCons = [...cons]
 		newCons.splice(index, 1)
 		setCons(newCons)
 		setSaved(false)
 	}
 
-	function changeCons(event, index)
-	{
+	function changeCons(event, index) {
 		let newCons = [...cons]
 		newCons[index] = event.target.value
 		setCons(newCons)
 		setSaved(false)
 	}
 
-	function formValidation(data)
-	{
+	function formValidation(data) {
 		const { score, pros, cons, comment, voted } = data;
 
 		setFormError(undefined);
-		if(VoteFormValidationRules.prosConsMin(pros, cons)) { setFormError("Inserire almeno 2 pro/contro"); return false }
-		if(VoteFormValidationRules.prosMax(pros)) { setFormError("impossibile inserire più di 3 pro"); return false; }
-		if(VoteFormValidationRules.consMax(cons)) { setFormError("impossibile inserire più di 3 contro"); return false; }
+		if (VoteFormValidationRules.prosConsMin(pros, cons)) { setFormError("Inserire almeno 2 pro/contro"); return false }
+		if (VoteFormValidationRules.prosMax(pros)) { setFormError("impossibile inserire più di 3 pro"); return false; }
+		if (VoteFormValidationRules.consMax(cons)) { setFormError("impossibile inserire più di 3 contro"); return false; }
 
 		return true;
 	}
 
-	function onSave()
-	{
+	function onSave() {
 		setVoted(true)
 
-		const data = 
+		const data =
 		{
-			score: 	score,
-			pros: 	pros,
-			cons: 	cons,
+			score: score,
+			pros: pros,
+			cons: cons,
 			comment: comment,
 			game_id: props.game_id,
-			voted: 	voted,
+			voted: voted,
 		};
 
-		if(formValidation(data) == false)
+		if (formValidation(data) == false)
 			return null;
 
-		props.onChange(data, props.index, (success)=> setSaved(success))
+		props.onChange(data, props.index, (success) => setSaved(success))
 	}
 
 	const prosOptions = prosList.map((elem, i) => (
@@ -144,24 +134,24 @@ export default function VoteForm(props) {
 						</label>
 						<div className="flex items-center gap-4">
 							<div className="relative">
-								<input 
-									type="number" 
-									min="0" 
-									max="100" 
-									value={score} 
+								<input
+									type="number"
+									min="0"
+									max="100"
+									value={score}
 									onChange={changeScore}
 									className="w-24 h-14 text-2xl font-bold text-center ds-surface border border-default ds-rounded-cta focus:border-secondary/50 focus:outline-none transition-colors ds-text-content"
 								/>
 								<span className="absolute right-2 top-1/2 -translate-y-1/2 ds-text-muted text-sm">/100</span>
 							</div>
-							
+
 							{/* Slider */}
 							<div className="flex-1">
-								<input 
-									type="range" 
-									min="0" 
-									max="100" 
-									value={score} 
+								<input
+									type="range"
+									min="0"
+									max="100"
+									value={score}
 									onChange={changeScore}
 									className="w-full h-2 ds-surface ds-rounded-sm appearance-none cursor-pointer accent-secondary"
 									style={{
@@ -173,7 +163,7 @@ export default function VoteForm(props) {
 					</div>
 
 					{/* Save Section */}
-					<div className="flex items-center gap-4">
+					<div>
 						<Button
 							variant="primary"
 							size="md"
@@ -184,16 +174,8 @@ export default function VoteForm(props) {
 							<i className="fa fa-save mr-2" />
 							{saved ? 'Salvato' : 'Salva'}
 						</Button>
-						
-						{saved && (
-							<div className="flex items-center gap-2 text-success">
-								<i className="fa fa-check-circle" />
-								<span className="text-sm font-medium">Modifiche salvate</span>
-							</div>
-						)}
 					</div>
 				</div>
-
 				{/* Error Message */}
 				{formError && (
 					<div className="mt-4 p-3 ds-rounded-sm bg-error/10 border border-error/30 flex items-center gap-2 text-error">
@@ -233,7 +215,7 @@ export default function VoteForm(props) {
 						ref={refTextarea}
 						className="w-full p-4 ds-surface border border-default ds-rounded-cta overflow-y-auto h-[280px] prose prose-sm max-w-none"
 						dangerouslySetInnerHTML={{
-							__html: marked.parse(comment.replaceAll("\n", "⠀⠀\n"), {breaks: true})
+							__html: marked.parse(comment.replaceAll("\n", "⠀⠀\n"), { breaks: true })
 						}}
 					/>
 				</div>
@@ -258,12 +240,12 @@ export default function VoteForm(props) {
 							<i className="fa fa-plus mr-1" /> Aggiungi
 						</Button>
 					</div>
-					
+
 					<div className="space-y-2">
 						{pros.map((elem, index) => (
 							<div key={index} className="flex items-center gap-2">
-								<select 
-									value={elem} 
+								<select
+									value={elem}
 									onChange={(e) => changePros(e, index)}
 									className="ds-select flex-1"
 								>
@@ -297,17 +279,17 @@ export default function VoteForm(props) {
 							variant="primary"
 							size="sm"
 							disabled={cons.length >= 3}
-							onClick={addCons} 
+							onClick={addCons}
 						>
 							<i className="fa fa-plus mr-1" /> Aggiungi
 						</Button>
 					</div>
-					
+
 					<div className="space-y-2">
 						{cons.map((elem, index) => (
 							<div key={index} className="flex items-center gap-2">
-								<select 
-									value={elem} 
+								<select
+									value={elem}
 									onChange={(e) => changeCons(e, index)}
 									className="ds-select flex-1"
 								>
