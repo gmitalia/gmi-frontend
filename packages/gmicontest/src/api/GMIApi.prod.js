@@ -289,4 +289,15 @@ export default class GMIApiProd extends GMIApiParent {
 		const url = this.apiURL + "get_videos.php" + (params ? "?" + params.toString() : "");
 		this._fetchWithCache(cacheKey, url, callback);
 	}
+
+	publishResults(contestId, callback) {
+		const params = new URLSearchParams({ contest: contestId });
+		fetch(this.apiURL + "publish_results.php?" + params.toString(), {
+			method: "POST",
+			credentials: "include"
+		})
+		.then(response => response.json())
+		.then(data => callback(data))
+		.catch(error => console.error("GMIApi Error:", error));
+	}
 }

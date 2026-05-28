@@ -55,11 +55,13 @@ export default class GMIApiMock extends GMIApiParent
 
 	getGames(contest, callback)
 	{
+		const matchingContest = MockContest.find(o => String(o.id) === String(contest));
+		const publicResults = matchingContest ? matchingContest.public === "1" : true;
 		callback(
 		{
 			success: true,
 			games: MockGames.filter(o=> o.contest_id == contest),
-			public_results: true,
+			public_results: publicResults,
 		});
 	}
 
@@ -333,5 +335,16 @@ export default class GMIApiMock extends GMIApiParent
 			success: true,
 			videos: sorted
 		});
+	}
+
+	publishResults(contestId, callback) {
+		const contest = MockContest.find(c => String(c.id) === String(contestId));
+		if (contest) {
+			contest.public = "1";
+			contest.is_completed = true;
+			callback({ success: true, message: "Results published successfully" });
+		} else {
+			callback({ success: false, error: "Contest not found" });
+		}
 	}
 }

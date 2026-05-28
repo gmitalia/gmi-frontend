@@ -184,4 +184,4 @@ type ContestVideo = {
 	is_highlighted: boolean;
 	sort_order: number;
 	contest_name: string;
-}
+}

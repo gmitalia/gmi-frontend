@@ -10,10 +10,11 @@ import ContestHeroSection from "./Contest/ContestHeroSection";
 import ContestJudgesSection from "./Contest/ContestJudgesSection";
 import ContestJudgingProgressSection from "./Contest/ContestJudgingProgressSection";
 import { Button } from "./commons/Button";
-import { BookIcon, UploadIcon, EyeIcon, TrophyIcon, EditIcon } from "./commons/Icons";
+import { BookIcon, UploadIcon, EyeIcon, TrophyIcon, EditIcon, CheckIcon } from "./commons/Icons";
 import { PageLayout } from "./WebsiteLayout/PageLayout";
 import ContestPrizesSection from "./Contest/ContestPrizesSection";
 import ContestVideosSection from "./Contest/ContestVideosSection";
+import ConfirmationModal from "./commons/ConfirmationModal";
 
 export default function PageContest(props) {
 	let router = useRouter();
@@ -30,6 +31,7 @@ export default function PageContest(props) {
 	let [timeLeft, setTimeLeft] = useState(null);
 	let [judgingProgress, setJudgingProgress] = useState(null);
 	let [resultsPublic, setResultsPublic] = useState(null);
+	let [showPublishModal, setShowPublishModal] = useState(false);
 
 	useEffect(() => {
 		setParticipant(false);
@@ -267,6 +269,17 @@ export default function PageContest(props) {
 				Anteprima Risultati
 			</Button>
 		);
+
+		actions.push(
+			<Button
+				key="pubblica"
+				onClick={() => setShowPublishModal(true)}
+				variant="primary"
+				icon={<CheckIcon size={16} />}
+			>
+				Pubblica Risultati
+			</Button>
+		);
 	}
 
 	return (
@@ -295,6 +308,26 @@ export default function PageContest(props) {
 
 				<ContestPrizesSection contestId={contest.id} />
 			</div>
+			<ConfirmationModal
+				isOpen={showPublishModal}
+				title="Pubblica Risultati"
+				message="Vuoi davvero pubblicare i risultati della competizione? Questo calcolerà i piazzamenti in base ai voti e renderà i risultati visibili a tutti."
+				confirmText="Pubblica"
+				cancelText="Annulla"
+				variant="primary"
+				onConfirm={() => {
+					setShowPublishModal(false);
+					GMIApi.getInstance().publishResults(contest.id, (data) => {
+						if (data.success) {
+							alert("Risultati pubblicati con successo!");
+							setResultsPublic(true);
+						} else {
+							alert("Errore durante la pubblicazione: " + (data.error || "Errore sconosciuto"));
+						}
+					});
+				}}
+				onCancel={() => setShowPublishModal(false)}
+			/>
 		</PageLayout>
 	);
 }

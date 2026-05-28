@@ -162,4 +162,12 @@ export default class GMIApiParent
 	 */
 	getVideos(contestId: number | undefined, callback: (data: {success: boolean; videos: ContestVideo[]})=> void): void
 	{}
+
+	/**
+	 * Pubblica i risultati di una competizione.
+	 * @param contestId ID del contest
+	 * @param callback Funzione di callback con l'esito dell'operazione
+	 */
+	publishResults(contestId: string, callback: (data: {success: boolean; message?: string; error?: string})=> void): void
+	{}
 }

@@ -15,9 +15,9 @@ export const MockContest =
 			name: "Competizione GMI mock_2026 (votazione)",
 			end_at: "2023-05-10 08:00:00",
 			can_submit: false,
-			completed_at: "2026-05-30 08:00:00",
-			public: "1",
-			is_ended: false,
+			completed_at: "2026-05-20 08:00:00",
+			public: "0",
+			is_ended: true,
 			is_completed: false,
 		},
 		{
@@ -136,7 +136,8 @@ export const MockPartecipants =
 			user_name: "Simsure",
 			user_discord_id: "190723513911345154",
 			kind: "1",
-			contest_id: "1001"
+			contest_id: "1001",
+			host: "1"
 		},
 		{
 			id: "71",
