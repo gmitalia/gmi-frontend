@@ -4,7 +4,6 @@ import Link from "next/link";
 import { createPortal } from "react-dom";
 import GMIApi from "../../src/api/GMIApi";
 import { GameTile } from "./GameTile";
-import Spinner from "../commons/Spinner";
 import { Button } from "../commons/Button";
 
 const ContestGamesSection = ({ contest, contestEnded, onPublicResults }) => {
@@ -26,6 +25,7 @@ const ContestGamesSection = ({ contest, contestEnded, onPublicResults }) => {
 
     return () => {
       setGames(null);
+      setShowVotes(false);
       setJudges(undefined);
     };
   }, [contest]);
@@ -58,7 +58,7 @@ const ContestGamesSection = ({ contest, contestEnded, onPublicResults }) => {
     />
   ));
 
-  const actions = (mounted && showVotes && document.querySelector("#results-portal")) ? (
+  const actions = (mounted && showVotes && games && document.querySelector("#results-portal")) ? (
     createPortal(
       <Button variant="primary" size="md" onClick={() => router.push("/results?contest=" + contest)}>
         Dettaglio Risultati
@@ -77,7 +77,13 @@ const ContestGamesSection = ({ contest, contestEnded, onPublicResults }) => {
         {actions}
         <div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:gap-8">
-            {isLoading ? <Spinner /> : elements}
+            {isLoading ? (
+              <>
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="h-72 bg-surface-muted rounded-xl animate-pulse" />
+                ))}
+              </>
+            ) : elements}
           </div>
         </div>
       </div>

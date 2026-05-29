@@ -10,7 +10,7 @@ export default class GMIApiParent
 	forumProfileURL ="";
 
 	/**
-	 * Ottiene le informazioni dell'utente.
+	 * Ottiene le informazioni dell'utente via JWT Bearer.
 	 */
 	getMe(): Promise<any>
 	{
@@ -18,83 +18,73 @@ export default class GMIApiParent
 	}
 
 	/**
-	 * Apre un URL con i parametri specificati. 
+	 * Apre un URL con i parametri specificati.
 	 */
 	openURL(url: string, params: Record<string, string>): void
 	{}
 
 	/**
-	 * Effettua il login dell'utente reindirizzando alla pagina di autenticazione. 
+	 * Effettua il login dell'utente reindirizzando alla pagina di autenticazione.
 	 */
 	login(): void
 	{}
 
 	/**
-	 * Effettua il logout dell'utente reindirizzando alla pagina di autenticazione. 
+	 * Effettua il logout — revoca refresh token e pulisce storage.
 	 */
-	logout(): void
-	{}
+	logout(): Promise<any>
+	{
+		return Promise.resolve()
+	}
+
+	/**
+	 * Scambia un codice breve OAuth per un JWT pair (usato in AuthCallback).
+	 */
+	exchangeCode(code: string): Promise<any>
+	{
+		return Promise.resolve()
+	}
+
+	/**
+	 * Rinnova il token pair via refresh_token.
+	 */
+	refreshToken(refreshToken: string): Promise<any>
+	{
+		return Promise.resolve()
+	}
+
+	/**
+	 * Revoca un refresh token.
+	 */
+	revokeToken(refreshToken?: string): Promise<any>
+	{
+		return Promise.resolve()
+	}
 
 	/**
 	 * Restituisce l'URL dell'avatar di un utente Discord.
 	 */
-	getAvatarUrl(discord_info: {id: string; avatar: string}): string
+	getAvatarUrl(discord_info: {avatar?: string}): string
 	{return ""}
 
-	/**
-	 * Ottiene la lista dei giochi per un contest.
-	 * @param contest ID del contest
-	 * @param callback Funzione di callback con i dati dei giochi
-	 */
 	getGames(contest: string, callback: (data: {success: boolean; games: Game[]; public_results: boolean})=> void): void
 	{}
 
-	/**
-	 * Ottiene i dettagli di un contest.
-	 * @param contestId ID del contest
-	 * @param callback Funzione di callback con i dettagli del contest
-	 */
 	getContest(contestId: string, callback: (data: {success: boolean; contests: Contest[]})=> void): void
 	{}
 
-	/**
-	 * Ottiene la lista dei contest.
-	 * @param callback Funzione di callback con i dati dei contest
-	 */
 	getContests(callback: (data: {success: boolean; contests: Contest[]})=> void): void
 	{}
 
-	/**
-	 * Ottiene la lista dei partecipanti di un contest.
-	 * @param contest ID del contest
-	 * @param onlyMe Specifica se ottenere solo i dati dell'utente corrente
-	 * @param callback Funzione di callback con i dati dei partecipanti
-	 */
 	getParticipants(contest: string, onlyMe: boolean, callback: (data: {success: boolean; participants: Participant[]})=> void): void
 	{}
 
-	/**
-	 * Ottiene i dati di partecipazione a un contest.
-	 * @param contest ID del contest
-	 * @param callback Funzione di callback con i dati di partecipazione
-	 */
 	getParticipation(contest: string, callback: (data: {participation: Partecipation})=> void): void
 	{}
 
-	/**
-	 * Ottiene i voti relativi a un gioco in un contest.
-	 * @param contest ID del contest
-	 * @param game ID del gioco
-	 * @param callback Funzione di callback con i dati dei voti
-	 */
 	getVotes(contest: string, game: string, callback: (data: VotesResponse)=> void): void
 	{}
 
-	/**
-	 * Ottiene i risultati di un contest.
-	 * @param contest ID del contest
-	 * @param callback Funzione di callback con i dati dei risultati
-	 */
 	getResults(contest: string, callback: (data: Results)=> void): void
 	{}
 
@@ -104,11 +94,6 @@ export default class GMIApiParent
 	getStats(callback: (data: {success: boolean; stats: {games_count: number; participants: number; competitions: number}})=> void): void
 	{}
 
-	/**
-	 * Cerca giochi e utenti.
-	 * @param q Query di ricerca (min 2 caratteri)
-	 * @param callback Funzione di callback con i risultati
-	 */
 	getSearchResults(q: string, callback: (data: {success: boolean; games: any[]; users: any[]; error?: string})=> void): void
 	{}
 
@@ -118,56 +103,24 @@ export default class GMIApiParent
 	getUserMedals(userId: number, callback: (data: {success: boolean; medals: UserMedals[]})=> void)
 	{}
 
-	/**
-	 * Imposta un voto per un gioco in un contest.
-	 * @param contest ID del contest
-	 * @param voteObject Oggetto contenente i dettagli del voto
-	 * @param callback Funzione di callback con la risposta del server
-	 */
 	setVote(contest: string, voteObject: Vote, callback: (data: {success: boolean, error: any})=> void): void
 	{}
 
 	setUserValues(user_id: number, user_name: string, callback: (data: {success: boolean, error: any})=> void): void
 	{}
 
-	/**
-	 * Imposta i dati di partecipazione a un contest.
-	 * @param contest ID del contest
-	 * @param game Oggetto contenente i dati del gioco
-	 * @param callback Funzione di callback con la risposta del server
-	 */
 	setParticipationData(contest: string, game: Game, callback: (data: {success: boolean, error: any})=> void): void
 	{}
 
-	/**
-	 * Elimina i dati di partecipazione a un contest.
-	 * @param contest ID del contest
-	 * @param callback Funzione di callback con la risposta del server
-	 */
 	deleteParticipationData(contest: string, callback: (data: {success: boolean, error: any})=> void): void
 	{}
 
-	/**
-	 * Ottiene la lista dei premi (galleria).
-	 * @param contestId ID del contest (opzionale)
-	 * @param callback Funzione di callback con i dati dei premi
-	 */
 	getPrizes(contestId: number | undefined, callback: (data: {success: boolean; prizes: Prize[]})=> void): void
 	{}
 
-	/**
-	 * Ottiene la lista dei video per un contest.
-	 * @param contestId ID del contest (opzionale)
-	 * @param callback Funzione di callback con la risposta
-	 */
 	getVideos(contestId: number | undefined, callback: (data: {success: boolean; videos: ContestVideo[]})=> void): void
 	{}
 
-	/**
-	 * Pubblica i risultati di una competizione.
-	 * @param contestId ID del contest
-	 * @param callback Funzione di callback con l'esito dell'operazione
-	 */
 	publishResults(contestId: string, callback: (data: {success: boolean; message?: string; error?: string})=> void): void
 	{}
 }

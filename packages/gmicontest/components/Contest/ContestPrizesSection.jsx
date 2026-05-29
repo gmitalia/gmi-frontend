@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { TrophyIcon } from "../commons/Icons";
 import ImageModal from "../commons/ImageModal";
+import { parseAuthors } from "../../src/Utils";
 
 export default function ContestPrizesSection({ contestId }) {
   const router = useRouter();
@@ -34,14 +35,7 @@ export default function ContestPrizesSection({ contestId }) {
     return GMIApi.getInstance().prizesURL + url;
   };
 
-  const parseAuthors = (authorsBase64) => {
-    if (!authorsBase64) return [];
-    try {
-      return JSON.parse(atob(authorsBase64));
-    } catch (e) {
-      return [];
-    }
-  };
+  // parseAuthors imported from Utils
 
   const handleCardClick = (targetContestId) => {
     router.push(`/contest?contest=${targetContestId}`);

@@ -5,6 +5,7 @@ import { TrophyIcon, ClockIcon } from "./commons/Icons";
 import GMIApi from "../src/api/GMIApi";
 import Link from "next/link";
 import ImageModal from "./commons/ImageModal";
+import { parseAuthors } from "../src/Utils";
 
 export default function PagePremi() {
   const router = useRouter();
@@ -29,15 +30,6 @@ export default function PagePremi() {
     if (!url) return "";
     if (url.startsWith("http")) return url;
     return GMIApi.getInstance().prizesURL + url;
-  };
-
-  const parseAuthors = (authorsBase64) => {
-    if (!authorsBase64) return [];
-    try {
-      return JSON.parse(atob(authorsBase64));
-    } catch (e) {
-      return [];
-    }
   };
 
   return (

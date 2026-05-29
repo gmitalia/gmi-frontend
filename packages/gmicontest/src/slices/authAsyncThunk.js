@@ -3,28 +3,33 @@ import GMIApi from "./../api/GMIApi";
 
 const getMe = createAsyncThunk("getme", async () =>
 {
-	const response = await GMIApi.getInstance().getMe();
-	return response;
+  const response = await GMIApi.getInstance().getMe();
+  return response;
 })
 
 const login = createAsyncThunk("login", async () =>
 {
-	const response = await GMIApi.getInstance().login()
-
-	return response;
+  // login() fa un redirect del browser, la promise non si completa
+  GMIApi.getInstance().login()
 })
 
 const logout = createAsyncThunk("logout", async () =>
 {
-	const response = await GMIApi.getInstance().logout()
+  const response = await GMIApi.getInstance().logout()
+  return response;
+})
 
-	return response;
+const exchangeCode = createAsyncThunk("exchangeCode", async (code) =>
+{
+  const response = await GMIApi.getInstance().exchangeCode(code)
+  return response;
 })
 
 const authAsyncThunk = {
-	getMe,
-	login,
-	logout
+  getMe,
+  login,
+  logout,
+  exchangeCode,
 }
 
 export { authAsyncThunk }
