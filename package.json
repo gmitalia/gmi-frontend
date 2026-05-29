@@ -1,7 +1,8 @@
 {
   "scripts": {
     "build": "bash build.sh",
-    "deploy-staging": "npx firebase deploy -P staging"
+    "deploy-staging": "npx firebase deploy -P staging",
+    "serve": "npx serve public -l 5000"
   },
   "dependencies": {
     "firebase": "^9.21.0",

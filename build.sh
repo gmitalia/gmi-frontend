@@ -3,6 +3,12 @@
 # Exit on error
 set -e
 
+# Pass --maintenance flag to enable maintenance mode for gmicontest
+if [ "$1" = "--maintenance" ]; then
+    export NEXT_PUBLIC_MAINTENANCE_MODE=true
+    echo "Root build: gmicontest will use MAINTENANCE MODE"
+fi
+
 mkdir -p public
 
 # blog
@@ -18,5 +24,3 @@ npm run build && npm run export
 mv out competizioni
 cp -r ./competizioni ../../public
 rm -rf competizioni
-
-

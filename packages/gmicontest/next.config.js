@@ -18,4 +18,7 @@ module.exports = {
             'cdn.discordapp.com'
         ],
     },
+    env: {
+        NEXT_PUBLIC_MAINTENANCE_MODE: process.env.NEXT_PUBLIC_MAINTENANCE_MODE || "false",
+    },
 }
