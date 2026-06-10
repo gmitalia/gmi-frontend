@@ -1,48 +1,17 @@
 import { GetStaticProps } from "next";
-import React, { useState } from "react";
+import React from "react";
 import Header from "../../components/molecules/Header/Header";
-import { sanityClient } from "../../sanity";
+import { sanityClient, urlFor } from "../../sanity";
 import { PostInterface } from "../../typings";
-import { useForm, SubmitHandler } from "react-hook-form";
 import BlogPost from "../../components/organisms/BlogPost";
 import Head from "next/head";
-import { urlFor } from "../../sanity";
 import Footer from "../../components/molecules/Footer/Footer";
-
-interface iForm {
-  _id: string;
-  name: string;
-  email: string;
-  comment: string;
-}
 
 interface Props {
   post: PostInterface;
 }
 
 const Post = ({ post }: Props) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<iForm>();
-  const [submitted, setsubmitted] = useState(false);
-
-  const onSubmit: SubmitHandler<iForm> = (data) => {
-    fetch("/api/createComment", {
-      method: "POST",
-      body: JSON.stringify(data),
-    })
-      .then(() => {
-        console.log(data);
-        setsubmitted(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        setsubmitted(false);
-      });
-  };
-  console.log(post.mainImage)
   return (
     <>
       <Header />

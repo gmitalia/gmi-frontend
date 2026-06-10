@@ -27,14 +27,13 @@ const Header = () => {
   return (
     <header ref={headerRef} className="bg-white shadow-sm sticky top-0 z-50">
       <div className="flex justify-between items-center p-5 max-w-7xl mx-auto relative">
-        <Link href="/">
-          <a
-            title="GameMaker Italia Home Page"
-            className="flex items-center gap-2 shrink-0 cursor-pointer"
-          >
-            <GMILogo className="w-9 object-contain" />
-            <span className="text-3xl hidden lg:block">GameMaker Italia</span>
-          </a>
+        <Link
+          href="/"
+          title="GameMaker Italia Home Page"
+          className="flex items-center gap-2 shrink-0 cursor-pointer"
+        >
+          <GMILogo className="w-9 object-contain" />
+          <span className="text-3xl hidden lg:block">GameMaker Italia</span>
         </Link>
 
         {/* Hamburger */}

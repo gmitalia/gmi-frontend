@@ -59,33 +59,31 @@ const Navbar = ({ id, openMenu, setOpenMenu }: NavbarProps) => {
       <ul className="flex flex-col md:flex-row md:items-center md:gap-5 p-4 md:p-0">
         {NAV_LINKS.map(({ href, label, external }) => (
           <li className="my-6 md:my-0" key={href}>
-            <Link href={href}>
-              <a
-                onClick={handleLinkClick}
-                tabIndex={isVisible ? 0 : -1}
-                target={external ? "_blank" : undefined}
-                rel={external ? "noopener noreferrer" : undefined}
-                className="block py-3 md:py-0 px-2 md:px-0 hover:underline decoration-2 underline-offset-4 transition-all duration-200 whitespace-nowrap"
-                title={`Vai alla pagina: ${label}`}
-              >
-                {label}
-              </a>
+            <Link
+              href={href}
+              onClick={handleLinkClick}
+              tabIndex={isVisible ? 0 : -1}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener noreferrer" : undefined}
+              className="block py-3 md:py-0 px-2 md:px-0 hover:underline decoration-2 underline-offset-4 transition-all duration-200 whitespace-nowrap"
+              title={`Vai alla pagina: ${label}`}
+            >
+              {label}
             </Link>
           </li>
         ))}
 
         <li className="mt-6 md:mt-0">
-          <Link href="https://discord.com/invite/juj4yEF2Yv">
-            <a
-              onClick={handleLinkClick}
-              tabIndex={isVisible ? 0 : -1}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block mx-2 md:mx-0 text-center text-content bg-gray-800 px-4 py-3 md:py-2 rounded-full text-sm font-medium hover:shadow-lg hover:bg-gray-700 transition-all duration-200 whitespace-nowrap"
-              title="Vai al server Discord di GMI"
-            >
-              Entra su Discord
-            </a>
+          <Link
+            href="https://discord.com/invite/juj4yEF2Yv"
+            onClick={handleLinkClick}
+            tabIndex={isVisible ? 0 : -1}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block mx-2 md:mx-0 text-center text-white bg-gray-800 px-4 py-3 md:py-2 rounded-full text-sm font-medium hover:shadow-lg hover:bg-gray-700 transition-all duration-200 whitespace-nowrap"
+            title="Vai al server Discord di GMI"
+          >
+            Entra su Discord
           </Link>
         </li>
       </ul>

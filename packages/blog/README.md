@@ -13,3 +13,6 @@
   `cd ..`
 - deploy on firebase
   `npx firebase deploy`
+
+# Local development
+`npm run dev`

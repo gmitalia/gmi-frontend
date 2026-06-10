@@ -2,6 +2,8 @@
 module.exports = {
   reactStrictMode: true,
   trailingSlash: true,
-  // Use the static export output mode (replaces `next export`)
   output: 'export',
+  turbopack: {
+    root: __dirname,
+  },
 }

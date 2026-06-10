@@ -52,13 +52,14 @@ export async function getStaticProps() {
   const query = `*[_type == 'post'] | order(publishedAt desc){
     _id,
     title,
+    publishedAt,
     description,
     "categories": categories[]->title,
     slug,
     author -> {
     name,
     image
-  }, 
+  },
   mainImage,
   description
   }`;

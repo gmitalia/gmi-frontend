@@ -7,8 +7,8 @@ interface BlogMetaDataProps {
 
 const BlogMetaData = ({ post }: BlogMetaDataProps) => {
   const author = post.author.name;
-
-  const date = formatDate(new Date(post.publishedAt));
+  const dateSource = post.publishedAt || post._createdAt;
+  const date = dateSource ? formatDate(new Date(dateSource)) : "Data sconosciuta";
   return (
     <div className={`blog-post__metadata`}>
       <p>Scritto da {author}</p>

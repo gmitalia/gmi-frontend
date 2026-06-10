@@ -62,13 +62,21 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
     return (str.match(/[A-Za-z0-9\s]+/g) || []).join('').trim();
   }
 
-  // Ordina le categorie: quelle senza group (undefined/null) prima, poi per valore numerico crescente
+  // Macrocategorie da mettere in cima (in quest'ordine)
+  const MACRO_PRIORITY = ["assets", "tools", "tutorial"];
+
+  // Ordina le categorie: macrocategorie prima, poi alfabeticamente
   const orderedCategories = categories.slice().sort((a, b) => {
-    const groupA = typeof a.group === "number" ? a.group : -1;
-    const groupB = typeof b.group === "number" ? b.group : -1;
-    if (groupA !== groupB) return groupA - groupB;
-    // Ordina alfabeticamente ignorando emoji e spazi iniziali
-    return stripEmojiAndTrim(a.title).localeCompare(stripEmojiAndTrim(b.title));
+    const aNorm = stripEmojiAndTrim(a.title).toLowerCase();
+    const bNorm = stripEmojiAndTrim(b.title).toLowerCase();
+    const aPriority = MACRO_PRIORITY.indexOf(aNorm);
+    const bPriority = MACRO_PRIORITY.indexOf(bNorm);
+    const aIsMacro = aPriority !== -1;
+    const bIsMacro = bPriority !== -1;
+    if (aIsMacro && bIsMacro) return aPriority - bPriority;
+    if (aIsMacro) return -1;
+    if (bIsMacro) return 1;
+    return aNorm.localeCompare(bNorm);
   });
 
   const macroCategoryBadge: Record<string, string> = {
@@ -119,7 +127,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
         </div>
         <nav aria-label="Categorie risorse" className="flex flex-wrap gap-2 mb-8">
           <button
-            className={`px-5 py-2 rounded-full border font-medium focus:outline-none transition-all duration-200 ${selectedCategories.length === 0 ? 'bg-primary text-content shadow' : 'bg-white text-primary border-primary hover:bg-primary hover:text-content'}`}
+            className={`px-5 py-2 rounded-full border font-medium focus:outline-none transition-all duration-200 ${selectedCategories.length === 0 ? 'bg-primary text-white shadow' : 'bg-white text-primary border-primary hover:bg-primary hover:text-white'}`}
             onClick={() => setSelectedCategories([])}
             aria-pressed={selectedCategories.length === 0}
           >
@@ -130,7 +138,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
               key={cat._id}
               className={`px-5 py-2 rounded-full border font-medium focus:outline-none transition-all duration-200 ${
                 selectedCategories.includes(cat._id)
-                  ? 'bg-primary text-content shadow'
+                  ? 'bg-primary text-white shadow'
                   : 'bg-white text-primary border-primary'
               }`}
               onClick={() => toggleCategory(cat._id)}
