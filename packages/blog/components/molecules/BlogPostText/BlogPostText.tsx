@@ -33,12 +33,17 @@ const BlogPostText = ({ post }: BlogPostTextProps) => {
               ></iframe>
             );
           },
+          code: (props: any) => {
+            const node = props?.node || props;
+            if (!node?.code) return null;
+            return <Code language={node.language || "js"} code={node.code} highlightedLines={[1]} />;
+          },
           unknownType: (props: any) => {
-            console.log("unknown type", props);
             if (props && props.node && props.node._type == "code") {
               const node = props.node;
-              return <Code language={props.node.language} code={node.code} highlightedLines={[1]}/>
+              return <Code language={node.language || "js"} code={node.code} highlightedLines={[1]} />;
             }
+            return null;
           },
         }}
       />

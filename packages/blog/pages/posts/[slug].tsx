@@ -29,7 +29,7 @@ const Post = ({ post }: Props) => {
         />
         <meta
           property="og:image"
-          content={urlFor(post.mainImage)?.url()!}
+          content={post.mainImage ? urlFor(post.mainImage)?.url()! : 'https://gamemakeritalia.it/images/gmi_logo.png'}
         />
       </Head>
       <BlogPost post={post} />
