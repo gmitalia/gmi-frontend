@@ -6,6 +6,7 @@ import GMIApi from "../src/api/GMIApi";
 import { PageLayout } from "./WebsiteLayout/PageLayout"; 
 import { VotesModal } from "./PopupVotes";
 import { basePath, competitionsPath } from "../src/paths";
+import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 
 export default function PageResults(props)
 {
@@ -180,7 +181,8 @@ export default function PageResults(props)
       breadcrumbs={
         contest
           ? [
-              { label: "Competizioni", href: competitionsPath("/") },
+              homeBreadcrumb,
+              competitionsBreadcrumb,
               {
                 label: contest.name,
                 href: `${competitionsPath("/contest")}?contest=${contest.id}`,

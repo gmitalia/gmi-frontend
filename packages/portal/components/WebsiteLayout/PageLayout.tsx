@@ -3,33 +3,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import GMIApi from "../../src/api/GMIApi";
 import { Button } from "../commons/Button";
-import Breadcrumbs, { BreadcrumbItem } from "../commons/Breadcrumbs";
+import type { BreadcrumbItem } from "../commons/Breadcrumbs";
+import {
+  getCompetitionBreadcrumbs,
+  normalizeBreadcrumbPath,
+} from "../../src/breadcrumbs";
+import { usePageBreadcrumbs } from "./SiteBreadcrumbs";
 import { competitionsPath } from "../../src/paths";
-
-const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
-
-const BREADCRUMB_LABELS: Record<string, string> = {
-  [competitionsPath("/search")]: "Cerca",
-  [competitionsPath("/users")]: "Utenti",
-  [competitionsPath("/user")]: "Profilo utente",
-  [competitionsPath("/premi")]: "Premi",
-  [competitionsPath("/rules")]: "Regolamento",
-  [competitionsPath("/contest")]: "Dettaglio competizione",
-  [competitionsPath("/results")]: "Risultati",
-  [competitionsPath("/editvotes")]: "Area giudizi",
-  [competitionsPath("/participation")]: "Partecipazione",
-};
-
-function getDefaultBreadcrumbs(pathname: string): BreadcrumbItem[] {
-  const currentLabel = BREADCRUMB_LABELS[normalizePath(pathname)];
-
-  if (!currentLabel) return [];
-
-  return [
-    { label: "Competizioni", href: competitionsPath("/") },
-    { label: currentLabel },
-  ];
-}
 
 const NAV_ITEMS = [
   { href: competitionsPath("/"), label: "Home" },
@@ -198,7 +178,7 @@ const ModernSidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
                 key={item.href}
                 href={item.href}
                 label={item.label}
-                isActive={normalizePath(currentPath) === normalizePath(item.href)}
+                isActive={normalizeBreadcrumbPath(currentPath) === normalizeBreadcrumbPath(item.href)}
                 onClick={onClose}
               />
             ))}
@@ -258,7 +238,9 @@ export const PageLayout = ({ children, breadcrumbs }: PageLayoutProps) => {
   const breadcrumbItems =
     breadcrumbs === null
       ? []
-      : breadcrumbs ?? getDefaultBreadcrumbs(router.pathname);
+      : breadcrumbs ?? getCompetitionBreadcrumbs(router.pathname);
+
+  usePageBreadcrumbs(breadcrumbItems);
 
   React.useEffect(() => {
     const handleToggle = () => setSidebarOpen(true);
@@ -287,12 +269,7 @@ export const PageLayout = ({ children, breadcrumbs }: PageLayoutProps) => {
       <div className="w-full flex flex-col lg:flex-row gap-6 relative overflow-x-clip">
         <ModernSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-        <div className="w-full flex-1 min-w-0">
-          {breadcrumbItems.length > 0 && (
-            <Breadcrumbs items={breadcrumbItems} className="mb-5" />
-          )}
-          {children}
-        </div>
+        <div className="w-full flex-1 min-w-0">{children}</div>
       </div>
     </div>
   );

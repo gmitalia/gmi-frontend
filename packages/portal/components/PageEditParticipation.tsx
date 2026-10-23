@@ -8,6 +8,7 @@ import InfoMessage from "./commons/InfoMessage";
 import { PageLayout } from "./WebsiteLayout/PageLayout";
 import { Button } from "./commons/Button";
 import { competitionsPath } from "../src/paths";
+import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 
 
 export default function PageEditParticipation(props) {
@@ -56,7 +57,8 @@ export default function PageEditParticipation(props) {
     return (
       <PageLayout
         breadcrumbs={[
-          { label: "Competizioni", href: competitionsPath("/") },
+          homeBreadcrumb,
+          competitionsBreadcrumb,
           ...(query.contest
             ? [
                 {

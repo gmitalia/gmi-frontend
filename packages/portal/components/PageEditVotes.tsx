@@ -8,6 +8,7 @@ import { Button } from "./commons/Button";
 import LoginRequiredPage from "./commons/LoginRequiredPage";
 import Link from "next/link";
 import { competitionsPath } from "../src/paths";
+import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 import { PageLayout } from "./WebsiteLayout/PageLayout";
 
 //@todo don't load if not judge
@@ -17,7 +18,8 @@ export default function PageEditVotes(props)
   let query = getQuery(router)
 
   const breadcrumbs = [
-    { label: "Competizioni", href: competitionsPath("/") },
+    homeBreadcrumb,
+    competitionsBreadcrumb,
     ...(query.contest
       ? [
           {

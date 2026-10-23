@@ -1,9 +1,7 @@
 import Link from "next/link";
+import type { BreadcrumbItem } from "../../src/breadcrumbs";
 
-export type BreadcrumbItem = {
-  label: string;
-  href?: string;
-};
+export type { BreadcrumbItem } from "../../src/breadcrumbs";
 
 type BreadcrumbsProps = {
   items: BreadcrumbItem[];

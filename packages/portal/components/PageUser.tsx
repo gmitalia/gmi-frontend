@@ -6,6 +6,7 @@ import { Button } from "./commons/Button";
 import GMIApi from "../src/api/GMIApi";
 import { PageLayout } from "./WebsiteLayout/PageLayout";
 import { basePath, competitionsPath } from "../src/paths";
+import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 import UserInventory from "./User/UserInventory";
 import UserStats from "./User/UserStats";
 import UserGames from "./User/UserGames";
@@ -137,7 +138,8 @@ export default function PageUser(props) {
   return (
     <PageLayout
       breadcrumbs={[
-        { label: "Competizioni", href: competitionsPath("/") },
+        homeBreadcrumb,
+        competitionsBreadcrumb,
         { label: "Utenti", href: competitionsPath("/users") },
         { label: user.user_name },
       ]}

@@ -4,6 +4,10 @@ import { Provider } from "react-redux";
 import { store } from "../src/store";
 import Header from "../components/WebsiteLayout/Header";
 import { Footer } from "../components/WebsiteLayout/Footer";
+import {
+  BreadcrumbsProvider,
+  SiteBreadcrumbs,
+} from "../components/WebsiteLayout/SiteBreadcrumbs";
 
 import "../styles/globals.css";
 import "../styles/competizioni.scss";
@@ -20,13 +24,16 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <div className="min-h-screen bg-page flex flex-col">
-        <Header />
-        <main className="w-full flex-1">
-          <Component {...pageProps} />
-        </main>
-        <Footer />
-      </div>
+      <BreadcrumbsProvider>
+        <div className="min-h-screen bg-page flex flex-col">
+          <Header />
+          <main className="w-full flex-1">
+            <SiteBreadcrumbs pageTitle={pageProps?.post?.title} />
+            <Component {...pageProps} />
+          </main>
+          <Footer />
+        </div>
+      </BreadcrumbsProvider>
     </Provider>
   );
 }

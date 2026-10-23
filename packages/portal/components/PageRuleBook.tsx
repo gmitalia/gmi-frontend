@@ -47,9 +47,9 @@ const PageRuleBook = ()=>
             {/* PREMI */}
             <section className="bg-surface p-5 border border-default">
               <h4 className="text-lg font-bold text-content m-0 mb-4">
-                Premi
+                Cosa si vince?
               </h4>
-              <p className="m-0">Per il primo classificato: gloriosa maglietta GMI con stampa dedicata al gioco vincitore!</p>
+              <p className="m-0">Per il primo classificato: gloriosa <b>Maglietta GMI</b> con stampa dedicata al gioco vincitore!</p>
             </section>
             {/* REGOLAMENTO IN BREVE */}
             <div className="bg-surface p-5 border border-default">
@@ -177,24 +177,6 @@ const PageRuleBook = ()=>
                 <p className="m-0 text-content-muted">Alcuni utenti della community GMI hanno all'attivo molte utility importanti, come il <a href="https://gamemakeritalia.it/posts/gestore-di-dialoghi-maximilian-volt/" >Gestore di dialoghi</a> realizzato da Maximilian o lo Unique Engine (3D Editor) di @Xeryan. Non c'è limite su GameMaker, fintanto che siete disposti a sporcarvi le mani</p>
               </div>
             </section>
-
-            
-
-            {/* DISCORD */}
-            <div className="mt-8 bg-surface border border-default p-6" id="discord">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <div className="flex-1 text-center sm:text-left">
-                  <h3 className="text-lg font-bold text-content mb-1">Unisciti al server Discord</h3>
-                  <p className="text-sm text-content-muted">Per iscriverti alla competizione e restare aggiornato sulle novità</p>
-                </div>
-                <Button
-                  variant="secondary"
-                  href="https://discord.com/invite/juj4yEF2Yv"
-                >
-                  Unisciti
-                </Button>
-              </div>
-            </div>
             
             
         </div>

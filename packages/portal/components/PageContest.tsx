@@ -2,7 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../src/store";
-import { basePath, competitionsPath } from "../src/paths";
+import { basePath } from "../src/paths";
+import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 import GMIApi from "../src/api/GMIApi";
 import { ParticipantType } from "../src/Constants";
 import { getQuery } from "../src/Utils";
@@ -278,7 +279,8 @@ export default function PageContest(props) {
   return (
     <PageLayout
       breadcrumbs={[
-        { label: "Competizioni", href: competitionsPath("/") },
+        homeBreadcrumb,
+        competitionsBreadcrumb,
         { label: contest.name },
       ]}
     >

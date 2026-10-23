@@ -38,9 +38,9 @@ export default function PagePremi() {
           
           {/* Header */}
           <div className="border-b border-default pb-6">
-            <h1 className="text-3xl font-normal text-content">Galleria Premi</h1>
+            <h1 className="text-3xl font-normal text-content">Hall of Fame</h1>
             <p className="text-content-muted mt-2">
-              I premi assegnati ai vincitori delle competizioni (quando si ricordano di mandarci una foto)
+              Le magliette dei vincitori della compe (quando si ricordano di mandarci una foto)
             </p>
           </div>
 

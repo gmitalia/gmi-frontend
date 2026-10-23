@@ -13,7 +13,7 @@ const linkClasses =
   "inline-block text-sm leading-5 text-gray-500 transition-colors hover:text-primary hover:underline underline-offset-4";
 
 const socialLinkClasses =
-  "footer-social-link flex h-9 w-9 items-center justify-center rounded-sm border border-gray-200 text-gray-500 transition-colors hover:border-primary hover:text-primary";
+  "footer-social-link flex h-8 w-8 items-center justify-center rounded-sm border border-gray-200 text-gray-500 transition-colors hover:border-primary hover:text-primary";
 
 const ADMIN_URL = "https://gmitalia.altervista.org/competizioni/admin/";
 
@@ -27,7 +27,7 @@ const FooterColumn = ({ title, children }: FooterColumnProps) => (
     <h2 className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-gray-900">
       {title}
     </h2>
-    <ul className="mt-4 space-y-2.5">{children}</ul>
+    <ul className="mt-3 space-y-1.5">{children}</ul>
   </div>
 );
 
@@ -55,7 +55,6 @@ export const Footer = () => {
   const userInfo = useSelector((root: RootState) => root.auth.userInfo);
   const dispatch = useDispatch<AppDispatch>();
   const user = userInfo && userInfo.success ? userInfo.user : undefined;
-  const year = new Date().getFullYear();
 
   const login = () => {
     dispatch(authAsyncThunk.login());
@@ -65,57 +64,45 @@ export const Footer = () => {
     dispatch(authAsyncThunk.logout());
   };
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <footer className="bg-white border-t border-gray-200">
-      <div className="mx-auto max-w-7xl px-5 py-12">
-        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4 lg:grid-cols-5 lg:gap-8">
+      <div className="mx-auto max-w-7xl px-5 py-8">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 lg:grid-cols-6 lg:gap-8">
           {/* Brand + social */}
-          <div className="col-span-2 md:col-span-4 lg:col-span-1">
+          <div className="col-span-2 md:col-span-4 lg:col-span-2">
             <Link href="/" className="inline-flex items-center gap-2" title="GameMaker Italia — Home">
-              <GMILogoIcon size={36} />
+              <GMILogoIcon size={32} />
               <span className="text-lg font-semibold text-gray-900">GameMaker Italia</span>
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-6 text-gray-500">
-              La community italiana di GameMaker: articoli, giochi, risorse e competizioni.
-            </p>
 
-            <div className="mt-6">
-              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-gray-900">
-                Seguici su
-              </p>
-              <div className="mt-3 flex items-center gap-2">
-                <a
-                  href="https://www.youtube.com/channel/UCee7hFC_VtQ_gnX5J2tMTHg"
-                  className={socialLinkClasses}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GameMaker Italia su YouTube"
-                >
-                  <YoutubeIcon />
-                </a>
-                <a
-                  href="https://twitter.com/GameMakerIta"
-                  className={socialLinkClasses}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GameMaker Italia su Twitter"
-                >
-                  <TwitterIcon />
-                </a>
-                <a
-                  href="https://discord.com/invite/juj4yEF2Yv"
-                  className={socialLinkClasses}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="GameMaker Italia su Discord"
-                >
-                  <DiscordIcon />
-                </a>
-              </div>
+            <div className="mt-4 flex items-center gap-2">
+              <a
+                href="https://www.youtube.com/channel/UCee7hFC_VtQ_gnX5J2tMTHg"
+                className={socialLinkClasses}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GameMaker Italia su YouTube"
+              >
+                <YoutubeIcon />
+              </a>
+              <a
+                href="https://twitter.com/GameMakerIta"
+                className={socialLinkClasses}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GameMaker Italia su Twitter"
+              >
+                <TwitterIcon />
+              </a>
+              <a
+                href="https://discord.com/invite/juj4yEF2Yv"
+                className={socialLinkClasses}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GameMaker Italia su Discord"
+              >
+                <DiscordIcon />
+              </a>
             </div>
           </div>
 
@@ -172,23 +159,6 @@ export const Footer = () => {
               </FooterLink>
             )}
           </FooterColumn>
-        </div>
-      </div>
-
-      <div className="border-t border-gray-200">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-5 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} GameMaker Italia. Tutti i diritti riservati.</p>
-
-          <div className="flex items-center gap-4">
-            <span>Sviluppatori per passione</span>
-            <button
-              type="button"
-              onClick={scrollToTop}
-              className="transition-colors hover:text-primary hover:underline underline-offset-4"
-            >
-              Torna su
-            </button>
-          </div>
         </div>
       </div>
     </footer>
