@@ -19,7 +19,6 @@ module.exports = {
       page: "rgba(var(--ds-rgb-primary), <alpha-value>)",
       "page-light": "rgba(var(--ds-rgb-primary-light), <alpha-value>)",
 
-      // Brand blog (ex palette primaria) — usata dalle pagine editoriali
       primary: {
         DEFAULT: "#3b3c5c",
         light: "#6366f1",
@@ -42,7 +41,7 @@ module.exports = {
       "on-primary": "var(--ds-color-on-primary)",
       "on-secondary": "var(--ds-color-on-secondary)",
 
-      // Surface system — theme-aware via CSS variables
+      // Surface system - theme-aware via CSS variables
       surface: {
         DEFAULT: "rgba(var(--ds-rgb-surface), <alpha-value>)",
         solid: "rgba(var(--ds-rgb-surface-solid), <alpha-value>)",

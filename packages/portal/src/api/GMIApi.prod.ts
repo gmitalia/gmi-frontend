@@ -73,7 +73,7 @@ export default class GMIApiProd extends GMIApiParent {
         refresh_token: refreshToken,
       })
     } catch (e) {
-      // Logout also on backend error — clean local state anyway
+      // Logout also on backend error - clean local state anyway
       console.error("[GMIApi] logout error:", e)
     }
     TokenService.clearTokens()

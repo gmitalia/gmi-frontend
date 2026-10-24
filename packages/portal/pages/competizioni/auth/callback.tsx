@@ -6,7 +6,7 @@ import { store } from "../../../src/store"
 import { authActions } from "../../../src/slices/authSlice"
 
 /**
- * AuthCallback — gestisce il redirect da OAuth Discord.
+ * AuthCallback - gestisce il redirect da OAuth Discord.
  * Legge ?code=xxx dall'URL, lo scambia per JWT pair via auth.php?action=exchange,
  * salva i token, carica userinfo, e reindirizza alla home.
  */

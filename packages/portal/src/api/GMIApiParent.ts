@@ -30,7 +30,7 @@ export default class GMIApiParent
 	{}
 
 	/**
-	 * Effettua il logout — revoca refresh token e pulisce storage.
+	 * Effettua il logout - revoca refresh token e pulisce storage.
 	 */
 	logout(): Promise<any>
 	{

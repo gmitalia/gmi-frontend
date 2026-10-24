@@ -71,7 +71,7 @@ export const Footer = () => {
         <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 lg:grid-cols-6 lg:gap-8">
           {/* Brand + social */}
           <div className="col-span-2 md:col-span-4 lg:col-span-2">
-            <Link href="/" className="inline-flex items-center gap-2" title="GameMaker Italia — Home">
+            <Link href="/" className="inline-flex items-center gap-2" title="GameMaker Italia - Home">
               <GMILogoIcon size={32} />
               <span className="text-lg font-semibold text-gray-900">GameMaker Italia</span>
             </Link>

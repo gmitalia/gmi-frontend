@@ -5,7 +5,7 @@ import { TokenService } from './TokenService'
  * Queues concurrent requests during refresh to avoid multiple refresh calls.
  *
  * Returns parsed JSON for ALL responses (including 4xx/5xx).
- * Callers check `data.success` — no exceptions for HTTP errors.
+ * Callers check `data.success` - no exceptions for HTTP errors.
  */
 class ApiClient {
   _refreshing: Promise<any> | null
@@ -38,9 +38,9 @@ class ApiClient {
         response = await execute()
         data = await this._parseJSON(response)
       } else {
-        // Refresh failed — tokens invalid, clean up
+        // Refresh failed - tokens invalid, clean up
         TokenService.clearTokens()
-        // Retry without auth — endpoint might be public
+        // Retry without auth - endpoint might be public
         response = await execute()
         data = await this._parseJSON(response)
       }
@@ -62,7 +62,7 @@ class ApiClient {
   }
 
   postFormData(url, formData) {
-    // Do not set Content-Type — browser sets it with boundary for FormData
+    // Do not set Content-Type - browser sets it with boundary for FormData
     return this.request(url, {
       method: 'POST',
       body: formData,
@@ -101,7 +101,7 @@ class ApiClient {
     const refreshToken = TokenService.getRefreshToken()
     if (!refreshToken) throw new Error('No refresh token')
 
-    // Plain fetch — no auth header, avoid infinite loop
+    // Plain fetch - no auth header, avoid infinite loop
     const response = await fetch(
       'https://gmitalia.altervista.org/competizioni/api/v1/auth.php?action=refresh',
       {

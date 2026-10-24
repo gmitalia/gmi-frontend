@@ -1,4 +1,4 @@
-# GameMaker Italia — portale
+# GameMaker Italia - portale
 
 Questa app Next.js contiene il portale del sito: blog, showcase, risorse, tutorial e competizioni.
 

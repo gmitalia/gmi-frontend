@@ -5,7 +5,7 @@ export default function PageMaintenance()
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-page">
       <Head>
-        <title>GMI Competizioni — Sito in manutenzione</title>
+        <title>GMI Competizioni - Sito in manutenzione</title>
       </Head>
       <div className="text-center px-6">
         <div className="bg-surface border border-default rounded p-12 max-w-lg w-full">

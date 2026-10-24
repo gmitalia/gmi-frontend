@@ -156,7 +156,7 @@ export default function Header() {
   return (
     <header ref={headerRef} className="bg-white shadow-sm sticky top-0 z-50">
       <div className="flex justify-between items-center p-5 max-w-7xl mx-auto relative">
-        <Link href="/" title="GameMaker Italia — Home" className="flex items-center gap-2 shrink-0 cursor-pointer">
+        <Link href="/" title="GameMaker Italia - Home" className="flex items-center gap-2 shrink-0 cursor-pointer">
           <GMILogoIcon size={36} />
           <span className="text-2xl text-gray-900 sm:text-3xl">GameMaker Italia</span>
         </Link>

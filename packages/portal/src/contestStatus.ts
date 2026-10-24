@@ -39,7 +39,7 @@ export function getFeaturedContest(contests: Contest[], now = Date.now()): Conte
 
 export function formatContestDate(value?: string | null): string {
   const date = parseContestDate(value);
-  if (!date) return "—";
+  if (!date) return "-";
 
   return date.toLocaleDateString("it-IT", {
     day: "numeric",
@@ -53,8 +53,8 @@ export function formatContestDateRange(contest: Contest): string {
   const start = formatContestDate(contest.end_at);
   const end = formatContestDate(contest.completed_at);
 
-  if (start === "—" && end === "—") return "Date da definire";
-  if (end === "—" || end === start) return start;
+  if (start === "-" && end === "-") return "Date da definire";
+  if (end === "-" || end === start) return start;
   return `${start} – ${end}`;
 }
 
