@@ -4,7 +4,8 @@ import { useRouter } from "next/router";
 import { getQuery } from "../src/Utils";
 import { Button } from "./commons/Button";
 import GMIApi from "../src/api/GMIApi";
-import { PageLayout } from "./WebsiteLayout/PageLayout";
+import { SectionLayout } from "./WebsiteLayout/SectionLayout";
+import { competitionTabs } from "../src/competitionSections";
 import { basePath, competitionsPath } from "../src/paths";
 import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 import UserInventory from "./User/UserInventory";
@@ -115,32 +116,43 @@ export default function PageUser(props) {
 
   if (error) {
     return (
-      <PageLayout>
+      <SectionLayout
+        title="Profilo utente"
+        description="Partecipazioni, giochi e riconoscimenti."
+        tabs={competitionTabs}
+      >
         <div className="bg-error/10 border border-error/20 p-8 text-center text-error">
           <p className="text-xl font-bold mb-2">Ops!</p>
           <p>{error}</p>
         </div>
-      </PageLayout>
+      </SectionLayout>
     );
   }
 
   if (!user) {
     return (
-      <PageLayout>
+      <SectionLayout
+        title="Profilo utente"
+        description="Partecipazioni, giochi e riconoscimenti."
+        tabs={competitionTabs}
+      >
         <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
           <div className="w-12 h-12 border-thick border-secondary/30 border-t-secondary rounded-full animate-spin" />
           <p className="text-content-muted animate-pulse font-medium">Caricamento profilo...</p>
         </div>
-      </PageLayout>
+      </SectionLayout>
     );
   }
 
   return (
-    <PageLayout
+    <SectionLayout
+      title="Profilo utente"
+      description="Partecipazioni, giochi e riconoscimenti."
+      tabs={competitionTabs}
       breadcrumbs={[
         homeBreadcrumb,
         competitionsBreadcrumb,
-        { label: "Utenti", href: competitionsPath("/users") },
+        { label: "Partecipanti", href: competitionsPath("/users/") },
         { label: user.user_name },
       ]}
     >
@@ -184,9 +196,9 @@ export default function PageUser(props) {
                     </div>
                   ) : (
                     <div className="flex items-center gap-3">
-                      <h1 className="text-3xl md:text-5xl font-normal text-content tracking-tight leading-tight">
+                      <h2 className="text-3xl md:text-5xl font-normal text-content tracking-tight leading-tight">
                         {user.user_name}
-                      </h1>
+                      </h2>
                       {isOwnProfile && (
                         <Button variant="ghost" size="sm" onClick={() => setEditName(true)}>Modifica</Button>
                       )}
@@ -218,6 +230,6 @@ export default function PageUser(props) {
           </div>
         </div>
       </div>
-    </PageLayout>
+    </SectionLayout>
   );
 }

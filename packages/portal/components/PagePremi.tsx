@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { PageLayout } from "./WebsiteLayout/PageLayout";
+import { SectionLayout } from "./WebsiteLayout/SectionLayout";
+import { competitionTabs } from "../src/competitionSections";
 import GMIApi from "../src/api/GMIApi";
 import Link from "next/link";
 import ImageModal from "./commons/ImageModal";
@@ -22,7 +23,7 @@ export default function PagePremi() {
   }, []);
 
   const handleCardClick = (contestId) => {
-    router.push(`/competizioni/contest?contest=${contestId}`);
+    router.push(`/competizioni/contest/?contest=${contestId}`);
   };
 
   const formatPrizeImage = (url) => {
@@ -32,18 +33,13 @@ export default function PagePremi() {
   };
 
   return (
-    <PageLayout>
+    <SectionLayout
+      title="Hall of Fame"
+      description="Le magliette dei vincitori della compe (quando si ricordano di mandarci una foto)"
+      tabs={competitionTabs}
+    >
       <div className="w-full">
         <div className="flex flex-col gap-8">
-          
-          {/* Header */}
-          <div className="border-b border-default pb-6">
-            <h1 className="text-3xl font-normal text-content">Hall of Fame</h1>
-            <p className="text-content-muted mt-2">
-              Le magliette dei vincitori della compe (quando si ricordano di mandarci una foto)
-            </p>
-          </div>
-
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
@@ -58,6 +54,7 @@ export default function PagePremi() {
                 return (
                   <div
                     key={prize.id}
+                    id={`prize-${prize.id}`}
                     className="flex flex-col bg-surface border border-default overflow-hidden hover:border-content/30 transition-colors"
                   >
                     {/* Image Section - Clicks to open Large View */}
@@ -90,7 +87,7 @@ export default function PagePremi() {
                         <div className="pt-2 border-t border-default flex flex-wrap items-center gap-1">
                           <span className="text-[10px] text-content-muted uppercase font-bold mr-1">di</span>
                           {authors.map((author, idx) => (
-                            <Link key={idx} href={`/competizioni/user?user=${author.id}`} onClick={(e) => e.stopPropagation()}
+                            <Link key={idx} href={`/competizioni/user/?user=${author.id}`} onClick={(e) => e.stopPropagation()}
                                 className="text-xs font-semibold text-secondary hover:underline">
                               
                                 {author.name}{idx < authors.length - 1 ? "," : ""}
@@ -114,6 +111,6 @@ export default function PagePremi() {
           onClose={() => setSelectedImage(null)} 
         />
       )}
-    </PageLayout>
+    </SectionLayout>
   );
 }

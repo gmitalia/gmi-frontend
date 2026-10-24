@@ -28,7 +28,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         <div className="min-h-screen bg-page flex flex-col">
           <Header />
           <main className="w-full flex-1">
-            <SiteBreadcrumbs pageTitle={pageProps?.post?.title} />
+            <SiteBreadcrumbs
+              pageTitle={pageProps?.post?.title}
+              pageCategories={pageProps?.post?.categories}
+            />
             <Component {...pageProps} />
           </main>
           <Footer />

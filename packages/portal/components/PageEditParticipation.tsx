@@ -5,9 +5,10 @@ import { ParticipantType } from "../src/Constants";
 import GameForm from "./Forms/GameForm";
 import GMIApi from "../src/api/GMIApi";
 import InfoMessage from "./commons/InfoMessage";
-import { PageLayout } from "./WebsiteLayout/PageLayout";
+import { SectionLayout } from "./WebsiteLayout/SectionLayout";
+import { competitionTabs } from "../src/competitionSections";
+import EditionSwitcher from "./Competition/EditionSwitcher";
 import { Button } from "./commons/Button";
-import { competitionsPath } from "../src/paths";
 import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 
 
@@ -48,32 +49,28 @@ export default function PageEditParticipation(props) {
     GMIApi.getInstance().deleteParticipationData(query.contest, (data) => {
       if (data.success) {
         alert("Cancellato con successo");
-        router.push("/competizioni/contest?contest=" + query.contest);
+        router.push("/competizioni/contest/?contest=" + query.contest);
       } else setError(data.error);
     });
   }
 
   function renderBody(body) {
     return (
-      <PageLayout
+      <SectionLayout
+        title="Partecipazione"
+        description="Iscrivi il tuo gioco o aggiorna la partecipazione alla competizione scelta."
+        tabs={competitionTabs}
+        action={<EditionSwitcher contestId={query.contest} />}
         breadcrumbs={[
           homeBreadcrumb,
           competitionsBreadcrumb,
-          ...(query.contest
-            ? [
-                {
-                  label: "Dettaglio competizione",
-                  href: `${competitionsPath("/contest")}?contest=${query.contest}`,
-                },
-              ]
-            : []),
           { label: "Partecipazione" },
         ]}
       >
-        <div className="w-full flex flex-col gap-2 pb-12 pt-4">
+        <div className="w-full flex flex-col gap-2 pb-12">
           {body}
         </div>
-      </PageLayout>
+      </SectionLayout>
     );
   }
 

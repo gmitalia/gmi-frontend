@@ -1,5 +1,5 @@
 import PageMaintenance from '../../components/PageMaintenance';
-import PageHome from '../../components/PageHome';
+import PageCompetitions from '../../components/PageCompetitions';
 import Head from 'next/head'
 
 export default function Home()
@@ -14,7 +14,7 @@ export default function Home()
       <Head>
         <title>GMI Competizioni</title>
       </Head>
-      <PageHome />
+      <PageCompetitions />
     </>
   )
 }

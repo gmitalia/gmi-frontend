@@ -23,6 +23,17 @@ const ShowcaseCard = ({ game }: ShowcaseCardProps) => {
           <p>di {game.author}</p>
         </div>
       </a>
+
+      {/* Sui dispositivi touch non c'è hover: il titolo resta visibile sotto la card. */}
+      <a
+        className="showcaseCard__caption"
+        href={game.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <p>{game.title}</p>
+        <p>di {game.author}</p>
+      </a>
     </div>
   );
 };

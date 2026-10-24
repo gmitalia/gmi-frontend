@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { basePath } from "../../src/paths";
+import { EmptyDesert } from "../commons/EmptyDesert";
 
 const JudgeCard = ({ judge, isHost }) => {
   const ringStyle = isHost
@@ -9,7 +10,7 @@ const JudgeCard = ({ judge, isHost }) => {
 
   return (
     <div className="flex flex-col items-center text-center group">
-      <Link href={`/competizioni/user?user=${judge.id}`} className="relative mb-4 cursor-pointer block">
+      <Link href={`/competizioni/user/?user=${judge.id}`} className="relative mb-4 cursor-pointer block">
         
           <div className={`relative p-1 rounded-full ${ringStyle}`}>
             <img
@@ -20,7 +21,7 @@ const JudgeCard = ({ judge, isHost }) => {
             />
           </div>
         </Link>
-      <Link href={`/competizioni/user?user=${judge.id}`} className={`text-content font-bold transition-colors text-lg ${isHost ? "hover:text-accent-warm" : "hover:text-secondary"}`}>
+      <Link href={`/competizioni/user/?user=${judge.id}`} className={`text-content font-bold transition-colors text-lg ${isHost ? "hover:text-accent-warm" : "hover:text-secondary"}`}>
         
           {judge.user_name}
         </Link>
@@ -34,7 +35,7 @@ const JudgeCard = ({ judge, isHost }) => {
 const ContestJudgesSection = ({ judges }) => {
   return (
     <section className="ds-card-section">
-      <h2 className="text-2xl font-bold text-content mb-8 flex items-center gap-3">
+      <h2 className="text-2xl font-bold text-content mb-4 flex items-center gap-3">
         Giuria
       </h2>
 
@@ -49,9 +50,9 @@ const ContestJudgesSection = ({ judges }) => {
       </div>
 
       {judges.length === 0 && (
-        <div className="py-12 flex flex-col items-center justify-center text-content-muted italic">
-          <p>Ancora nessun giudice per questa edizione.</p>
-        </div>
+        <EmptyDesert>
+          Ancora nessun giudice per questa competizione.
+        </EmptyDesert>
       )}
     </section>
   );

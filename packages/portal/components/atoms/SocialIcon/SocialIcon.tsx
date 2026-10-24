@@ -1,8 +1,9 @@
 import DiscordIcon from "./DiscordIcon"
+import TwitchIcon from "./TwitchIcon"
 import TwitterIcon from "./TwitterIcon"
 import YoutubeIcon from "./YoutubeIcon";
 
-type SocialProps = "Twitter" | "Discord" | "YouTube";
+type SocialProps = "Twitter" | "Discord" | "Twitch" | "YouTube";
 
 type SocialIconProps = {
   social: SocialProps;
@@ -17,6 +18,9 @@ const SocialIcon = ({social}: SocialIconProps) => {
       case "Discord":
         return "https://discord.com/invite/juj4yEF2Yv"
 
+      case "Twitch":
+        return "https://www.twitch.tv/gamemakeritalia"
+
       case "YouTube":
         return "https://www.youtube.com/channel/UCee7hFC_VtQ_gnX5J2tMTHg"
     }
@@ -29,6 +33,9 @@ const SocialIcon = ({social}: SocialIconProps) => {
 
       case "Discord":
         return <DiscordIcon />
+
+      case "Twitch":
+        return <TwitchIcon />
 
       case "YouTube":
         return <YoutubeIcon />

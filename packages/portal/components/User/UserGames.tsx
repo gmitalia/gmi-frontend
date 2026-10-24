@@ -47,7 +47,7 @@ export default function UserGames(props) {
           let contest = contestMap[game.contest_id];
           return (
             <div key={i} className="flex flex-col gap-4 h-full">
-              <Link href={`/competizioni/contest?contest=${contest?.id}`} className="group">
+              <Link href={`/competizioni/contest/?contest=${contest?.id}`} className="group">
                 
                   <div className="text-sm font-semibold text-content-muted uppercase tracking-[0.15em] text-center">
                     {contest?.name ?? "..."}

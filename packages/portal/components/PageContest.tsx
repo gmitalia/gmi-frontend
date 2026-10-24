@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import type { RootState } from "../src/store";
-import { basePath } from "../src/paths";
+import { basePath, competitionsPath } from "../src/paths";
 import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 import GMIApi from "../src/api/GMIApi";
 import { ParticipantType } from "../src/Constants";
@@ -12,7 +12,7 @@ import ContestHeroSection from "./Contest/ContestHeroSection";
 import ContestJudgesSection from "./Contest/ContestJudgesSection";
 import ContestJudgingProgressSection from "./Contest/ContestJudgingProgressSection";
 import { Button } from "./commons/Button";
-import { PageLayout } from "./WebsiteLayout/PageLayout";
+import { SectionLayout } from "./WebsiteLayout/SectionLayout";
 import ContestPrizesSection from "./Contest/ContestPrizesSection";
 import ContestVideosSection from "./Contest/ContestVideosSection";
 import ConfirmationModal from "./commons/ConfirmationModal";
@@ -121,6 +121,12 @@ export default function PageContest(props) {
     });
   }, [contest, query.contest]);
 
+  const detailBreadcrumbs = [
+    homeBreadcrumb,
+    competitionsBreadcrumb,
+    { label: contest?.name || "Competizione" },
+  ];
+
   if (query.contest === "0") {
     return (
       <div className="w-full h-full flex items-center justify-center">
@@ -132,18 +138,26 @@ export default function PageContest(props) {
 
   if (error)
     return (
-      <PageLayout>
+      <SectionLayout
+        title="Competizione"
+        description="Non riusciamo a caricare questa competizione."
+        breadcrumbs={detailBreadcrumbs}
+      >
         <div className="bg-error/10 border border-error/20 p-8 text-center">
           <h2 className="text-xl font-bold text-error">Errore</h2>
           <p className="text-content-muted mt-2">{error}</p>
           <Button variant="ghost" onClick={() => router.push("/competizioni/")} className="mt-4">Torna alla Home</Button>
         </div>
-      </PageLayout>
+      </SectionLayout>
     );
 
   if (!contest)
     return (
-      <PageLayout>
+      <SectionLayout
+        title="Competizione"
+        description="Caricamento della competizione in corso..."
+        breadcrumbs={detailBreadcrumbs}
+      >
         <div className="w-full flex flex-col gap-8 pb-12 animate-pulse">
           {/* Hero skeleton */}
           <section className="relative border border-default overflow-hidden">
@@ -154,7 +168,7 @@ export default function PageContest(props) {
                     <div className="h-10 w-24 bg-surface-solid" />
                     <div className="h-10 w-64 bg-surface-solid" />
                   </div>
-                  <div className="h-5 w-96 bg-surface-solid" />
+                  <div className="h-5 w-full max-w-[320px] md:w-96 bg-surface-solid" />
                 </div>
                 <div className="w-full md:w-56 space-y-3">
                   <div className="h-3 w-24 bg-surface-solid rounded" />
@@ -178,9 +192,9 @@ export default function PageContest(props) {
           {/* Judges skeleton */}
           <section className="ds-card-section">
             <div className="h-8 w-20 bg-surface-solid rounded mb-4" />
-            <div className="flex gap-6">
+            <div className="flex flex-wrap gap-6 justify-center">
               {[1, 2, 3, 4].map(i => (
-                <div key={i} className="flex flex-col items-center gap-3">
+                <div key={i} className="flex flex-col items-center gap-3 w-24 shrink-0">
                   <div className="w-24 h-24 bg-surface-solid rounded-full" />
                   <div className="h-4 w-20 bg-surface-solid rounded" />
                 </div>
@@ -188,7 +202,7 @@ export default function PageContest(props) {
             </div>
           </section>
         </div>
-      </PageLayout>
+      </SectionLayout>
     );
 
   const complete_date = new Date(Date.parse(contest.completed_at));
@@ -211,7 +225,7 @@ export default function PageContest(props) {
     <Button
       key="regolamento"
       variant="secondary"
-      onClick={() => router.push(`/competizioni/rules?contest=${contest.id}`)}
+      onClick={() => router.push(`/competizioni/rules/?contest=${contest.id}`)}
       className="text-content"
     >
       Regolamento
@@ -222,7 +236,7 @@ export default function PageContest(props) {
     actions.push(
       <Button
         key="vota"
-        onClick={() => router.push("/competizioni/editvotes?contest=" + contest.id)}
+        onClick={() => router.push("/competizioni/editvotes/?contest=" + contest.id)}
         variant="primary"
       >
         Vota
@@ -233,7 +247,7 @@ export default function PageContest(props) {
     actions.push(
       <Button
         key="invia"
-        onClick={() => router.push("/competizioni/participation?contest=" + contest.id)}
+        onClick={() => router.push("/competizioni/participation/?contest=" + contest.id)}
         variant="primary"
       >
         Partecipa
@@ -244,7 +258,7 @@ export default function PageContest(props) {
     actions.push(
       <Button
         key="modifica"
-        onClick={() => router.push("/competizioni/participation?contest=" + contest.id)}
+        onClick={() => router.push("/competizioni/participation/?contest=" + contest.id)}
         variant="primary"
       >
         Aggiorna Gioco
@@ -258,7 +272,7 @@ export default function PageContest(props) {
     actions.push(
       <Button
         key="anteprima"
-        onClick={() => router.push("/competizioni/results?contest=" + contest.id)}
+        onClick={() => router.push("/competizioni/results/?contest=" + contest.id)}
         variant="primary"
       >
         Anteprima Risultati
@@ -277,12 +291,10 @@ export default function PageContest(props) {
   }
 
   return (
-    <PageLayout
-      breadcrumbs={[
-        homeBreadcrumb,
-        competitionsBreadcrumb,
-        { label: contest.name },
-      ]}
+    <SectionLayout
+      title={contest.name}
+      description="Tutti i giochi, i giudici e i risultati della competizione."
+      breadcrumbs={detailBreadcrumbs}
     >
       <div className="w-full flex flex-col gap-8 pb-12">
         <ContestHeroSection
@@ -328,6 +340,6 @@ export default function PageContest(props) {
         }}
         onCancel={() => setShowPublishModal(false)}
       />
-    </PageLayout>
+    </SectionLayout>
   );
 }

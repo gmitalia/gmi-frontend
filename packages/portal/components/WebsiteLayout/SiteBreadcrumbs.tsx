@@ -15,12 +15,13 @@ import {
 
 type BreadcrumbOverride = {
   path: string;
-  items: BreadcrumbItem[] | null;
+  /** undefined = nessun override, null = breadcrumb nascoste. */
+  items: BreadcrumbItem[] | null | undefined;
 };
 
 const BreadcrumbStateContext = createContext<BreadcrumbOverride | null>(null);
 const BreadcrumbSetterContext = createContext<
-  ((items: BreadcrumbItem[] | null) => void) | null
+  ((items: BreadcrumbItem[] | null | undefined) => void) | null
 >(null);
 
 /**
@@ -32,7 +33,7 @@ export function BreadcrumbsProvider({ children }: { children: ReactNode }) {
   const [override, setOverride] = useState<BreadcrumbOverride | null>(null);
 
   const setPageBreadcrumbs = useCallback(
-    (items: BreadcrumbItem[] | null) => {
+    (items: BreadcrumbItem[] | null | undefined) => {
       setOverride({ path: router.asPath, items });
     },
     [router.asPath]
@@ -48,10 +49,13 @@ export function BreadcrumbsProvider({ children }: { children: ReactNode }) {
 }
 
 /**
- * Registra le breadcrumb specifiche di una pagina. `null` le nasconde.
+ * Registra le breadcrumb specifiche di una pagina. `null` le nasconde;
+ * `undefined` lascia decidere al mapper globale in base alla route.
  * Se il percorso cambia, l'override precedente viene ignorato automaticamente.
  */
-export function usePageBreadcrumbs(items: BreadcrumbItem[] | null) {
+export function usePageBreadcrumbs(
+  items?: BreadcrumbItem[] | null
+) {
   const setPageBreadcrumbs = useContext(BreadcrumbSetterContext);
   const key = JSON.stringify(items);
 
@@ -59,27 +63,34 @@ export function usePageBreadcrumbs(items: BreadcrumbItem[] | null) {
     if (!setPageBreadcrumbs) return;
 
     setPageBreadcrumbs(items);
-    return () => setPageBreadcrumbs(null);
+    return () => setPageBreadcrumbs(undefined);
   }, [key, setPageBreadcrumbs]);
 }
 
 type SiteBreadcrumbsProps = {
   /** Titolo dinamico disponibile in `pageProps` (es. articolo del blog). */
   pageTitle?: string;
+  /** Categorie del post, per distinguere gli articoli dai tutorial. */
+  pageCategories?: string[];
 };
 
 /**
  * Breadcrumb globali: un unico punto di rendering per blog, showcase, risorse,
  * tutorial, articoli e competizioni. Le pagine possono sovrascriverle.
  */
-export function SiteBreadcrumbs({ pageTitle }: SiteBreadcrumbsProps) {
+export function SiteBreadcrumbs({
+  pageTitle,
+  pageCategories,
+}: SiteBreadcrumbsProps) {
   const router = useRouter();
   const override = useContext(BreadcrumbStateContext);
 
   const items =
-    override && override.path === router.asPath
+    override &&
+    override.path === router.asPath &&
+    override.items !== undefined
       ? override.items
-      : getGlobalBreadcrumbs(router.pathname, pageTitle);
+      : getGlobalBreadcrumbs(router.pathname, pageTitle, pageCategories);
 
   if (!items || items.length === 0) return null;
 

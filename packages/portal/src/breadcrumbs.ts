@@ -13,20 +13,24 @@ export const competitionsBreadcrumb: BreadcrumbItem = {
   href: competitionsPath("/"),
 };
 
+export const blogBreadcrumb: BreadcrumbItem = {
+  label: "Blog",
+  href: "/blog/",
+};
+
 const SECTION_LABELS: Record<string, string> = {
   "/blog": "Blog",
   "/showcase": "Showcase",
-  "/tutorial": "Tutorial",
   "/resources": "Risorse",
 };
 
 const COMPETITION_LABELS: Record<string, string> = {
   [competitionsPath("/search")]: "Cerca",
-  [competitionsPath("/users")]: "Utenti",
-  [competitionsPath("/user")]: "Profilo utente",
-  [competitionsPath("/premi")]: "Premi",
+  [competitionsPath("/users")]: "Partecipanti",
+  [competitionsPath("/user")]: "Profilo",
+  [competitionsPath("/premi")]: "Hall of Fame",
   [competitionsPath("/rules")]: "Regolamento",
-  [competitionsPath("/contest")]: "Dettaglio competizione",
+  [competitionsPath("/contest")]: "Competizione",
   [competitionsPath("/results")]: "Risultati",
   [competitionsPath("/editvotes")]: "Area giudizi",
   [competitionsPath("/participation")]: "Partecipazione",
@@ -56,18 +60,30 @@ export function getCompetitionBreadcrumbs(pathname: string): BreadcrumbItem[] {
 /** Breadcrumb globali per le sezioni editoriali e per gli articoli del blog. */
 export function getGlobalBreadcrumbs(
   pathname: string,
-  postTitle?: string
+  postTitle?: string,
+  postCategories?: string[]
 ): BreadcrumbItem[] {
   const normalized = normalizeBreadcrumbPath(pathname);
 
   if (normalized === "/") return [];
 
   if (normalized === "/posts/[slug]") {
+    const isTutorial = postCategories?.includes("Tutorial");
+
     return [
       homeBreadcrumb,
-      { label: "Blog", href: "/blog/" },
+      blogBreadcrumb,
+      ...(isTutorial ? [{ label: "Tutorial", href: "/tutorial/" }] : []),
       { label: postTitle || "Articolo" },
     ];
+  }
+
+  if (normalized === "/blog/articoli") {
+    return [homeBreadcrumb, blogBreadcrumb, { label: "Articoli" }];
+  }
+
+  if (normalized === "/tutorial") {
+    return [homeBreadcrumb, blogBreadcrumb, { label: "Tutorial" }];
   }
 
   if (normalized.startsWith("/competizioni")) {

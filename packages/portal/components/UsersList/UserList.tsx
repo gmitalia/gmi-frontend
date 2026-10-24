@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import GMIApi from "../../src/api/GMIApi";
 
 import { UserTile } from "./UserTile";
+import { SearchBar } from "../commons/SearchBar";
 
 const sortingId = 
 {
@@ -130,18 +131,12 @@ export default function UserList(props)
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="bg-surface border border-default p-4 md:p-6">
-        <div className="flex flex-col gap-2">
-          <label className="text-xs font-semibold text-content-muted uppercase tracking-wider">Cerca utenti</label>
-          <input
-            type="text"
-            value={search}
-            onChange={e=> setSearch(e.target.value)}
-            placeholder="Nome"
-            className="w-full ds-input"
-          />
-        </div>
-      </div>
+      <SearchBar
+        value={search}
+        onChange={setSearch}
+        placeholder="Cerca partecipanti..."
+        ariaLabel="Cerca partecipanti"
+      />
     
     <div className="grid gap-y-2">
       {/* Mobile Header */}

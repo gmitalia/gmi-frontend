@@ -96,7 +96,7 @@ export const GameTile = (props) => {
             <span>di</span>
             {authors.map((author, index) => (
               <React.Fragment key={author.id}>
-                <Link href={`/competizioni/user?user=${author.id}`} onClick={(e) => e.stopPropagation()} className="text-secondary hover:text-secondary/80 hover:underline transition-colors">
+                <Link href={`/competizioni/user/?user=${author.id}`} onClick={(e) => e.stopPropagation()} className="text-secondary hover:text-secondary/80 hover:underline transition-colors">
                   
                     {author.name}
                   </Link>

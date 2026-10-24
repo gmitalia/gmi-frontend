@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  /* Evita che la comparsa della scrollbar sposti il contenuto tra le pagine. */
+  scrollbar-gutter: stable;
+}
+
 :root {
   /* Colors */
   --cloudGrayLight: #F5F7F9;

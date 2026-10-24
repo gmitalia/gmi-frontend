@@ -18,7 +18,7 @@ export const UserTile = (props) =>
   const avatar = user.avatar ?? basePath + "/img/profile.png";
 
   return (
-    <Link href={`/competizioni/user?user=${user.id}`} className={`group border border-default rounded-md px-3 py-3 hover:bg-surface-elevated hover:border-secondary/30 transition-all min-h-[64px] ${isEven ? 'bg-surface-muted/30' : 'bg-surface-muted'}`}>
+    <Link href={`/competizioni/user/?user=${user.id}`} className={`group border border-default rounded-md px-3 py-3 hover:bg-surface-elevated hover:border-secondary/30 transition-all min-h-[64px] ${isEven ? 'bg-surface-muted/30' : 'bg-surface-muted'}`}>
       
         {/* Mobile Layout */}
         <div className="lg:hidden grid grid-cols-[32px_1fr_110px] items-center gap-x-3">

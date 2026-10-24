@@ -68,24 +68,24 @@ export default function Showcase({ games }: ShowcaseProps) {
         <div className="max-w-7xl mx-auto p-5 blog-section">
           <h2 className="text-3xl mb-3">Showcase</h2>
           <p className="mb-1">Una selezione di titoli sviluppati dai membri della community</p>
-          <div className="flex flex-wrap items-center gap-3 mt-6 mb-2 border-b border-gray-200 pb-2">
+          <div className="flex flex-wrap items-center gap-3 mt-6 mb-2 border-b border-gray-200 pb-1">
             <span className="text-gray-700 font-medium text-sm">Ordina per:</span>
             <button onClick={() => {setGamesArray(titleOrder); setActiveButton("title")}}
-              className={`text-sm transition-all duration-200 pb-2 -mb-2 border-b-2 ${
+              className={`text-sm transition-all duration-200 pb-1 -mb-1 border-b-2 ${
                 activeButton === 'title'
                   ? 'text-primary border-primary font-semibold'
                   : 'text-gray-500 border-transparent hover:text-primary hover:border-primary/40'
               }`}
             >Titolo</button>
             <button onClick={() => {setGamesArray(authorOrder); setActiveButton("author")}}
-              className={`text-sm transition-all duration-200 pb-2 -mb-2 border-b-2 ${
+              className={`text-sm transition-all duration-200 pb-1 -mb-1 border-b-2 ${
                 activeButton === 'author'
                   ? 'text-primary border-primary font-semibold'
                   : 'text-gray-500 border-transparent hover:text-primary hover:border-primary/40'
               }`}
             >Autore</button>
             <button onClick={() => {setGamesArray([...games].sort(() => Math.random() - 0.5)); setActiveButton("random")}}
-              className={`text-sm transition-all duration-200 pb-2 -mb-2 border-b-2 ${
+              className={`text-sm transition-all duration-200 pb-1 -mb-1 border-b-2 ${
                 activeButton === 'random'
                   ? 'text-primary border-primary font-semibold'
                   : 'text-gray-500 border-transparent hover:text-primary hover:border-primary/40'

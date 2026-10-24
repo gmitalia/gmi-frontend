@@ -37,7 +37,7 @@ export default function ContestPrizesSection({ contestId }) {
   // parseAuthors imported from Utils
 
   const handleCardClick = (targetContestId) => {
-    router.push(`/competizioni/contest?contest=${targetContestId}`);
+    router.push(`/competizioni/contest/?contest=${targetContestId}`);
   };
 
   return (
@@ -84,7 +84,7 @@ export default function ContestPrizesSection({ contestId }) {
                   <div className="flex flex-wrap gap-1 pt-2 border-t border-default mt-1">
                     <span className="text-[10px] text-content-muted uppercase font-bold mr-1">di</span>
                     {authors.map((author, idx) => (
-                      <Link key={idx} href={`/competizioni/user?user=${author.id}`} onClick={(e) => e.stopPropagation()}
+                      <Link key={idx} href={`/competizioni/user/?user=${author.id}`} onClick={(e) => e.stopPropagation()}
                           className="text-[11px] font-semibold text-secondary hover:underline">
                         
                           {author.name}{idx < authors.length - 1 ? "," : ""}

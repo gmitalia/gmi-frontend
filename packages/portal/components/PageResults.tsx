@@ -3,7 +3,9 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { getQuery } from "../src/Utils";
 import GMIApi from "../src/api/GMIApi";
-import { PageLayout } from "./WebsiteLayout/PageLayout"; 
+import { SectionLayout } from "./WebsiteLayout/SectionLayout";
+import { competitionTabs } from "../src/competitionSections";
+import EditionSwitcher from "./Competition/EditionSwitcher";
 import { VotesModal } from "./PopupVotes";
 import { basePath, competitionsPath } from "../src/paths";
 import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
@@ -64,23 +66,31 @@ export default function PageResults(props)
 
   if(error)
     return (
-      <PageLayout>
+      <SectionLayout
+        title="Risultati"
+        description="Classifiche, voti e giudizi delle competizioni."
+        tabs={competitionTabs}
+      >
         <div className="bg-error/10 border border-error/20 p-6 md:p-12 text-center text-error">
           {error}
         </div>
-      </PageLayout>
+      </SectionLayout>
     );
 
   if(!results)
     return (
-      <PageLayout>
+      <SectionLayout
+        title="Risultati"
+        description="Classifiche, voti e giudizi delle competizioni."
+        tabs={competitionTabs}
+      >
         <div className="bg-surface border border-default p-6 md:p-12 text-center text-content-muted">
           <div className="animate-pulse flex flex-col items-center gap-4">
             <div className="h-8 w-8 rounded-full border-thick border-secondary/30 border-t-secondary animate-spin" />
             <span>Caricamento risultati in corso...</span>
           </div>
         </div>
-      </PageLayout>
+      </SectionLayout>
     );
 
   const toggleGameVisibility = (index)=>
@@ -109,6 +119,9 @@ export default function PageResults(props)
       });
     }
   };
+
+  const isJudging = !!contest && !contest.is_completed && contest.is_ended;
+  const isComplete = !!contest && contest.is_completed;
 
   const games = (results.games_data || []).sort((a, b) => (parseFloat(b.avg_score) || 0) - (parseFloat(a.avg_score) || 0));
   const podium = games.filter((game)=> !!game.avg_score).slice(0, 3);
@@ -173,11 +186,16 @@ export default function PageResults(props)
     );
   });
 
-  const isJudging = contest && !contest.is_completed && contest.is_ended;
-  const isComplete = contest && contest.is_completed;
-
   return (
-    <PageLayout
+    <SectionLayout
+      title={isJudging ? "Avanzamento giudizi" : "Classifica"}
+      description={
+        isJudging
+          ? `${contest?.name || "Competizione"} · I giudici stanno valutando i giochi. Ecco lo stato di avanzamento in tempo reale.`
+          : `${contest?.name || "Competizione"} · Esplora il verdetto finale e i punteggi medi dei giochi in gara.`
+      }
+      tabs={competitionTabs}
+      action={<EditionSwitcher contestId={query.contest} />}
       breadcrumbs={
         contest
           ? [
@@ -185,7 +203,7 @@ export default function PageResults(props)
               competitionsBreadcrumb,
               {
                 label: contest.name,
-                href: `${competitionsPath("/contest")}?contest=${contest.id}`,
+                href: `${competitionsPath("/contest/")}?contest=${contest.id}`,
               },
               { label: isJudging ? "Avanzamento giudizi" : "Risultati" },
             ]
@@ -193,19 +211,6 @@ export default function PageResults(props)
       }
     >
       <div className="flex flex-col gap-8 pb-12 overflow-x-clip">
-        <section className="relative bg-surface border border-default p-6 md:p-8 overflow-hidden">
-          <div className="relative text-center md:text-left">
-            <h1 className="text-3xl md:text-4xl font-normal text-content tracking-tight">
-              {isJudging ? "Avanzamento Giudizi" : "Classifica"} <span className="text-secondary">{contest?.name || "Edizione"}</span>
-            </h1>
-            <p className="text-content-muted mt-2 text-lg">
-              {isJudging 
-                ? "I giudici stanno valutando i giochi. Ecco lo stato di avanzamento in tempo reale." 
-                : "Esplora il verdetto finale e i punteggi medi dei giochi in gara."}
-            </p>
-          </div>
-        </section>
-
         <div className="w-full max-w-5xl mx-auto">
           {/* Judging Phase: Show only progress bars */}
           {isJudging && (
@@ -264,7 +269,7 @@ export default function PageResults(props)
                       const avatar = judgeAvatars[judge.id] || (basePath + "/img/profile.png");
                       const name = judge.name;
                       return (
-                        <Link key={judge.id} href={`/competizioni/user?user=${judge.id}`} className="border border-default p-4 flex items-center gap-4 hover:border-content/30 transition-colors cursor-pointer group">
+                        <Link key={judge.id} href={`/competizioni/user/?user=${judge.id}`} className="border border-default p-4 flex items-center gap-4 hover:border-content/30 transition-colors cursor-pointer group">
                           
                             <img
                               src={avatar}
@@ -305,6 +310,6 @@ export default function PageResults(props)
         isOpen={!!selectedGame}
         onClose={() => setSelectedGame(null)}
       />
-    </PageLayout>
+    </SectionLayout>
   );
 }

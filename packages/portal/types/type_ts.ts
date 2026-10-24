@@ -56,9 +56,10 @@ type Contest =
 	end_at: string; // La data di fine della competizione
 	can_submit: boolean; // Se è possibile sottomettere giochi
 	completed_at: string; // La data di completamento della competizione
-	public: string; // Se la competizione è pubblica
+	public: boolean | string; // Se i risultati sono pubblici (l'API usa "0"/"1")
 	is_ended: boolean; // Se la competizione è terminata
 	is_completed: boolean; // Se la competizione è completata
+	thumbnail_url?: string; // L'URL della miniatura della competizione
 }
 
 type Participant =

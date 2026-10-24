@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { PageLayout } from "./WebsiteLayout/PageLayout"; 
+import React from "react";
+import { SectionLayout } from "./WebsiteLayout/SectionLayout";
 import UserList from "./UsersList/UserList";
+import { competitionTabs } from "../src/competitionSections";
 
-export default function PageUsers(props)
-{
-
+export default function PageUsers() {
   return (
-    <PageLayout>
-      <div className="flex flex-col gap-6">
-        <section className="ds-card-section p-6 md:p-8">
-          <h1 className="text-3xl font-normal">La community</h1>
-          <p className="ds-text-muted mt-2">Esplora i membri della community, ordina per attività e trova rapidamente profili, partecipazioni, vittorie e giudizi.</p>
-        </section>
-        <section className="ds-card-section p-6 md:p-8">
-          <UserList/>
-        </section>
-      </div>
-    </PageLayout>
+    <SectionLayout
+      title="Partecipanti"
+      description="Esplora le persone che hanno preso parte alle competizioni di GameMaker Italia: profili, giochi, vittorie e giudizi."
+      tabs={competitionTabs}
+    >
+      <UserList />
+    </SectionLayout>
   );
 }

@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import GMIApi from "../../src/api/GMIApi";
 import { GameTile } from "./GameTile";
 import { Button } from "../commons/Button";
+import { EmptyDesert } from "../commons/EmptyDesert";
 
 const ContestGamesSection = ({ contest, contestEnded, onPublicResults }) => {
   const router = useRouter();
@@ -60,7 +61,7 @@ const ContestGamesSection = ({ contest, contestEnded, onPublicResults }) => {
 
   const actions = (mounted && showVotes && games && document.querySelector("#results-portal")) ? (
     createPortal(
-      <Button variant="primary" size="md" onClick={() => router.push("/competizioni/results?contest=" + contest)}>
+      <Button variant="primary" size="md" onClick={() => router.push("/competizioni/results/?contest=" + contest)}>
         Dettaglio Risultati
       </Button>,
       document.querySelector("#results-portal")
@@ -76,15 +77,21 @@ const ContestGamesSection = ({ contest, contestEnded, onPublicResults }) => {
       <div className="w-full flex flex-col gap-4">
         {actions}
         <div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:gap-8">
-            {isLoading ? (
-              <>
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="h-72 bg-surface-muted rounded animate-pulse" />
-                ))}
-              </>
-            ) : elements}
-          </div>
+          {!isLoading && games?.length === 0 ? (
+            <EmptyDesert>
+              Non ci sono ancora giochi iscritti a questa competizione.
+            </EmptyDesert>
+          ) : (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:gap-8">
+              {isLoading ? (
+                <>
+                  {[1, 2, 3].map(i => (
+                    <div key={i} className="h-72 bg-surface-muted rounded animate-pulse" />
+                  ))}
+                </>
+              ) : elements}
+            </div>
+          )}
         </div>
       </div>
     </section>

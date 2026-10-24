@@ -694,7 +694,8 @@ module.exports = {
       "4xl": "56rem",
       "5xl": "64rem",
       "6xl": "72rem",
-      "7xl": "80rem",
+      // Container principale del sito: leggermente più stretto dei 1280px standard.
+      "7xl": "70rem",
       full: "100%",
       min: "min-content",
       max: "max-content",

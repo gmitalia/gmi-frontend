@@ -6,6 +6,7 @@ import { competitionsPath } from "../../src/paths";
 import type { AppDispatch, RootState } from "../../src/store";
 import { GMILogoIcon } from "../commons/Icons";
 import DiscordIcon from "../atoms/SocialIcon/DiscordIcon";
+import TwitchIcon from "../atoms/SocialIcon/TwitchIcon";
 import TwitterIcon from "../atoms/SocialIcon/TwitterIcon";
 import YoutubeIcon from "../atoms/SocialIcon/YoutubeIcon";
 
@@ -77,6 +78,15 @@ export const Footer = () => {
 
             <div className="mt-4 flex items-center gap-2">
               <a
+                href="https://www.twitch.tv/gamemakeritalia"
+                className={socialLinkClasses}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GameMaker Italia su Twitch"
+              >
+                <TwitchIcon />
+              </a>
+              <a
                 href="https://www.youtube.com/channel/UCee7hFC_VtQ_gnX5J2tMTHg"
                 className={socialLinkClasses}
                 target="_blank"
@@ -115,13 +125,10 @@ export const Footer = () => {
           </FooterColumn>
 
           <FooterColumn title="Competizioni">
-            <FooterLink href={competitionsPath("/")}>Home</FooterLink>
-            <FooterLink href={competitionsPath("/search")}>
-              Giochi
-            </FooterLink>
-            <FooterLink href={competitionsPath("/users")}>Utenti</FooterLink>
-            <FooterLink href={competitionsPath("/premi")}>Premi</FooterLink>
-            <FooterLink href={competitionsPath("/rules")}>Regolamento</FooterLink>
+            <FooterLink href={competitionsPath("/")}>Competizioni</FooterLink>
+            <FooterLink href={competitionsPath("/users/")}>Partecipanti</FooterLink>
+            <FooterLink href={competitionsPath("/premi/")}>Hall of Fame</FooterLink>
+            <FooterLink href={competitionsPath("/rules/")}>Regolamento</FooterLink>
           </FooterColumn>
 
           <FooterColumn title="Links">
@@ -136,7 +143,7 @@ export const Footer = () => {
           <FooterColumn title="Area personale">
             {user ? (
               <>
-                <FooterLink href={`${competitionsPath("/user")}?user=${user.user_id}`}>
+                <FooterLink href={`${competitionsPath("/user/")}?user=${user.user_id}`}>
                   Il mio profilo
                 </FooterLink>
                 <li>

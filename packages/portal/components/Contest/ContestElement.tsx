@@ -22,7 +22,7 @@ export const ContestElement = (props)=>
   const hoverClass = "hover:cursor-pointer hover:border-secondary"
 
   return (
-    <Link href={`/competizioni/contest?contest=${contest.id}`}>
+    <Link href={`/competizioni/contest/?contest=${contest.id}`}>
 
       <div className={`flex flex-row items-center ds-rounded-cta border border-default p-3 ${selectedClass} ${hoverClass}`}>
         

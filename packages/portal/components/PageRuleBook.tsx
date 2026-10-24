@@ -2,46 +2,126 @@
 
 import { prosList, consList } from "../src/Constants";
 import { Button } from "./commons/Button";
+import { DiscordIcon } from "./commons/Icons";
 
 const PageRuleBook = ()=>
 {
   return (
     <article className="prose max-w-none text-content/80">
       <div>
-        {/* TITOLO SEZIONE */}
-        <h2 className="text-3xl font-normal text-content m-0 mb-6">Regolamento</h2>
-
         {/* REGOLAMENTO COMPLETO - SEMPRE VISIBILE */}
         <div className="space-y-8">
             {/* MODALITÀ DI INVIO */}
             <section className="bg-surface p-5 border border-default">
-              <h4 className="text-lg font-bold text-content m-0 mb-4">
+              <h4 className="text-lg font-bold text-content m-0 mb-5">
                 Come partecipare
               </h4>
-              <p className="m-0 mb-3">Caricare il gioco su un sito di hosting a scelta e farlo pervenire al capogiuria in uno dei seguenti modi:</p>
-              
-              <ol className="m-0 space-y-2">
-                <li><strong>Metodo 1 (preferibile):</strong> Iscriversi alla piattaforma ufficiale GMI. Sarà necessario eseguire il login attraverso un account Discord, dopodiché potrete iscrivere il vostro gioco alla competizione e caricare direttamente lì un link allo stesso.</li>
-                <li><strong>Metodo 2:</strong> Scrivere su discord al capogiuria. Il messaggio dovrà contenere:
-                  <ul className="mt-1">
-                    <li>Il titolo del gioco;</li>
-                    <li>Un link funzionante da cui poter scaricare il gioco;</li>
-                    <li>(Opzionale ma caldamente consigliato) un file README.txt contenente eventuali istruzioni, comandi debug del vostro gioco o suggerimenti per la corretta fruizione di quest'ultimo;</li>
-                  </ul>
+
+              <ol className="m-0 list-none p-0 space-y-6">
+                {/* STEP 1 */}
+                <li className="flex gap-4">
+                  <div className="relative flex flex-col items-center">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-default bg-surface-muted text-sm font-semibold text-content">
+                      1
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="absolute left-1/2 top-9 -bottom-6 w-px -translate-x-1/2 border-l border-default"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1 pb-1">
+                    <p className="m-0">Carica il gioco su un sito di hosting a scelta</p>
+
+                    <p className="m-0 mt-3 text-sm font-semibold text-content">Siti di hosting consigliati:</p>
+                    <ul className="m-0 mt-2 flex list-none flex-wrap gap-2 p-0">
+                      <li>
+                        <a
+                          href="https://drive.google.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center border border-default bg-surface px-3 py-1.5 text-sm text-content transition-colors hover:border-content/30 hover:bg-surface-muted"
+                        >
+                          Google Drive
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="https://onedrive.live.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center border border-default bg-surface px-3 py-1.5 text-sm text-content transition-colors hover:border-content/30 hover:bg-surface-muted"
+                        >
+                          Microsoft OneDrive
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="https://www.dropbox.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center border border-default bg-surface px-3 py-1.5 text-sm text-content transition-colors hover:border-content/30 hover:bg-surface-muted"
+                        >
+                          Dropbox
+                        </a>
+                      </li>
+                    </ul>
+                    <p className="m-0 mt-2 text-sm text-content-muted"><strong>NOTA:</strong> Fornire sempre un link condivisibile e accessibile senza account.</p>
+                  </div>
+                </li>
+
+                {/* STEP 2 */}
+                <li className="flex gap-4">
+                  <div className="relative flex flex-col items-center">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-default bg-surface-muted text-sm font-semibold text-content">
+                      2
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="absolute left-1/2 top-9 -bottom-6 w-px -translate-x-1/2 border-l border-default"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1 pb-1">
+                    <p className="m-0">
+                      Eseguire il login attraverso un account Discord, dopodiché potrete iscrivere il vostro gioco alla competizione e caricare un link al gioco.
+                    </p>
+                  </div>
+                </li>
+
+                {/* STEP 3 */}
+                <li className="flex gap-4">
+                  <div className="flex flex-col items-center">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-default bg-surface-muted text-sm font-semibold text-content">
+                      3
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1 pb-1">
+                    <p className="m-0">
+                      I giochi dovranno essere consegnati nelle modalità previste entro la data e ora di scadenza, i giochi consegnati oltre la scadenza non saranno considerati. Ricordate di controllare bene il gioco prima di consegnare. Verrà prelevato il link dell'ultima versione del gioco inviata.
+                    </p>
+                  </div>
                 </li>
               </ol>
-              
-              <p className="m-0 mt-3">Non è necessario iscriversi anticipatamente, tutti i giochi pervenuti entro la data limite saranno considerati in gara.</p>
-              
-              <p className="m-0 mt-3">I giochi dovranno essere consegnati nelle modalità previste entro la data e ora di scadenza, i giochi consegnati oltre la scadenza non saranno considerati. Ricordate di controllare bene il gioco prima di consegnare. Verrà prelevato il link dell'ultima versione del gioco inviata.</p>
-              
-              <p className="m-0 mt-3"><strong>Siti di hosting consigliati:</strong></p>
-              <ul className="m-0">
-                <li><a href="https://drive.google.com/" className="ds-link">Google Drive</a></li>
-                <li><a href="https://onedrive.live.com/" className="ds-link">Microsoft OneDrive</a></li>
-                <li><a href="https://www.dropbox.com/" className="ds-link">Dropbox</a></li>
-              </ul>
-              <p className="m-0 mt-1 text-sm text-content-muted">Fornire sempre un link condivisibile e accessibile senza account.</p>
+
+              <div className="mt-6 space-y-3 border-t border-default pt-5">
+                <p className="m-0 text-sm text-content-muted">
+                  Non è necessario iscriversi anticipatamente, tutti i giochi pervenuti entro la data limite saranno considerati in gara.
+                </p>
+                <p className="m-0 flex items-start gap-2 text-sm text-content-muted">
+                  <DiscordIcon size={16} className="mt-0.5 shrink-0" />
+                  <span>
+                    <strong className="font-semibold text-content">Nel caso di problemi</strong> chiedi aiuto su{" "}
+                    <a
+                      href="https://discord.com/invite/juj4yEF2Yv"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ds-link"
+                    >
+                      discord
+                    </a>
+                    !
+                  </span>
+                </p>
+              </div>
             </section>
 
             {/* PREMI */}
@@ -49,7 +129,7 @@ const PageRuleBook = ()=>
               <h4 className="text-lg font-bold text-content m-0 mb-4">
                 Cosa si vince?
               </h4>
-              <p className="m-0">Per il primo classificato: gloriosa <b>Maglietta GMI</b> con stampa dedicata al gioco vincitore!</p>
+              <p className="m-0">Per il primo classificato: la gloriosa <b>Maglietta GMI</b> con stampa dedicata al gioco vincitore!</p>
             </section>
             {/* REGOLAMENTO IN BREVE */}
             <div className="bg-surface p-5 border border-default">
@@ -174,7 +254,7 @@ const PageRuleBook = ()=>
                 <p className="m-0">Se ancora non avete iniziato a realizzare il vostro capolavoro, questo è il momento ideale per cercare compagni di sviluppo o passare in rassegna utilissimi 
                   &nbsp;<a href="https://www.gamemakeritalia.it/blog" target="_blank" rel="noopener noreferrer" className="ds-link">tutorial</a>&nbsp;
                   e <a href="https://www.gamemakeritalia.it/resources" target="_blank" rel="noopener noreferrer" className="ds-link">risorse</a></p>
-                <p className="m-0 text-content-muted">Alcuni utenti della community GMI hanno all'attivo molte utility importanti, come il <a href="https://gamemakeritalia.it/posts/gestore-di-dialoghi-maximilian-volt/" >Gestore di dialoghi</a> realizzato da Maximilian o lo Unique Engine (3D Editor) di @Xeryan. Non c'è limite su GameMaker, fintanto che siete disposti a sporcarvi le mani</p>
+                <p className="m-0 text-content-muted">Alcuni utenti della community GMI hanno all'attivo molte utility importanti che puoi trovare sul Blog. <br/> Non c'è limite su GameMaker, fintanto che siete disposti a sporcarvi le mani</p>
               </div>
             </section>
             

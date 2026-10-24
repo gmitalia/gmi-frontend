@@ -7,9 +7,10 @@ import GMIApi from "../src/api/GMIApi";
 import { Button } from "./commons/Button";
 import LoginRequiredPage from "./commons/LoginRequiredPage";
 import Link from "next/link";
-import { competitionsPath } from "../src/paths";
 import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
-import { PageLayout } from "./WebsiteLayout/PageLayout";
+import { SectionLayout } from "./WebsiteLayout/SectionLayout";
+import { competitionTabs } from "../src/competitionSections";
+import EditionSwitcher from "./Competition/EditionSwitcher";
 
 //@todo don't load if not judge
 export default function PageEditVotes(props)
@@ -20,16 +21,16 @@ export default function PageEditVotes(props)
   const breadcrumbs = [
     homeBreadcrumb,
     competitionsBreadcrumb,
-    ...(query.contest
-      ? [
-          {
-            label: "Dettaglio competizione",
-            href: `${competitionsPath("/contest")}?contest=${query.contest}`,
-          },
-        ]
-      : []),
     { label: "Area giudizi" },
   ];
+
+  const shellProps = {
+    title: "Area giudizi",
+    description: "Valuta i giochi della competizione e registra i tuoi voti.",
+    tabs: competitionTabs,
+    action: <EditionSwitcher contestId={query.contest} />,
+    breadcrumbs,
+  };
 
   let [loaded, setLoaded] = useState(false)
   /**@type {[Game[], (data: Game[])=> any]} */
@@ -102,14 +103,14 @@ export default function PageEditVotes(props)
   if(!games || !votes)
   {
     return (
-      <PageLayout breadcrumbs={breadcrumbs}>
+      <SectionLayout {...shellProps}>
         <div className="min-h-[50vh] flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
             <div className="w-12 h-12 border-thick border-secondary/30 border-t-secondary rounded-full animate-spin" />
             <span className="ds-text-muted text-sm">Caricamento voti...</span>
           </div>
         </div>
-      </PageLayout>
+      </SectionLayout>
     );
   }
 
@@ -144,22 +145,22 @@ export default function PageEditVotes(props)
 
     if (isLoginError) {
       return (
-        <PageLayout breadcrumbs={breadcrumbs}>
+        <SectionLayout {...shellProps}>
           <LoginRequiredPage
             title="Accesso come giudice richiesto"
             message="Per votare devi aver effettuato l'accesso come giudice con il tuo account Discord."
           />
-        </PageLayout>
+        </SectionLayout>
       );
     }
 
     return (
-      <PageLayout breadcrumbs={breadcrumbs}>
+      <SectionLayout {...shellProps}>
         <div className="ds-card max-w-2xl mx-auto p-8 text-center">
           <h2 className="text-xl font-bold ds-text-content mb-2">Errore</h2>
           <p className="ds-text-muted">{error}</p>
         </div>
-      </PageLayout>
+      </SectionLayout>
     );
   }
   else if(loaded)
@@ -216,7 +217,7 @@ export default function PageEditVotes(props)
         {/* Header and stats */}
         <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
           <div className="flex-1">
-            <h1 className="text-2xl font-bold ds-text-content">Area Giudizi</h1>
+            <h2 className="text-2xl font-bold ds-text-content">I tuoi voti</h2>
             <p className="ds-text-muted text-sm mt-1">Vota i giochi e crea la tua classifica</p>
           </div>
 
@@ -266,7 +267,7 @@ export default function PageEditVotes(props)
 
       const parsedAuthors = parseAuthors(game.authors);
       const authorLinks = parsedAuthors.map((author) => (
-        <Link key={author.id} href={`/competizioni/user?user=${author.id}`} className="ds-link text-sm">
+        <Link key={author.id} href={`/competizioni/user/?user=${author.id}`} className="ds-link text-sm">
           {author.name}</Link>
       ));
 
@@ -347,7 +348,7 @@ export default function PageEditVotes(props)
   }
 
   return (
-    <PageLayout breadcrumbs={breadcrumbs}>
+    <SectionLayout {...shellProps}>
     <div className="ds-app-shell">
       <div>
         {/* Tabs Navigation */}
@@ -396,6 +397,6 @@ export default function PageEditVotes(props)
         </div>
       </div>
     </div>
-    </PageLayout>
+    </SectionLayout>
   );
 }

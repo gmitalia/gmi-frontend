@@ -184,13 +184,13 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
         {/* Filtri categoria */}
         <nav
           aria-label="Categorie risorse"
-          className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-6 mb-2 border-b border-gray-200 pb-2"
+          className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-6 mb-2 border-b border-gray-200 pb-1"
         >
           <span className="text-gray-700 font-medium text-sm">Filtri attivi</span>
           <button
             onClick={() => setSelectedCategories([])}
             aria-pressed={selectedCategories.length === 0}
-            className={`text-sm pb-2 -mb-2 border-b-2 transition-colors duration-200 ${
+            className={`text-sm pb-1 -mb-1 border-b-2 transition-colors duration-200 ${
               selectedCategories.length === 0
                 ? 'text-primary border-primary font-semibold'
                 : 'text-gray-500 border-transparent hover:text-primary hover:border-primary/40'
@@ -205,7 +205,7 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
                 key={cat._id}
                 onClick={() => toggleCategory(cat._id)}
                 aria-pressed={isActive}
-                className={`text-sm pb-2 -mb-2 border-b-2 transition-colors duration-200 ${
+                className={`text-sm pb-1 -mb-1 border-b-2 transition-colors duration-200 ${
                   isActive
                     ? 'text-primary font-semibold'
                     : 'text-gray-500 border-transparent hover:text-primary hover:border-primary/40'

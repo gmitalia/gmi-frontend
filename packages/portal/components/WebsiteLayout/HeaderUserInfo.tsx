@@ -28,7 +28,7 @@ export const HeaderUserInfo = () => {
     return (
       <div className="flex items-center gap-3">
         <Link
-          href={`${competitionsPath("/user")}?user=${user.user_id}`}
+          href={`${competitionsPath("/user/")}?user=${user.user_id}`}
           className="flex items-center gap-2 hover:underline decoration-2 underline-offset-4"
         >
           <img

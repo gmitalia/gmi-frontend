@@ -3,12 +3,13 @@ import GMIApi from "../src/api/GMIApi";
 import Link from "next/link";
 import { basePath } from "../src/paths";
 import { GameTile } from "./Contest/GameTile";
+import { SearchBar } from "./commons/SearchBar";
 
 const UserCard = ({ user }) => {
   const avatar = user.avatar ?? basePath + "/img/profile.png";
 
   return (
-    <Link href={`/competizioni/user?user=${user.id}`} className="flex items-center gap-3 p-3 bg-surface border border-default hover:border-content/30 transition-colors cursor-pointer">
+    <Link href={`/competizioni/user/?user=${user.id}`} className="flex items-center gap-3 p-3 bg-surface border border-default hover:border-content/30 transition-colors cursor-pointer">
       
         <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 bg-surface-muted">
           <img className="w-full h-full object-cover" src={avatar} alt={user.name} loading="lazy" />
@@ -26,7 +27,7 @@ export default function PageSearch() {
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef(null);
   const [hasSearched, setHasSearched] = useState(false);
 
@@ -87,30 +88,18 @@ export default function PageSearch() {
   const isEmptySearch = hasSearched && !loading && totalResults === 0;
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Search Header */}
-      <h1 className="text-3xl font-normal text-content mb-2">Cerca</h1>
-
+    <div className="w-full">
       {/* Search Bar */}
-      <div className="relative mb-8">
-        <div className="relative flex items-center">
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Cerca giochi o utenti..."
-            className="w-full h-14 px-4 bg-surface border border-default text-content placeholder-content-muted/50 text-lg outline-none focus:border-content/40 transition-colors"
-          />
-          {query.length > 0 && (
-            <button
-              onClick={handleClear}
-              className="absolute right-4 px-2 py-1 text-xs text-content-muted hover:text-content transition-colors"
-            >
-              Cancella
-            </button>
-          )}
-        </div>
+      <div className="mb-8">
+        <SearchBar
+          ref={inputRef}
+          value={query}
+          onChange={setQuery}
+          onClear={handleClear}
+          placeholder="Cerca giochi o partecipanti..."
+          ariaLabel="Cerca giochi o partecipanti"
+          autoFocus
+        />
         {query.length > 0 && query.length < 2 && (
           <p className="text-xs text-content-muted mt-2 ml-1">
             Inserisci almeno 2 caratteri per cercare
@@ -153,7 +142,7 @@ export default function PageSearch() {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {results.games.map((game) => (
-                  <GameTile key={game.id} game={game} contest={game.contest_id} href={`/competizioni/contest?contest=${game.contest_id}`} />
+                  <GameTile key={game.id} game={game} contest={game.contest_id} href={`/competizioni/contest/?contest=${game.contest_id}`} />
                 ))}
               </div>
             </section>
@@ -163,7 +152,7 @@ export default function PageSearch() {
           {usersCount > 0 && (
             <section>
               <h2 className="text-xl font-bold text-content mb-4 flex items-center gap-2">
-                Utenti
+                Partecipanti
                 <span className="text-sm font-normal text-content-muted">({usersCount})</span>
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
