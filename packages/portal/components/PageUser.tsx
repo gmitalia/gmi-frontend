@@ -5,7 +5,6 @@ import { getQuery } from "../src/Utils";
 import { Button } from "./commons/Button";
 import GMIApi from "../src/api/GMIApi";
 import { SectionLayout } from "./WebsiteLayout/SectionLayout";
-import { competitionTabs } from "../src/competitionSections";
 import { basePath, competitionsPath } from "../src/paths";
 import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 import UserInventory from "./User/UserInventory";
@@ -13,6 +12,53 @@ import UserStats from "./User/UserStats";
 import UserGames from "./User/UserGames";
 import moment from "moment";
 import UserVotes from "./User/UserVotes";
+import ContestHeroBackground from "./Contest/ContestHeroBackground";
+
+const UserHeroSkeleton = () => (
+  <section
+    aria-busy="true"
+    className="contest-hero relative mb-8 overflow-hidden text-gray-100"
+  >
+    <ContestHeroBackground />
+
+    <div className="relative mx-auto w-full max-w-7xl px-5 py-10 md:py-12">
+      <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+          <div className="h-24 w-24 shrink-0 animate-pulse rounded-full bg-white/10 md:h-32 md:w-32" />
+          <div className="w-full max-w-md space-y-4">
+            <div className="h-9 w-56 animate-pulse bg-white/10 md:h-12" />
+            <div className="flex gap-2">
+              <div className="h-6 w-24 animate-pulse bg-white/10" />
+              <div className="h-6 w-28 animate-pulse bg-white/10" />
+            </div>
+          </div>
+        </div>
+
+        <div className="min-w-0 shrink-0">
+          <div className="h-3 w-24 animate-pulse bg-white/10" />
+          <div className="mt-3 flex flex-wrap gap-2">
+            {[1, 2, 3, 4].map((item) => (
+              <div
+                key={item}
+                className="flex h-11 w-11 items-center justify-center"
+              >
+                <div className="h-10 w-10 animate-pulse bg-white/10" />
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 flex flex-wrap items-baseline gap-x-5 gap-y-2 sm:gap-x-6">
+            {[1, 2, 3, 4, 5].map((item) => (
+              <div key={item} className="flex items-baseline gap-1.5">
+                <div className="h-4 w-6 animate-pulse bg-white/10" />
+                <div className="h-3 w-16 animate-pulse bg-white/10" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
 
 export default function PageUser(props) {
   let router = useRouter();
@@ -116,14 +162,12 @@ export default function PageUser(props) {
 
   if (error) {
     return (
-      <SectionLayout
-        title="Profilo utente"
-        description="Partecipazioni, giochi e riconoscimenti."
-        tabs={competitionTabs}
-      >
-        <div className="bg-error/10 border border-error/20 p-8 text-center text-error">
-          <p className="text-xl font-bold mb-2">Ops!</p>
-          <p>{error}</p>
+      <SectionLayout>
+        <div className="pt-8">
+          <div className="border border-error/20 bg-error/10 p-8 text-center text-error">
+            <p className="text-xl font-bold mb-2">Ops!</p>
+            <p>{error}</p>
+          </div>
         </div>
       </SectionLayout>
     );
@@ -131,14 +175,10 @@ export default function PageUser(props) {
 
   if (!user) {
     return (
-      <SectionLayout
-        title="Profilo utente"
-        description="Partecipazioni, giochi e riconoscimenti."
-        tabs={competitionTabs}
-      >
-        <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-          <div className="w-12 h-12 border-thick border-secondary/30 border-t-secondary rounded-full animate-spin" />
-          <p className="text-content-muted animate-pulse font-medium">Caricamento profilo...</p>
+      <SectionLayout hero={<UserHeroSkeleton />}>
+        <div className="flex min-h-[320px] flex-col items-center justify-center gap-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-thick border-secondary/30 border-t-secondary" />
+          <p className="animate-pulse font-medium text-content-muted">Caricamento profilo...</p>
         </div>
       </SectionLayout>
     );
@@ -146,9 +186,73 @@ export default function PageUser(props) {
 
   return (
     <SectionLayout
-      title="Profilo utente"
-      description="Partecipazioni, giochi e riconoscimenti."
-      tabs={competitionTabs}
+      hero={
+        <section className="contest-hero relative mb-8 overflow-hidden text-gray-100">
+          <ContestHeroBackground />
+
+          <div className="relative mx-auto w-full max-w-7xl px-5 py-10 md:py-12">
+            <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex gap-6 flex-row sm:items-center">
+                <img
+                  className="h-24 w-24 shrink-0 rounded-full border border-white/20 object-cover md:h-32 md:w-32"
+                  src={user.user_avatar ?? basePath + "/img/profile.png"}
+                  alt={user.user_name}
+                />
+
+                <div className="min-w-0">
+                  {editName ? (
+                    <div className="flex w-full max-w-md flex-col gap-2 sm:flex-row">
+                      <input
+                        type="text"
+                        autoFocus
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleSaveName();
+                          if (e.key === "Escape") handleCancelEdit();
+                        }}
+                        className="w-full border border-white/20 bg-white/10 px-3 py-2 text-lg font-semibold text-white outline-none transition-colors placeholder:text-gray-500 focus:border-white/50"
+                      />
+                      <div className="flex shrink-0 gap-2">
+                        <Button variant="light" size="sm" onClick={handleSaveName}>Salva</Button>
+                        <Button variant="outlineLight" size="sm" onClick={handleCancelEdit}>Annulla</Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap items-center gap-3">
+                      <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl">
+                        {user.user_name}
+                      </h1>
+                      {isOwnProfile && (
+                        <Button variant="outlineLight" size="sm" onClick={() => setEditName(true)}>
+                          Modifica
+                        </Button>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    {!isHistorical &&(<span className="border border-white/15 bg-white/[0.04] px-2.5 py-1.5 text-[10px] font-semibold uppercase leading-none tracking-[0.18em] text-gray-300">
+                      Utente GMI
+                    </span>
+                    )}
+                    {isHistorical && (
+                      <span className="border border-white/15 border-l-[3px] border-l-[#FBC147] bg-white/[0.04] px-2.5 py-1.5 text-[10px] font-semibold uppercase leading-none tracking-[0.18em] text-gray-300">
+                        Membro storico
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="min-w-0 shrink-0">
+                <UserInventory user={query.user} variant="hero" />
+                <UserStats userInfo={user} variant="hero" />
+              </div>
+            </div>
+          </div>
+        </section>
+      }
       breadcrumbs={[
         homeBreadcrumb,
         competitionsBreadcrumb,
@@ -156,79 +260,9 @@ export default function PageUser(props) {
         { label: user.user_name },
       ]}
     >
-      <div className="w-full space-y-6">
-        {/* Profile Card */}
-        <div className="bg-surface border border-default">
-          {/* Profile Header Background */}
-          <div className="ds-profile-banner" />
-
-          <div className="px-6 md:px-12 pb-8 md:pb-12 -mt-16 md:-mt-24 relative">
-            <div className="flex flex-col lg:flex-row items-center lg:items-end gap-6 lg:gap-10">
-              {/* Avatar */}
-              <div className="relative group">
-                <img
-                  className="w-32 h-32 md:w-48 md:h-48 rounded-full object-cover border border-default"
-                  src={user.user_avatar ?? basePath + "/img/profile.png"}
-                  alt={user.user_name}
-                />
-              </div>
-
-              {/* Name & Info */}
-              <div className="flex-1 text-center lg:text-left mb-2 space-y-4">
-                <div className="flex flex-col items-center lg:items-start gap-2">
-                  {editName ? (
-                    <div className="flex flex-col sm:flex-row items-center gap-2 w-full max-w-md">
-                      <input
-                        type="text"
-                        autoFocus
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        onKeyDown={e => {
-                          if (e.key === 'Enter') handleSaveName();
-                          if (e.key === 'Escape') handleCancelEdit();
-                        }}
-                        className="ds-input flex-1 text-xl font-bold w-full"
-                      />
-                      <div className="flex gap-2">
-                        <Button variant="secondary" size="sm" onClick={handleSaveName}>Salva</Button>
-                        <Button variant="ghost" size="sm" onClick={handleCancelEdit}>Annulla</Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-3xl md:text-5xl font-normal text-content tracking-tight leading-tight">
-                        {user.user_name}
-                      </h2>
-                      {isOwnProfile && (
-                        <Button variant="ghost" size="sm" onClick={() => setEditName(true)}>Modifica</Button>
-                      )}
-                    </div>
-                  )}
-                  <div className="flex flex-wrap justify-center lg:justify-start gap-4 text-content-muted font-medium">
-                    <span>Utente GMI</span>
-                    {isHistorical && (
-                      <span>Membro storico</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="px-6 md:px-12 pb-12 space-y-12">
-            {/* Inventory Section - Wide */}
-            <div className="w-full">
-              <UserInventory user={query.user} />
-            </div>
-
-            {/* Stats, Games & Votes */}
-            <div className="grid grid-cols-1 gap-12">
-              <UserStats userInfo={user} />
-              <UserGames userInfo={user} contests={contests} />
-              <UserVotes userInfo={user} contests={contests} />
-            </div>
-          </div>
-        </div>
+      <div className="flex w-full flex-col gap-8 pb-12">
+        <UserGames userInfo={user} contests={contests} />
+        <UserVotes userInfo={user} contests={contests} />
       </div>
     </SectionLayout>
   );

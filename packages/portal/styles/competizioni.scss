@@ -294,18 +294,6 @@
   border-color: rgba(var(--ds-rgb-content), 0.2);
 }
 
-/* Profile banner header — flat, no gradients */
-.ds-profile-banner {
-  height: 8rem;
-  background: var(--ds-color-surface-muted);
-  border-bottom: 1px solid var(--ds-color-border);
-}
-
-@media (min-width: 768px) {
-  .ds-profile-banner {
-    height: 9rem;
-  }
-}
 /* Sidebar  */
 .ds-sidebar {
   background: var(--ds-color-surface-muted);

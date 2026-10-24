@@ -55,13 +55,13 @@ export default function ImageModal({ src, alt, onClose }) {
 
   return createPortal(
     <div 
-      className="fixed inset-0 z-[1000] bg-page flex items-center justify-center overflow-hidden touch-none"
+      className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center overflow-hidden touch-none"
       onWheel={handleWheel}
       onClick={onClose}
     >
       {/* Controls & Info */}
       <div className="absolute top-6 right-6 flex items-center gap-4 z-[1010]">
-        <div className="hidden md:block px-4 py-2 border border-default rounded-md text-xs text-content-muted">
+        <div className="hidden md:block px-4 py-2 border border-white/20 rounded-md text-xs text-gray-300">
           Rotella per zoom • Trascina per spostare
         </div>
         <Button variant="secondary" size="sm" onClick={(e) => { e.stopPropagation(); onClose(); }}>

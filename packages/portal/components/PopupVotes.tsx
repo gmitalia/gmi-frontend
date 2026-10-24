@@ -86,7 +86,7 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
 
   if (!isOpen || !mounted) return null;
   if (error) return createPortal(
-    <div className="fixed inset-0 z-[2000] bg-surface-muted/90 flex items-center justify-center p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-[2000] bg-black/60 flex items-center justify-center p-4" onClick={onClose}>
       <div className="bg-surface border border-error/30 p-8 text-center max-w-sm" onClick={e => e.stopPropagation()}>
         <h3 className="text-content font-bold text-lg mb-2">Errore caricamento</h3>
         <p className="text-content-muted text-sm mb-6">{error}</p>
@@ -97,10 +97,10 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
   );
 
   if (!votes) return createPortal(
-    <div className="fixed inset-0 z-[2000] bg-surface-muted flex items-center justify-center">
+    <div className="fixed inset-0 z-[2000] bg-black/60 flex items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <div className="w-10 h-10 border-2 border-default border-t-secondary rounded-full animate-spin" />
-        <span className="text-content-muted font-medium tracking-wider text-xs uppercase">Caricamento Valutazioni...</span>
+        <div className="w-10 h-10 border-2 border-white/20 border-t-secondary rounded-full animate-spin" />
+        <span className="text-gray-300 font-medium tracking-wider text-xs uppercase">Caricamento Valutazioni...</span>
       </div>
     </div>,
     document.body
@@ -138,7 +138,7 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
   })();
 
   return createPortal(
-    <div className="fixed inset-0 z-[2000] bg-surface-muted/90 flex items-center justify-center md:p-8" onClick={onClose}>
+    <div className="fixed inset-0 z-[2000] bg-black/60 flex items-center justify-center md:p-8" onClick={onClose}>
       <div className="bg-surface border border-default w-full max-w-6xl h-full md:h-[90vh] flex flex-col overflow-y-auto md:overflow-hidden custom-scrollbar" onClick={(e) => e.stopPropagation()}>
         
         {/* Header */}
@@ -310,7 +310,7 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
                     <JudgeAvatar vote={activeVote} size="w-16 h-16" />
                     <div>
                       <h3 className="text-2xl font-bold text-content">{activeVote.judge_name}</h3>
-                      <p className="text-content-muted text-[10px] font-semibold uppercase tracking-wider mt-1">Giudizio Individuale</p>
+                      <p className="text-content-muted text-[10px] font-semibold uppercase tracking-wider mt-1">Giudice</p>
                     </div>
                   </div>
                   <div className="flex flex-col items-center md:items-end">
@@ -379,12 +379,18 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
 /**
  * PopupVotes - Standard button-based wrapper for VotesModal.
  */
-export default function PopupVotes({ contest, game, gamename, authors }: any) {
+export default function PopupVotes({ contest, game, gamename, authors, className = "" }: any) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <Button variant="ghost" onClick={() => setIsOpen(true)}>
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={() => setIsOpen(true)}
+        title={`Votazioni di ${gamename}`}
+        className={className}
+      >
         Votazioni
       </Button>
       <VotesModal 

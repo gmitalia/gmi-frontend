@@ -114,29 +114,37 @@ export const GameTile = (props) => {
 
           {/* Actions - Only show if there are votes, a download, or a status to show */}
           {((game.votes_count !== undefined ? game.votes_count > 0 : showVotes) || game.download_url || (showTrophy && !game.download_url)) && (
-            <div className="flex items-center justify-between gap-x-2 sm:gap-x-4 pt-4 border-t border-default w-full min-w-0">
-              {(game.votes_count !== undefined ? game.votes_count > 0 : showVotes) ? (
-                <PopupVotes contest={contest} game={game?.id} gamename={game?.name} authors={game.authors} />
-              ) : (
-                <div /> // Spacer to keep download on the right
-              )}
+            <div className="mt-auto border-t border-default pt-4">
+              <div className="flex flex-col justify-center gap-2 min-[360px]:flex-row">
+                {(game.votes_count !== undefined ? game.votes_count > 0 : showVotes) ? (
+                  <PopupVotes
+                    contest={contest}
+                    game={game?.id}
+                    gamename={game?.name}
+                    authors={game.authors}
+                    className="w-full min-[360px]:max-w-[130px]"
+                  />
+                ) : null}
 
-              {/* Download Button or Status */}
-              {game.download_url ? (
-                <span onClick={(e) => e.stopPropagation()}>
-                  <Button
-                    variant="ghost"
-                    href={game.download_url}
-                    title={`Scarica ${game.name}`}
-                  >
-                    Scarica
-                  </Button>
-                </span>
-              ) : showTrophy ? (
-                <span className="text-[11px] font-medium text-content-muted italic text-right">
-                  Download non disponibile
-                </span>
-              ) : null}
+                {/* Download Button or Status */}
+                {game.download_url ? (
+                  <span className="contents" onClick={(e) => e.stopPropagation()}>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      href={game.download_url}
+                      title={`Scarica ${game.name}`}
+                      className="w-full min-[360px]:max-w-[130px]"
+                    >
+                      Scarica
+                    </Button>
+                  </span>
+                ) : showTrophy ? (
+                  <span className="flex w-full items-center justify-center border border-default bg-surface-muted px-3 py-2 text-center text-[10px] font-semibold uppercase leading-tight tracking-[0.14em] text-content-muted min-[360px]:max-w-[130px]">
+                    Download non disponibile
+                  </span>
+                ) : null}
+              </div>
             </div>
           )}
         </div>

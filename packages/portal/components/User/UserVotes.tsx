@@ -1,4 +1,5 @@
 import ContestCard from "../Competition/ContestCard";
+import { EmptyState } from "../commons/EmptyState";
 
 export default function UserVotes(props) {
   /**@type {UserInfo} */
@@ -11,7 +12,7 @@ export default function UserVotes(props) {
     contestMap[contest.id] = contest;
   });
 
-  if (userInfo.votes == undefined || userInfo.votes.length == 0) return <div></div>;
+  if (userInfo.votes == undefined || userInfo.votes.length == 0) return null;
 
   const judgedContests = userInfo.votes
     .map((vote) => Number(vote.contest_id))
@@ -21,12 +22,15 @@ export default function UserVotes(props) {
     .sort((a, b) => Number(b.id) - Number(a.id));
 
   return (
-    <div className="w-full space-y-4">
-      <div className="flex items-center gap-3">
-        <h2 className="text-xl font-bold text-content uppercase tracking-wider">
-          Giudizi
-        </h2>
-      </div>
+    <section className="ds-card-section">
+      <h2 className="mb-4 flex items-center gap-3 text-2xl font-bold text-content">
+        Giudizi
+        {judgedContests.length > 0 && (
+          <span className="text-lg text-content-muted">
+            ({judgedContests.length})
+          </span>
+        )}
+      </h2>
 
       {contests.length === 0 ? (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
@@ -43,6 +47,8 @@ export default function UserVotes(props) {
             </div>
           ))}
         </div>
+      ) : judgedContests.length === 0 ? (
+        <EmptyState>Non ci sono giudizi pubblici.</EmptyState>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {judgedContests.map((contest) => (
@@ -50,6 +56,6 @@ export default function UserVotes(props) {
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }
