@@ -8,7 +8,7 @@ export default function RulesPage() {
   return (
     <>
       <Head>
-        <title>GMI Competizioni | Regolamento</title>
+        <title>GameMaker Italia | Regolamento</title>
       </Head>
       <SectionLayout
         title="Regolamento"

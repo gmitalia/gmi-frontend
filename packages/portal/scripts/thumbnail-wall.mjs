@@ -46,9 +46,9 @@ const CACHE_DIR = ".cache/thumbnail-wall";
  * ------------------------------------------------------------ */
 function parseArgs(argv) {
   const options = {
-    width: 1920,
-    height: 1080,
-    tile: "160x90",
+    width: 1366,
+    height: 758,
+    tile: "80x45",
     gap: 4,
     out: DEFAULT_OUT,
     seed: null,

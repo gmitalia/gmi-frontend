@@ -4,8 +4,10 @@ import { usePageBreadcrumbs } from "./SiteBreadcrumbs";
 import { SectionTabs, type SectionTab } from "./SectionTabs";
 
 type SectionLayoutProps = {
-  title: string;
+  title?: string;
   description?: ReactNode;
+  /** Banner a piena larghezza renderizzato sopra il container dei contenuti. */
+  hero?: ReactNode;
   tabs?: SectionTab[];
   /** Azione a destra del titolo (es. ricerca o selettore edizione). */
   action?: ReactNode;
@@ -22,6 +24,7 @@ type SectionLayoutProps = {
 export function SectionLayout({
   title,
   description,
+  hero,
   tabs,
   action,
   breadcrumbs,
@@ -30,28 +33,38 @@ export function SectionLayout({
   usePageBreadcrumbs(breadcrumbs);
 
   return (
-    <div className="mx-auto w-full max-w-7xl p-5">
-      <header className="mb-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div className="min-w-0">
-            <h1 className="text-3xl font-normal text-gray-900">{title}</h1>
-            {description && (
-              <p className="mt-2 text-gray-500">{description}</p>
+    <>
+      {hero}
+
+      <div
+        className={`mx-auto w-full max-w-7xl px-5 pb-5`}
+      >
+        {(title || description) && (
+          <header className="mb-8">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div className="min-w-0">
+                {title && (
+                  <h1 className="text-3xl font-normal text-gray-900">{title}</h1>
+                )}
+                {description && (
+                  <p className="mt-2 text-gray-500">{description}</p>
+                )}
+              </div>
+
+              {action && <div className="shrink-0">{action}</div>}
+            </div>
+
+            {tabs && tabs.length > 0 && (
+              <div className="mt-6 hidden lg:block">
+                <SectionTabs tabs={tabs} />
+              </div>
             )}
-          </div>
-
-          {action && <div className="shrink-0">{action}</div>}
-        </div>
-
-        {tabs && tabs.length > 0 && (
-          <div className="mt-6 hidden lg:block">
-            <SectionTabs tabs={tabs} />
-          </div>
+          </header>
         )}
-      </header>
 
-      {children}
-    </div>
+        {children}
+      </div>
+    </>
   );
 }
 

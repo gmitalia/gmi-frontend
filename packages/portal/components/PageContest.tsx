@@ -9,6 +9,7 @@ import { ParticipantType } from "../src/Constants";
 import { getQuery } from "../src/Utils";
 import ContestGamesSection from "./Contest/ContestGamesSection";
 import ContestHeroSection from "./Contest/ContestHeroSection";
+import ContestHeroSkeleton from "./Contest/ContestHeroSkeleton";
 import ContestJudgesSection from "./Contest/ContestJudgesSection";
 import ContestJudgingProgressSection from "./Contest/ContestJudgingProgressSection";
 import { Button } from "./commons/Button";
@@ -154,31 +155,10 @@ export default function PageContest(props) {
   if (!contest)
     return (
       <SectionLayout
-        title="Competizione"
-        description="Caricamento della competizione in corso..."
         breadcrumbs={detailBreadcrumbs}
+        hero={<ContestHeroSkeleton />}
       >
         <div className="w-full flex flex-col gap-8 pb-12 animate-pulse">
-          {/* Hero skeleton */}
-          <section className="relative border border-default overflow-hidden">
-            <div className="relative p-6 md:p-10">
-              <div className="flex flex-col md:flex-row justify-between gap-6 items-start">
-                <div className="flex-1 space-y-4">
-                  <div className="flex items-center gap-4">
-                    <div className="h-10 w-24 bg-surface-solid" />
-                    <div className="h-10 w-64 bg-surface-solid" />
-                  </div>
-                  <div className="h-5 w-full max-w-[320px] md:w-96 bg-surface-solid" />
-                </div>
-                <div className="w-full md:w-56 space-y-3">
-                  <div className="h-3 w-24 bg-surface-solid rounded" />
-                  <div className="h-8 w-36 bg-surface-solid rounded" />
-                  <div className="h-3 w-40 bg-surface-solid rounded" />
-                </div>
-              </div>
-            </div>
-          </section>
-
           {/* Games skeleton */}
           <section className="ds-card-section">
             <div className="h-8 w-24 bg-surface-solid rounded mb-4" />
@@ -195,7 +175,7 @@ export default function PageContest(props) {
             <div className="flex flex-wrap gap-6 justify-center">
               {[1, 2, 3, 4].map(i => (
                 <div key={i} className="flex flex-col items-center gap-3 w-24 shrink-0">
-                  <div className="w-24 h-24 bg-surface-solid rounded-full" />
+                  <div className="w-24 h-24 bg-surface-solid" />
                   <div className="h-4 w-20 bg-surface-solid rounded" />
                 </div>
               ))}
@@ -224,9 +204,8 @@ export default function PageContest(props) {
   actions.push(
     <Button
       key="regolamento"
-      variant="secondary"
+      variant="outlineLight"
       onClick={() => router.push(`/competizioni/rules/?contest=${contest.id}`)}
-      className="text-content"
     >
       Regolamento
     </Button>
@@ -237,7 +216,7 @@ export default function PageContest(props) {
       <Button
         key="vota"
         onClick={() => router.push("/competizioni/editvotes/?contest=" + contest.id)}
-        variant="primary"
+        variant="light"
       >
         Vota
       </Button>
@@ -248,7 +227,7 @@ export default function PageContest(props) {
       <Button
         key="invia"
         onClick={() => router.push("/competizioni/participation/?contest=" + contest.id)}
-        variant="primary"
+        variant="light"
       >
         Partecipa
       </Button>
@@ -259,7 +238,7 @@ export default function PageContest(props) {
       <Button
         key="modifica"
         onClick={() => router.push("/competizioni/participation/?contest=" + contest.id)}
-        variant="primary"
+        variant="light"
       >
         Aggiorna Gioco
       </Button>
@@ -273,7 +252,7 @@ export default function PageContest(props) {
       <Button
         key="anteprima"
         onClick={() => router.push("/competizioni/results/?contest=" + contest.id)}
-        variant="primary"
+        variant="light"
       >
         Anteprima Risultati
       </Button>
@@ -283,7 +262,7 @@ export default function PageContest(props) {
       <Button
         key="pubblica"
         onClick={() => setShowPublishModal(true)}
-        variant="primary"
+        variant="light"
       >
         Pubblica Risultati
       </Button>
@@ -292,11 +271,8 @@ export default function PageContest(props) {
 
   return (
     <SectionLayout
-      title={contest.name}
-      description="Tutti i giochi, i giudici e i risultati della competizione."
       breadcrumbs={detailBreadcrumbs}
-    >
-      <div className="w-full flex flex-col gap-8 pb-12">
+      hero={
         <ContestHeroSection
           contest={contest}
           actions={actions}
@@ -305,18 +281,20 @@ export default function PageContest(props) {
           canSubmitGames={canSubmitGames}
           timeLeft={timeLeft}
         />
-
+      }
+    >
+      <div className="w-full flex flex-col gap-8 pb-12">
         <ContestGamesSection
           contest={contest.id}
           contestEnded={isComplete}
           onPublicResults={setResultsPublic}
         />
 
-        <ContestVideosSection contestId={contest.id} />
-
         <ContestJudgesSection judges={judges} />
 
         {isJudging && <ContestJudgingProgressSection judgingProgress={judgingProgress} judges={judges} />}
+
+        <ContestVideosSection contestId={contest.id} />
 
         <ContestPrizesSection contestId={contest.id} />
       </div>

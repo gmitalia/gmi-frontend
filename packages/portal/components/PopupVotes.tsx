@@ -144,12 +144,12 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
         {/* Header */}
         <div className="sticky top-0 z-[60] p-6 md:p-10 border-b border-default flex items-center justify-between bg-surface">
           <div className="flex-1 min-w-0">
-            <h2 className="text-3xl md:text-4xl font-bold text-content tracking-tight truncate">
+            <h2 className="text-3xl md:text-4xl font-bold text-content tracking-tight break-words">
               {gameName}
             </h2>
             <div className="flex items-center gap-2 mt-1">
               {displayAuthors && (
-                <p className="text-content-muted text-xs uppercase tracking-wider truncate">di {displayAuthors}</p>
+                <p className="text-content-muted text-xs uppercase tracking-wider break-words">di {displayAuthors}</p>
               )}
             </div>
           </div>
@@ -241,9 +241,15 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Common Pros */}
                         {hasPros && (
-                          <div className="space-y-6">
-                            <div className="text-success">
-                              <span className="text-xs font-semibold uppercase tracking-wider">Pro</span>
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-2">
+                              <span
+                                aria-hidden="true"
+                                className="inline-flex h-5 w-5 items-center justify-center border border-content bg-content text-xs font-semibold leading-none text-on-secondary"
+                              >
+                                +
+                              </span>
+                              <span className="text-xs font-semibold uppercase tracking-wider text-content">Pro</span>
                             </div>
                             <div className="flex flex-wrap gap-2">
                               {(() => {
@@ -251,9 +257,11 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
                                 const sorted = (Object.entries(counts) as [string, number][]).sort((a, b) => b[1] - a[1]);
                                 
                                 return sorted.map(([pro, count]) => (
-                                  <div key={pro} className="flex items-center gap-2 px-3 py-1.5 bg-success/5 border border-success/20">
-                                    <span className="text-xs font-medium text-success">{prosList[pro]}</span>
-                                    {count > 1 && <span className="text-success/70 text-[10px] font-semibold">{count}</span>}
+                                  <div key={pro} className="flex items-center gap-2 border border-default bg-surface px-3 py-1.5">
+                                    <span className="text-xs font-medium text-content">{prosList[pro]}</span>
+                                    {count > 1 && (
+                                      <span className="border-l border-default pl-2 text-[10px] font-semibold leading-none tabular-nums text-content-muted">&times;{count}</span>
+                                    )}
                                   </div>
                                 ));
                               })()}
@@ -263,9 +271,15 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
 
                         {/* Common Cons */}
                         {hasCons && (
-                          <div className="space-y-6">
-                            <div className="text-error">
-                              <span className="text-xs font-semibold uppercase tracking-wider">Contro</span>
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-2">
+                              <span
+                                aria-hidden="true"
+                                className="inline-flex h-5 w-5 items-center justify-center border border-default bg-surface-muted text-xs font-semibold leading-none text-content-muted"
+                              >
+                                &minus;
+                              </span>
+                              <span className="text-xs font-semibold uppercase tracking-wider text-content">Contro</span>
                             </div>
                             <div className="flex flex-wrap gap-2">
                               {(() => {
@@ -273,9 +287,11 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
                                 const sorted = (Object.entries(counts) as [string, number][]).sort((a, b) => b[1] - a[1]);
                                 
                                 return sorted.map(([con, count]) => (
-                                  <div key={con} className="flex items-center gap-2 px-3 py-1.5 bg-error/5 border border-error/20">
-                                    <span className="text-xs font-medium text-error">{consList[con]}</span>
-                                    {count > 1 && <span className="text-error/70 text-[10px] font-semibold">{count}</span>}
+                                  <div key={con} className="flex items-center gap-2 border border-default bg-surface px-3 py-1.5">
+                                    <span className="text-xs font-medium text-content">{consList[con]}</span>
+                                    {count > 1 && (
+                                      <span className="border-l border-default pl-2 text-[10px] font-semibold leading-none tabular-nums text-content-muted">&times;{count}</span>
+                                    )}
                                   </div>
                                 ));
                               })()}
@@ -305,25 +321,37 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                   {activeVote.pros.length > 0 && (
-                    <div className="border border-success/20 p-6">
-                      <h4 className="text-[10px] font-semibold text-success uppercase tracking-wider mb-4">
+                    <div className="border border-default p-6">
+                      <h4 className="mb-4 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-content">
+                        <span
+                          aria-hidden="true"
+                          className="inline-flex h-4 w-4 items-center justify-center border border-content bg-content text-[10px] font-semibold leading-none text-on-secondary"
+                        >
+                          +
+                        </span>
                         Pro
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {activeVote.pros.map((pro) => (
-                          <span key={pro} className="px-3 py-1 bg-success/10 border border-success/20 text-success text-xs font-medium">{prosList[pro]}</span>
+                          <span key={pro} className="border border-default bg-surface px-3 py-1 text-xs font-medium text-content">{prosList[pro]}</span>
                         ))}
                       </div>
                     </div>
                   )}
                   {activeVote.cons.length > 0 && (
-                    <div className="border border-error/20 p-6">
-                      <h4 className="text-[10px] font-semibold text-error uppercase tracking-wider mb-4">
+                    <div className="border border-default p-6">
+                      <h4 className="mb-4 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-wider text-content">
+                        <span
+                          aria-hidden="true"
+                          className="inline-flex h-4 w-4 items-center justify-center border border-default bg-surface-muted text-[10px] font-semibold leading-none text-content-muted"
+                        >
+                          &minus;
+                        </span>
                         Contro
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {activeVote.cons.map((con) => (
-                          <span key={con} className="px-3 py-1 bg-error/10 border border-error/20 text-error text-xs font-medium">{consList[con]}</span>
+                          <span key={con} className="border border-default bg-surface px-3 py-1 text-xs font-medium text-content">{consList[con]}</span>
                         ))}
                       </div>
                     </div>

@@ -6,7 +6,7 @@
   --ds-color-primary: #E8EDF1;
   --ds-color-primary-light: #F5F7F9;
   --ds-color-secondary: #1F2937;
-  --ds-color-accent: #DF7B00;
+  --ds-color-accent: #de9a46;
   --ds-color-accent-warm: #AD5700;
 
   --ds-color-gold: #f59e0b;
@@ -41,7 +41,7 @@
   --ds-rgb-primary: 232, 237, 241;
   --ds-rgb-primary-light: 245, 247, 249;
   --ds-rgb-secondary: 31, 41, 55;
-  --ds-rgb-accent: 223, 123, 0;
+  --ds-rgb-accent: 222, 154, 70;
   --ds-rgb-accent-warm: 173, 87, 0;
   --ds-rgb-success: 0, 122, 105;
   --ds-rgb-error: 220, 38, 38;
@@ -150,6 +150,33 @@
   padding: 1.5rem;
 }
 
+/* Contest hero — dark full-width feature banner */
+.contest-hero {
+  background-color: #0b1220;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    radial-gradient(ellipse at 85% -10%, rgba(0, 122, 105, 0.42), transparent 55%),
+    radial-gradient(ellipse at 0% 110%, rgba(223, 123, 0, 0.14), transparent 45%),
+    linear-gradient(135deg, #070b13 0%, #0d1524 55%, #101a2c 100%);
+  background-size: 40px 40px, 40px 40px, auto, auto, auto;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.contest-hero-wall {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(2px);
+}
+
+@media (max-width: 767px) {
+  .contest-hero-wall {
+    background-size: 160% auto;
+    background-repeat: repeat-y;
+  }
+}
+
 /* Text utilities */
 .ds-text-content {
   color: var(--ds-color-content);
@@ -184,13 +211,6 @@
 .ds-link:hover {
   color: var(--ds-color-content);
   text-decoration-color: currentColor;
-}
-
-/* Empty state illustration — colore sovrascrivibile via prop iconColor */
-.empty-desert-icon {
-  background-color: #a5a5a5;
-  -webkit-mask: url("/images/empty_desert.svg") center / contain no-repeat;
-  mask: url("/images/empty_desert.svg") center / contain no-repeat;
 }
 
 /* Chips — gaming badge style */

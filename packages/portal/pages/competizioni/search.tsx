@@ -8,7 +8,7 @@ export default function SearchPage() {
   return (
     <>
       <Head>
-        <title>GMI Competizioni | Cerca</title>
+        <title>GameMaker Italia | Cerca</title>
       </Head>
       <SectionLayout
         title="Cerca"

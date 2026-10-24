@@ -9,7 +9,6 @@ import LoginRequiredPage from "./commons/LoginRequiredPage";
 import Link from "next/link";
 import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 import { SectionLayout } from "./WebsiteLayout/SectionLayout";
-import { competitionTabs } from "../src/competitionSections";
 import EditionSwitcher from "./Competition/EditionSwitcher";
 
 //@todo don't load if not judge
@@ -27,7 +26,6 @@ export default function PageEditVotes(props)
   const shellProps = {
     title: "Area giudizi",
     description: "Valuta i giochi della competizione e registra i tuoi voti.",
-    tabs: competitionTabs,
     action: <EditionSwitcher contestId={query.contest} />,
     breadcrumbs,
   };

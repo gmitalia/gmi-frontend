@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { getQuery } from "../src/Utils";
-import { ParticipantType } from "../src/Constants";
 import GameForm from "./Forms/GameForm";
 import GMIApi from "../src/api/GMIApi";
-import InfoMessage from "./commons/InfoMessage";
 import { SectionLayout } from "./WebsiteLayout/SectionLayout";
-import { competitionTabs } from "../src/competitionSections";
-import EditionSwitcher from "./Competition/EditionSwitcher";
 import { Button } from "./commons/Button";
+import LoginRequiredPage from "./commons/LoginRequiredPage";
 import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 
 
@@ -57,17 +54,15 @@ export default function PageEditParticipation(props) {
   function renderBody(body) {
     return (
       <SectionLayout
-        title="Partecipazione"
+        title="Partecipa"
         description="Iscrivi il tuo gioco o aggiorna la partecipazione alla competizione scelta."
-        tabs={competitionTabs}
-        action={<EditionSwitcher contestId={query.contest} />}
         breadcrumbs={[
           homeBreadcrumb,
           competitionsBreadcrumb,
-          { label: "Partecipazione" },
+          { label: "Partecipa" },
         ]}
       >
-        <div className="w-full flex flex-col gap-2 pb-12">
+        <div className="w-full pb-12">
           {body}
         </div>
       </SectionLayout>
@@ -81,19 +76,21 @@ export default function PageEditParticipation(props) {
 
     if (isNotLoggedError) {
       return renderBody(
-        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-          <h2 className="text-2xl font-bold text-content mb-3">Accesso richiesto</h2>
-          <p className="text-content-muted max-w-md mb-6">
-            Per iscriverti o gestire la tua partecipazione alla competizione devi aver effettuato l'accesso con il tuo account Discord.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Button variant="primary" size="lg" onClick={() => { GMIApi.getInstance().login(); }}>Accedi con Discord</Button>
-          </div>
-        </div>
+        <LoginRequiredPage message="Per iscriverti o gestire la tua partecipazione alla competizione devi aver effettuato l'accesso con il tuo account Discord." />
       );
     }
 
-    return renderBody(error);
+    return renderBody(
+      <div className="mx-auto w-full max-w-5xl border border-error/20 bg-error/10 p-8 text-center">
+        <h2 className="text-xl font-bold text-error">Errore</h2>
+        <p className="mt-2 text-sm text-error">{error}</p>
+        <div className="mt-6">
+          <Button variant="secondary" onClick={() => router.push("/competizioni/")}>
+            Torna alle competizioni
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   //join contest
@@ -109,23 +106,22 @@ export default function PageEditParticipation(props) {
   }
   //edit contest info
   else if (participation) {
-    let isJudge = participation.kind == String(ParticipantType.judge);
-
     return renderBody(
-      <>
-        <InfoMessage>
-          Sei iscritto come {isJudge ? "Giudice" : "Partecipante"}
-        </InfoMessage>
-
-        <div className="flex-grow-v">
-          <GameForm
-            participation={participation}
-            onFormSubmit={onFormSubmit}
-            onDelete={onDelete}
-            contestId={query.contest}
-          />
-        </div>
-      </>
+      <GameForm
+        participation={participation}
+        onFormSubmit={onFormSubmit}
+        onDelete={onDelete}
+        contestId={query.contest}
+      />
     );
-  } else return <div>loading</div>;
+  }
+
+  return renderBody(
+    <div className="mx-auto w-full max-w-5xl border border-gray-200 bg-white p-10">
+      <div className="flex flex-col items-center gap-3">
+        <div className="h-10 w-10 animate-spin rounded-full border-thick border-gray-200 border-t-gray-700" />
+        <span className="text-sm text-gray-500">Caricamento partecipazione...</span>
+      </div>
+    </div>
+  );
 }

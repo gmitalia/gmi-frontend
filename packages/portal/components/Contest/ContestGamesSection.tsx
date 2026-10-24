@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 import GMIApi from "../../src/api/GMIApi";
 import { GameTile } from "./GameTile";
 import { Button } from "../commons/Button";
-import { EmptyDesert } from "../commons/EmptyDesert";
+import { EmptyState } from "../commons/EmptyState";
 
 const ContestGamesSection = ({ contest, contestEnded, onPublicResults }) => {
   const router = useRouter();
@@ -61,7 +61,7 @@ const ContestGamesSection = ({ contest, contestEnded, onPublicResults }) => {
 
   const actions = (mounted && showVotes && games && document.querySelector("#results-portal")) ? (
     createPortal(
-      <Button variant="primary" size="md" onClick={() => router.push("/competizioni/results/?contest=" + contest)}>
+      <Button variant="light" size="md" onClick={() => router.push("/competizioni/results/?contest=" + contest)}>
         Dettaglio Risultati
       </Button>,
       document.querySelector("#results-portal")
@@ -72,15 +72,17 @@ const ContestGamesSection = ({ contest, contestEnded, onPublicResults }) => {
     <section className="ds-card-section">
       <h2 className="text-2xl font-bold text-content flex items-center gap-3 mb-4">
         Giochi 
-        {games && <span className="text-content-muted text-lg">({games.length})</span>}
+        {games && games.length > 0 && (
+          <span className="text-content-muted text-lg">({games.length})</span>
+        )}
       </h2>
       <div className="w-full flex flex-col gap-4">
         {actions}
         <div>
           {!isLoading && games?.length === 0 ? (
-            <EmptyDesert>
+            <EmptyState>
               Non ci sono ancora giochi iscritti a questa competizione.
-            </EmptyDesert>
+            </EmptyState>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:gap-8">
               {isLoading ? (

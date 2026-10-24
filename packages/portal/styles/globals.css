@@ -32,7 +32,7 @@ html {
 
   /* Size and distances */
   --defaultSpace: 24px;
-  --blogPostWidth: 900px;
+  --blogPostWidth: 70rem;
 }
 
 .page {

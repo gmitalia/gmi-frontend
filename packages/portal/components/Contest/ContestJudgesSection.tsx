@@ -1,33 +1,42 @@
 import React from "react";
 import Link from "next/link";
 import { basePath } from "../../src/paths";
-import { EmptyDesert } from "../commons/EmptyDesert";
+import { EmptyState } from "../commons/EmptyState";
+
+const roleLabelClasses =
+  "mt-1 inline-flex items-center gap-1.5 px-2 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.18em]";
 
 const JudgeCard = ({ judge, isHost }) => {
-  const ringStyle = isHost
-    ? "border border-accent-warm"
-    : "border border-transparent";
-
   return (
-    <div className="flex flex-col items-center text-center group">
-      <Link href={`/competizioni/user/?user=${judge.id}`} className="relative mb-4 cursor-pointer block">
-        
-          <div className={`relative p-1 rounded-full ${ringStyle}`}>
-            <img
-              src={judge.avatar || judge.user_avatar || (basePath + "/img/profile.png")}
-              className={`w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-thick border-default`}
-              alt={judge.user_name}
-              onError={(e) => { (e.target as HTMLImageElement).src = basePath + "/img/profile.png"; }}
-            />
-          </div>
-        </Link>
-      <Link href={`/competizioni/user/?user=${judge.id}`} className={`text-content font-bold transition-colors text-lg ${isHost ? "hover:text-accent-warm" : "hover:text-secondary"}`}>
-        
-          {judge.user_name}
-        </Link>
-      <p className={`text-xs font-medium ${isHost ? "text-accent-warm" : "text-content-muted"}`}>
-        {isHost ? "Organizzatore" : "Giudice"}
-      </p>
+    <div className="group flex flex-col items-center text-center">
+      <Link
+        href={`/competizioni/user/?user=${judge.id}`}
+        className="relative mb-2 block cursor-pointer"
+      >
+        <img
+          src={judge.avatar || judge.user_avatar || basePath + "/img/profile.png"}
+          className={`h-20 w-20 object-cover md:h-24 md:w-24 ${
+            isHost ? "border-4 border-accent" : "border-4 border-default"
+          }`}
+          alt={judge.user_name}
+          onError={(e) => { (e.target as HTMLImageElement).src = basePath + "/img/profile.png"; }}
+        />
+      </Link>
+      <Link
+        href={`/competizioni/user/?user=${judge.id}`}
+        className="text-lg font-bold text-content transition-colors hover:text-secondary"
+      >
+        {judge.user_name}
+      </Link>
+      {isHost ? (
+        <span className={`${roleLabelClasses} text-accent`}>
+          Organizzatore
+        </span>
+      ) : (
+        <span className={`${roleLabelClasses} text-content-muted`}>
+          Giudice
+        </span>
+      )}
     </div>
   );
 };
@@ -50,9 +59,9 @@ const ContestJudgesSection = ({ judges }) => {
       </div>
 
       {judges.length === 0 && (
-        <EmptyDesert>
+        <EmptyState>
           Ancora nessun giudice per questa competizione.
-        </EmptyDesert>
+        </EmptyState>
       )}
     </section>
   );

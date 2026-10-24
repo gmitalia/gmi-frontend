@@ -6,7 +6,7 @@ export default function Participation()
   return (
     <>
       <Head>
-        <title>GMI Competizioni</title>
+        <title>GameMaker Italia | Partecipa</title>
       </Head>
       <PageEditParticipation />
     </>

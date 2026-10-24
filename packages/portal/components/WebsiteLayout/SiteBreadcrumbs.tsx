@@ -95,7 +95,7 @@ export function SiteBreadcrumbs({
   if (!items || items.length === 0) return null;
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-5 pt-5">
+    <div className="mx-auto w-full max-w-7xl p-4">
       <Breadcrumbs items={items} />
     </div>
   );

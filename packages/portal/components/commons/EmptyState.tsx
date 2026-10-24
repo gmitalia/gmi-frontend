@@ -1,26 +1,22 @@
 import type { ReactNode } from "react";
 
-type EmptyDesertProps = {
+type EmptyStateProps = {
   children: ReactNode;
   className?: string;
-  /** Colore CSS dell'illustrazione; se omesso usa il default del foglio di stile. */
-  iconColor?: string;
 };
 
 /** Empty state condiviso: illustrazione deserta e messaggio contestuale. */
-export function EmptyDesert({
-  children,
-  className = "",
-  iconColor,
-}: EmptyDesertProps) {
+export function EmptyState({ children, className = "" }: EmptyStateProps) {
   return (
     <div
       className={`flex flex-col items-center justify-center gap-2 border border-dashed border-default bg-surface-muted/30 px-6 py-10 text-center ${className}`}
     >
-      <span
+      <img
+        src="/images/empty_state.svg"
+        alt=""
         aria-hidden="true"
-        className="empty-desert-icon block h-16 w-16 shrink-0"
-        style={iconColor ? { backgroundColor: iconColor } : undefined}
+        className="h-14 w-14 shrink-0 object-contain"
+        loading="lazy"
       />
       <p className="max-w-md text-sm leading-6 text-content-muted">
         {children}
@@ -29,4 +25,4 @@ export function EmptyDesert({
   );
 }
 
-export default EmptyDesert;
+export default EmptyState;

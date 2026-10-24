@@ -33,7 +33,7 @@ const COMPETITION_LABELS: Record<string, string> = {
   [competitionsPath("/contest")]: "Competizione",
   [competitionsPath("/results")]: "Risultati",
   [competitionsPath("/editvotes")]: "Area giudizi",
-  [competitionsPath("/participation")]: "Partecipazione",
+  [competitionsPath("/participation")]: "Partecipa",
 };
 
 /** Normalizza un percorso rimuovendo gli slash finali. */

@@ -5,6 +5,9 @@ const VARIANT_MAP = {
   primary: "bg-gray-800 text-white border border-gray-800 hover:bg-gray-700",
   secondary: "bg-white text-gray-700 border border-gray-300 hover:bg-gray-100",
   accent: "bg-accent text-white border border-accent hover:bg-accent/90",
+  light: "bg-white text-gray-900 border border-white hover:bg-gray-100",
+  outlineLight:
+    "bg-transparent text-gray-100 border border-white/30 hover:border-white/60 hover:bg-white/10",
   ghost:
     "bg-transparent text-gray-500 border border-transparent hover:text-gray-900 hover:bg-gray-100",
   text: "text-gray-500 hover:text-gray-900 hover:underline underline-offset-4",
