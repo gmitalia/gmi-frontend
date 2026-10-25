@@ -11,7 +11,6 @@ import ContestGamesSection from "./Contest/ContestGamesSection";
 import ContestHeroSection from "./Contest/ContestHeroSection";
 import ContestHeroSkeleton from "./Contest/ContestHeroSkeleton";
 import ContestJudgesSection from "./Contest/ContestJudgesSection";
-import ContestJudgingProgressSection from "./Contest/ContestJudgingProgressSection";
 import { Button } from "./commons/Button";
 import { SectionLayout } from "./WebsiteLayout/SectionLayout";
 import ContestPrizesSection from "./Contest/ContestPrizesSection";
@@ -337,9 +336,10 @@ export default function PageContest(props) {
           onPublicResults={setResultsPublic}
         />
 
-        <ContestJudgesSection judges={judges} />
-
-        {isJudging && <ContestJudgingProgressSection judgingProgress={judgingProgress} judges={judges} />}
+        <ContestJudgesSection
+          judges={judges}
+          judgingProgress={isJudging ? judgingProgress : null}
+        />
 
         <ContestVideosSection contestId={contest.id} />
 

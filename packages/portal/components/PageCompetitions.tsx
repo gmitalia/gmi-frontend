@@ -3,6 +3,7 @@ import GMIApi from "../src/api/GMIApi";
 import { competitionTabs } from "../src/competitionSections";
 import { getContestStatus } from "../src/contestStatus";
 import ContestCard from "./Competition/ContestCard";
+import DiscordCommunitySection from "./Home/DiscordCommunitySection";
 import { SectionLayout } from "./WebsiteLayout/SectionLayout";
 
 const CARD_GRID =
@@ -113,6 +114,8 @@ export default function PageCompetitions() {
           )}
         </div>
       )}
+
+      <DiscordCommunitySection className="mt-12 mb-12" />
     </SectionLayout>
   );
 }
