@@ -6,6 +6,25 @@ import { renderMarkdownPreview } from "../../src/markdown"
 import { CloseIcon, InfoIcon } from "../commons/Icons";
 
 const MIN_PROS_CONS = 2;
+const AUTO_SAVE_DELAY_MS = 800;
+
+type VoteFormValues = {
+  score: number | null;
+  pros: number[];
+  cons: number[];
+  comment: string;
+};
+
+type SaveMode = "auto" | "draft" | "confirm";
+
+function sameVoteValues(a: VoteFormValues, b: VoteFormValues): boolean {
+  return a.score === b.score
+    && a.comment === b.comment
+    && a.pros.length === b.pros.length
+    && a.cons.length === b.cons.length
+    && a.pros.every((value, index) => value === b.pros[index])
+    && a.cons.every((value, index) => value === b.cons[index]);
+}
 
 function uniqueSelection(values: unknown, max: number): number[] {
   if (!Array.isArray(values))
@@ -161,32 +180,80 @@ export default function VoteForm(props) {
   const [confirmed, setConfirmed] = useState(!!props.confirmed)
   const [dirty, setDirty] = useState(false)
   const [saved, setSaved] = useState(!!props.saved)
-  const [savingAction, setSavingAction] = useState<"draft" | "confirm" | null>(null)
+  const [savingAction, setSavingAction] = useState<SaveMode | null>(null)
   const [fieldErrors, setFieldErrors] = useState<VoteFieldErrors>({})
   const [formError, setFormError] = useState<string | null>(null)
   const [mobileView, setMobileView] = useState<"write" | "preview">("write");
   const [showMarkdownGuide, setShowMarkdownGuide] = useState(false);
 
   const refTextarea = useRef<HTMLDivElement | null>(null);
+  const latestValuesRef = useRef<VoteFormValues>({ score, pros, cons, comment });
+  const confirmedRef = useRef(confirmed);
+  const dirtyRef = useRef(dirty);
+  const activeSaveRef = useRef<SaveMode | null>(null);
+  const queuedSaveRef = useRef<SaveMode | null>(null);
+  const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mountedRef = useRef(true);
+  const onChangeRef = useRef(props.onChange);
+  const onDirtyChangeRef = useRef(props.onDirtyChange);
+  const requestSaveRef = useRef<(mode: SaveMode) => void>(() => {});
+
+  useEffect(() => {
+    onChangeRef.current = props.onChange;
+    onDirtyChangeRef.current = props.onDirtyChange;
+    requestSaveRef.current = requestSave;
+  });
+
+  useEffect(() => {
+    mountedRef.current = true;
+
+    return () => {
+      mountedRef.current = false;
+
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = null;
+      }
+
+      // Salva le ultime modifiche prima di smontare il form (es. cambio gioco).
+      if (
+        dirtyRef.current
+        && !confirmedRef.current
+        && activeSaveRef.current !== "confirm"
+        && queuedSaveRef.current !== "confirm"
+      ) {
+        requestSaveRef.current("auto");
+      }
+    };
+  }, []);
+
+  function syncValues(patch: Partial<VoteFormValues>) {
+    latestValuesRef.current = { ...latestValuesRef.current, ...patch };
+  }
 
   function markDirty() {
     setFormError(null)
+    dirtyRef.current = true;
     if (!dirty) {
       setDirty(true)
       props.onDirtyChange?.(props.index, true)
     }
+    scheduleAutoSave()
   }
 
   function changeScore(event) {
     const raw = event.target.value
     const next = raw === "" ? null : Math.max(0, Math.min(100, Number(raw)))
-    setScore(Number.isFinite(next as number) ? next : null)
+    const normalized = Number.isFinite(next as number) ? next : null;
+    setScore(normalized)
+    syncValues({ score: normalized })
     setFieldErrors(current => ({ ...current, score: undefined }))
     markDirty()
   }
 
   function changeComment(event) {
     setComment(event.target.value)
+    syncValues({ comment: event.target.value })
     setFieldErrors(current => ({ ...current, comment: undefined }))
     markDirty()
   }
@@ -199,7 +266,9 @@ export default function VoteForm(props) {
     if (next === null)
       return;
 
-    setPros([...pros, next])
+    const newPros = [...pros, next];
+    setPros(newPros)
+    syncValues({ pros: newPros })
     setFieldErrors(current => ({ ...current, pros: undefined }))
     markDirty()
   }
@@ -208,6 +277,7 @@ export default function VoteForm(props) {
     let newPros = [...pros]
     newPros.splice(index, 1)
     setPros(newPros)
+    syncValues({ pros: newPros })
     setFieldErrors(current => ({ ...current, pros: undefined }))
     markDirty()
   }
@@ -220,6 +290,7 @@ export default function VoteForm(props) {
     let newPros = [...pros]
     newPros[index] = value
     setPros(newPros)
+    syncValues({ pros: newPros })
     setFieldErrors(current => ({ ...current, pros: undefined }))
     markDirty()
   }
@@ -232,7 +303,9 @@ export default function VoteForm(props) {
     if (next === null)
       return;
 
-    setCons([...cons, next])
+    const newCons = [...cons, next];
+    setCons(newCons)
+    syncValues({ cons: newCons })
     setFieldErrors(current => ({ ...current, cons: undefined }))
     markDirty()
   }
@@ -241,6 +314,7 @@ export default function VoteForm(props) {
     let newCons = [...cons]
     newCons.splice(index, 1)
     setCons(newCons)
+    syncValues({ cons: newCons })
     setFieldErrors(current => ({ ...current, cons: undefined }))
     markDirty()
   }
@@ -253,90 +327,177 @@ export default function VoteForm(props) {
     let newCons = [...cons]
     newCons[index] = value
     setCons(newCons)
+    syncValues({ cons: newCons })
     setFieldErrors(current => ({ ...current, cons: undefined }))
     markDirty()
   }
 
-  function canSaveDraft(): boolean {
+  function validateDraft(values: VoteFormValues): VoteFieldErrors {
     const errors: VoteFieldErrors = {};
 
-    if (score !== null && (!Number.isInteger(score) || score < 0 || score > 100))
+    if (values.score !== null && (!Number.isInteger(values.score) || values.score < 0 || values.score > 100))
       errors.score = "Inserisci un punteggio intero da 0 a 100.";
-    if (pros.length > 3)
+    if (values.pros.length > 3)
       errors.pros = "Puoi inserire al massimo 3 pro.";
-    if (cons.length > 3)
+    if (values.cons.length > 3)
       errors.cons = "Puoi inserire al massimo 3 contro.";
 
-    setFieldErrors(errors);
-    return Object.keys(errors).length === 0;
+    return errors;
   }
 
-  function canConfirm(): boolean {
+  function validateConfirm(values: VoteFormValues): VoteFieldErrors {
     const errors: VoteFieldErrors = {};
 
-    if (score === null || !Number.isInteger(score) || score < 0 || score > 100)
+    if (values.score === null || !Number.isInteger(values.score) || values.score < 0 || values.score > 100)
       errors.score = "Inserisci un punteggio intero da 0 a 100 prima di confermare.";
-    if (!comment.trim())
+    if (!values.comment.trim())
       errors.comment = "Scrivi un commento prima di confermare.";
-    if (pros.length + cons.length < MIN_PROS_CONS)
+    if (values.pros.length + values.cons.length < MIN_PROS_CONS)
       errors.pros = "Inserisci almeno 2 pro/contro in totale prima di confermare.";
-    if (pros.length > 3)
+    if (values.pros.length > 3)
       errors.pros = "Puoi inserire al massimo 3 pro.";
-    if (cons.length > 3)
+    if (values.cons.length > 3)
       errors.cons = "Puoi inserire al massimo 3 contro.";
 
-    setFieldErrors(errors);
-    return Object.keys(errors).length === 0;
+    return errors;
   }
 
-  function submit(confirmedValue: boolean) {
-    if (savingAction)
+  function cancelAutoSave() {
+    if (autoSaveTimerRef.current) {
+      clearTimeout(autoSaveTimerRef.current);
+      autoSaveTimerRef.current = null;
+    }
+  }
+
+  function scheduleAutoSave() {
+    cancelAutoSave();
+    autoSaveTimerRef.current = setTimeout(() => {
+      autoSaveTimerRef.current = null;
+      requestSaveRef.current("auto");
+    }, AUTO_SAVE_DELAY_MS);
+  }
+
+  function requestSave(mode: SaveMode) {
+    if (mode === "auto" && (confirmedRef.current || activeSaveRef.current === "confirm"))
       return;
 
-    if (confirmedValue ? !canConfirm() : !canSaveDraft())
+    if (activeSaveRef.current !== null) {
+      if (mode === "confirm" || queuedSaveRef.current !== "confirm")
+        queuedSaveRef.current = mode;
+      return;
+    }
+
+    executeSave(mode);
+  }
+
+  function executeSave(mode: SaveMode) {
+    if (mode === "auto" && confirmedRef.current)
       return;
 
+    const values: VoteFormValues = {
+      score: latestValuesRef.current.score,
+      pros: [...latestValuesRef.current.pros],
+      cons: [...latestValuesRef.current.cons],
+      comment: latestValuesRef.current.comment,
+    };
+
+    const errors = mode === "confirm" ? validateConfirm(values) : validateDraft(values);
+    if (Object.keys(errors).length > 0) {
+      if (mountedRef.current)
+        setFieldErrors(errors);
+      if (mode === "confirm" && dirtyRef.current)
+        scheduleAutoSave();
+      return;
+    }
+
+    const confirmedValue = mode === "confirm";
     const data = {
-      score: score,
-      pros: pros,
-      cons: cons,
-      comment: comment,
+      score: values.score,
+      pros: values.pros,
+      cons: values.cons,
+      comment: values.comment,
       game_id: props.game_id,
       confirmed: confirmedValue,
     };
 
-    setSavingAction(confirmedValue ? "confirm" : "draft");
-    setFormError(null);
+    activeSaveRef.current = mode;
 
-    props.onChange(data, props.index, (result) => {
-      setSavingAction(null);
+    if (mountedRef.current) {
+      setSavingAction(mode);
+      setFormError(null);
+    }
+
+    onChangeRef.current(data, props.index, (result) => {
+      activeSaveRef.current = null;
 
       if (!result?.success) {
-        const errors = result?.errors || {};
-        setFieldErrors({
-          score: errors.score,
-          comment: errors.comment,
-          pros: errors.pros,
-          cons: errors.cons,
-        });
-        setFormError(result?.error || "Impossibile salvare il voto.");
+        if (mountedRef.current) {
+          const errors = result?.errors || {};
+          setSavingAction(null);
+          setFieldErrors({
+            score: errors.score,
+            comment: errors.comment,
+            pros: errors.pros,
+            cons: errors.cons,
+          });
+          setFormError(result?.error || "Impossibile salvare il voto.");
+        }
+
+        if (mode === "confirm" && dirtyRef.current)
+          scheduleAutoSave();
+
+        processQueuedSave();
         return;
       }
 
       const savedConfirmed = typeof result.confirmed === "boolean"
         ? result.confirmed
         : confirmedValue;
+      const stillDirty = !sameVoteValues(values, latestValuesRef.current);
 
-      setConfirmed(savedConfirmed);
-      setDirty(false);
-      setSaved(true);
-      setFieldErrors({});
-      props.onDirtyChange?.(props.index, false);
+      confirmedRef.current = savedConfirmed;
+
+      if (mountedRef.current) {
+        setSavingAction(null);
+        setConfirmed(savedConfirmed);
+        setSaved(true);
+
+        if (!stillDirty || savedConfirmed) {
+          dirtyRef.current = false;
+          setDirty(false);
+          setFieldErrors({});
+          onDirtyChangeRef.current?.(props.index, false);
+        }
+      }
+
+      if (savedConfirmed) {
+        cancelAutoSave();
+        queuedSaveRef.current = null;
+      }
+
+      processQueuedSave();
     });
   }
 
-  const onSaveDraft = () => submit(false);
-  const onConfirm = () => submit(true);
+  function processQueuedSave() {
+    const queued = queuedSaveRef.current;
+    queuedSaveRef.current = null;
+
+    if (!queued)
+      return;
+    if (queued === "auto" && confirmedRef.current)
+      return;
+
+    requestSaveRef.current(queued);
+  }
+
+  const onSaveDraft = () => {
+    cancelAutoSave();
+    requestSave("draft");
+  };
+  const onConfirm = () => {
+    requestSave("confirm");
+  };
 
   const usedPros = new Set(pros);
   const usedCons = new Set(cons);
@@ -353,15 +514,40 @@ export default function VoteForm(props) {
 
   const scoreValue = Math.max(0, Math.min(100, score ?? 0));
   const scoreId = `vote-score-${props.game_id}`;
+  const locked = confirmed || savingAction === "confirm";
 
   const saveDraftDisabled = savingAction !== null || !dirty;
-  const confirmDisabled = savingAction !== null;
-  const saveDraftLabel = !confirmed && saved && !dirty
-    ? "Bozza salvata"
-    : "Salva bozza";
+  const confirmDisabled = savingAction === "confirm";
+  const saveDraftLabel = savingAction === "auto" || savingAction === "draft"
+    ? "Salvataggio..."
+    : !confirmed && saved && !dirty
+      ? "Bozza salvata"
+      : "Salva bozza";
   const confirmLabel = savingAction === "confirm"
     ? "Conferma..."
     : "Conferma voto";
+
+  const autoSaveFailed = savingAction === null && dirty && !!formError;
+  const autoSaveStatusText = savingAction === "auto"
+    ? "Salvataggio automatico in corso..."
+    : savingAction === "draft"
+      ? "Salvataggio della bozza in corso..."
+      : autoSaveFailed
+        ? "Salvataggio automatico non riuscito. Modifica un campo per riprovare."
+        : dirty
+          ? "Modifiche non ancora salvate: salvataggio automatico in corso."
+          : saved
+            ? "Bozza salvata automaticamente."
+            : "La bozza viene salvata automaticamente mentre scrivi.";
+  const autoSaveDotClass = savingAction === "auto" || savingAction === "draft"
+    ? "bg-secondary animate-pulse"
+    : autoSaveFailed
+      ? "bg-error"
+      : dirty
+        ? "bg-accent-warm"
+        : saved
+          ? "bg-success"
+          : "bg-gray-300";
 
   return (
     <div className="flex flex-col gap-5">
@@ -385,7 +571,7 @@ export default function VoteForm(props) {
                 inputMode="numeric"
                 value={score ?? ""}
                 onChange={changeScore}
-                disabled={confirmed}
+                disabled={locked}
                 placeholder="—"
                 className="h-10 w-full border border-default bg-surface px-2 pr-9 text-center font-mono text-xl font-bold tabular-nums text-content outline-none transition-colors placeholder:text-content-muted/40 focus:border-secondary disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-content-muted"
               />
@@ -401,7 +587,7 @@ export default function VoteForm(props) {
                 max="100"
                 value={score ?? 0}
                 onChange={changeScore}
-                disabled={confirmed}
+                disabled={locked}
                 aria-label="Punteggio da 0 a 100"
                 className="ds-range disabled:cursor-not-allowed disabled:opacity-60"
                 style={{
@@ -481,11 +667,11 @@ export default function VoteForm(props) {
             <textarea
               value={comment}
               onChange={changeComment}
-              readOnly={confirmed}
+              readOnly={locked}
               rows={8}
               placeholder="Scrivi la tua recensione dettagliata del gioco..."
               className={`h-44 w-full resize-none border border-default p-3 text-sm leading-relaxed text-content outline-none transition-colors placeholder:text-content-muted/40 focus:border-secondary ${
-                confirmed ? "cursor-default bg-surface-muted text-content-muted" : "bg-surface"
+                locked ? "cursor-default bg-surface-muted text-content-muted" : "bg-surface"
               }`}
               onScroll={(e) => refTextarea.current && (refTextarea.current.scrollTop = (e.target as HTMLTextAreaElement).scrollTop)}
               onWheel={(e) => refTextarea.current && (refTextarea.current.scrollTop = (e.target as HTMLTextAreaElement).scrollTop)}
@@ -540,7 +726,7 @@ export default function VoteForm(props) {
               Pro
               <span className="font-mono normal-case tracking-normal">({pros.length}/3)</span>
             </span>
-            {!confirmed && (
+            {!locked && (
               <Button
                 variant="secondary"
                 size="sm"
@@ -560,7 +746,7 @@ export default function VoteForm(props) {
                 <select
                   value={elem}
                   onChange={(e) => changePros(e, index)}
-                  disabled={confirmed}
+                  disabled={locked}
                   aria-label={`Pro ${index + 1}`}
                   className="ds-select min-w-0 flex-1 !py-1.5 text-[13px] disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-content-muted"
                 >
@@ -568,7 +754,7 @@ export default function VoteForm(props) {
                     <option key={value} value={value}>{label}</option>
                   ))}
                 </select>
-                {!confirmed && (
+                {!locked && (
                   <button
                     type="button"
                     onClick={() => deletePros(index)}
@@ -601,7 +787,7 @@ export default function VoteForm(props) {
               Contro
               <span className="font-mono normal-case tracking-normal">({cons.length}/3)</span>
             </span>
-            {!confirmed && (
+            {!locked && (
               <Button
                 variant="secondary"
                 size="sm"
@@ -621,7 +807,7 @@ export default function VoteForm(props) {
                 <select
                   value={elem}
                   onChange={(e) => changeCons(e, index)}
-                  disabled={confirmed}
+                  disabled={locked}
                   aria-label={`Contro ${index + 1}`}
                   className="ds-select min-w-0 flex-1 !py-1.5 text-[13px] disabled:cursor-not-allowed disabled:bg-surface-muted disabled:text-content-muted"
                 >
@@ -629,7 +815,7 @@ export default function VoteForm(props) {
                     <option key={value} value={value}>{label}</option>
                   ))}
                 </select>
-                {!confirmed && (
+                {!locked && (
                   <button
                     type="button"
                     onClick={() => deleteCons(index)}
@@ -661,9 +847,18 @@ export default function VoteForm(props) {
           Voto confermato: i contenuti non sono più modificabili. Puoi riportarlo in bozza per riprendere la modifica.
         </p>
       ) : (
-        <p className="text-[11px] leading-relaxed text-content-muted">
-          Per confermare servono un punteggio da 0 a 100, un commento e almeno 2 pro/contro in totale (massimo 3 per categoria).
-        </p>
+        <div className="flex flex-col gap-2">
+          <p
+            className="flex items-start gap-2 text-[11px] leading-relaxed text-content-muted"
+            aria-live="polite"
+          >
+            <span className={`mt-1 h-1.5 w-1.5 shrink-0 rounded-full ${autoSaveDotClass}`} />
+            <span>{autoSaveStatusText}</span>
+          </p>
+          <p className="text-[11px] leading-relaxed text-content-muted">
+            Per confermare servono un punteggio da 0 a 100, un commento e almeno 2 pro/contro in totale (massimo 3 per categoria).
+          </p>
+        </div>
       )}
 
       <div className="w-full p-3">
@@ -687,7 +882,7 @@ export default function VoteForm(props) {
               onClick={onSaveDraft}
               className="w-full sm:flex-1"
             >
-              {savingAction === "draft" ? "Salvataggio..." : saveDraftLabel}
+              {saveDraftLabel}
             </Button>
             <Button
               variant="primary"

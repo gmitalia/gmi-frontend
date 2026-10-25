@@ -317,14 +317,16 @@ export default function PageEditVotes(props)
         ? data.confirmed
         : !!newVote.confirmed;
 
-      const newVotes = [...votes];
-      newVotes[index] = {
-        ...newVote,
-        score: newVote.score ?? null,
-        confirmed: confirmed,
-        saved: true,
-      };
-      setVotes(newVotes);
+      setVotes(current => {
+        const newVotes = [...current];
+        newVotes[index] = {
+          ...newVote,
+          score: newVote.score ?? null,
+          confirmed: confirmed,
+          saved: true,
+        };
+        return newVotes;
+      });
     })
   }
 
