@@ -1,0 +1,15 @@
+/**
+ * Utility overrides that Tailwind cannot express through the theme tokens.
+ *
+ * All colour utilities (bg/text/border + opacity variants) are generated from
+ * tailwind.config.js. The two surface utilities below intentionally keep the
+ * translucent recipe used by the portal, so they override the solid Tailwind
+ * value after the utilities layer.
+ */
+.bg-surface-muted {
+  background-color: rgba(var(--ds-rgb-surface-muted), 0.8);
+}
+
+.bg-surface-elevated {
+  background-color: rgba(var(--ds-rgb-surface-elevated), 0.8);
+}

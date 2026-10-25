@@ -1,0 +1,62 @@
+/**
+ * Sezione blog: card dell'elenco articoli.
+ */
+.blog-card {
+  background-color: var(--ds-color-surface);
+  display: flex;
+  flex-direction: column;
+
+  &--tutorial {
+    --categoryColor: var(--ds-color-category-tutorial);
+  }
+
+  &--notizie {
+    --categoryColor: var(--ds-color-category-news);
+  }
+
+  &--game-jam {
+    --categoryColor: var(--ds-color-category-game-jam)
+  }
+
+  &--competizioni {
+    --categoryColor: var(--ds-color-category-competition)
+  }
+
+
+  &__category {
+    text-transform: uppercase;
+    font-size: .7rem;
+    border-bottom: 2px solid var(--categoryColor);
+    margin-left: calc(var(--defaultSpace) / 2);
+    // color: var(--ds-color-surface);
+    width: fit-content;
+  }
+
+  &__title {
+    font-size: 1.2rem;
+    line-height: 1.1;
+    margin: calc(var(--defaultSpace) / 2) 0;
+  }
+
+  &__link:hover {
+    text-decoration: underline;
+  }
+
+  &__body {
+    flex: 1;
+    padding: 0 calc(var(--defaultSpace) / 2);
+  }
+
+  &__image {
+    aspect-ratio: 16/9;
+    margin: calc(var(--defaultSpace) / 2);
+    background-position: center;
+    background-size: cover;
+  }
+
+  &__author {
+    text-transform: uppercase;
+    font-size: .7rem;
+    padding: calc(var(--defaultSpace) / 2);
+  }
+}

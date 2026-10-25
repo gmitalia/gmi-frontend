@@ -1,0 +1,28 @@
+/**
+ * Sezione competizioni: banner scuro a tutta larghezza.
+ */
+.contest-hero {
+  background-color: var(--ds-color-night-800);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    radial-gradient(ellipse at 85% -10%, rgba(var(--ds-rgb-success), 0.42), transparent 55%),
+    radial-gradient(ellipse at 0% 110%, rgba(var(--ds-rgb-warning), 0.14), transparent 45%),
+    linear-gradient(135deg, var(--ds-color-night-900) 0%, var(--ds-color-night-700) 55%, var(--ds-color-night-600) 100%);
+  background-size: 40px 40px, 40px 40px, auto, auto, auto;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.contest-hero-wall {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(2px);
+}
+
+@media (max-width: 767px) {
+  .contest-hero-wall {
+    background-size: 160% auto;
+    background-repeat: repeat-y;
+  }
+}

@@ -1,0 +1,18 @@
+/**
+ * Global stylesheet entry point.
+ *
+ * Load order mirrors the previous cascade: design-system foundations first,
+ * shared components, then section-specific styles. Keep section files after
+ * the utilities layer so a section can still override a generic utility.
+ */
+@use "design-system/tokens";
+@use "design-system/base";
+@use "design-system/components";
+@use "design-system/utilities";
+@use "sections/contest";
+@use "sections/blog-post";
+@use "sections/blog-card";
+@use "sections/code";
+@use "sections/showcase-card";
+@use "sections/resources";
+@use "sections/footer";

@@ -1,0 +1,81 @@
+/**
+ * Sezione risorse: card con lo stesso linguaggio delle card del blog,
+ * superficie bianca e angoli netti.
+ */
+.resource-card {
+  background-color: var(--ds-color-surface);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+
+  &:hover {
+    .resource-card__title {
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ds-color-secondary);
+    outline-offset: 2px;
+  }
+
+  &__body {
+    flex: 1;
+    padding: calc(var(--defaultSpace) / 2) calc(var(--defaultSpace) / 2) 0;
+  }
+
+  &__title {
+    font-size: 1.2rem;
+    line-height: 1.15;
+    font-weight: 600;
+    margin: calc(var(--defaultSpace) / 2) 0;
+    color: var(--ds-color-content);
+    overflow-wrap: anywhere;
+  }
+
+  &__description {
+    color: var(--ds-color-content-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin-bottom: calc(var(--defaultSpace) / 2);
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: calc(var(--defaultSpace) / 2);
+    min-height: 3rem;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem 0.75rem;
+    min-width: 0;
+  }
+
+  &__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    color: var(--ds-color-content-muted);
+    white-space: nowrap;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background-color: var(--ds-color-border);
+    flex: none;
+  }
+}

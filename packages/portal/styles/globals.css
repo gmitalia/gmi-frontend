@@ -1,0 +1,7 @@
+/*
+ * Tailwind entry point.
+ * Custom global styles live in app.scss.
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
