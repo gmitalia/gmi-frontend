@@ -7,9 +7,9 @@ export const Config = {
   getServerUrl: () => {
     if (typeof window === "undefined") return "";
 
-    const protocol = window.location.hostname === "localhost" ? "http:" : "https:";
-    const hostname = `${protocol}//${window.location.host}`;
-    return hostname + basePath;
+    // Keep the real origin (scheme, host and port) so the OAuth
+    // redirect_uri matches the URL the user is actually browsing.
+    return window.location.origin + basePath;
   },
 };
 

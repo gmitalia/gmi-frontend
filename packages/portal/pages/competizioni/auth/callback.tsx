@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Head from "next/head"
 import GMIApi from "../../../src/api/GMIApi"
 import { TokenService } from "../../../src/services/TokenService"
@@ -13,6 +13,9 @@ import { authActions } from "../../../src/slices/authSlice"
 export default function AuthCallback() {
   const [error, setError] = useState(null)
   const [status, setStatus] = useState("Completamento accesso in corso...")
+  // StrictMode in sviluppo esegue l'effetto due volte: condividendo la
+  // promise evitiamo di consumare due volte lo stesso code monouso.
+  const exchangeRef = useRef<Promise<any> | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -34,11 +37,19 @@ export default function AuthCallback() {
         }
 
         // 1. Scambia il codice breve per JWT pair
-        const exchangeData = await GMIApi.getInstance().exchangeCode(code)
+        if (!exchangeRef.current) {
+          exchangeRef.current = GMIApi.getInstance().exchangeCode(code)
+        }
+        const exchangeData = await exchangeRef.current
+
         if (!exchangeData.success) {
-          setError(exchangeData.error || "Scambio codice fallito.")
+          if (!cancelled) setError(exchangeData.error || "Scambio codice fallito.")
           return
         }
+
+        // Il primo effetto (annullato da StrictMode) si ferma qui: il secondo
+        // porta a termine salvataggio token e redirect.
+        if (cancelled) return
 
         // 2. Salva i token
         TokenService.setTokens(
@@ -53,9 +64,10 @@ export default function AuthCallback() {
           store.dispatch(authActions.setUser(userData.user))
         }
 
-        // 4. Redirect alla home delle competizioni
+        // 4. Redirect alla home delle competizioni. `replace` evita di
+        // lasciare in cronologia il callback con un code già consumato.
         if (!cancelled) {
-          window.location.href = "/competizioni/"
+          window.location.replace("/competizioni/")
         }
       } catch (err) {
         if (!cancelled) {

@@ -73,7 +73,11 @@ export default class GMIApiParent
 	getContest(contestId: string, callback: (data: {success: boolean; contests: Contest[]})=> void): void
 	{}
 
-	getContests(callback: (data: {success: boolean; contests: Contest[]})=> void): void
+	/**
+	 * Restituisce le competizioni. Con `limit` il backend restituisce solo
+	 * le più recenti (ordinate per end_at DESC).
+	 */
+	getContests(callback: (data: {success: boolean; contests?: Contest[]; error?: string})=> void, limit?: number): void
 	{}
 
 	getParticipants(contest: string, onlyMe: boolean, callback: (data: {success: boolean; participants: Participant[]})=> void): void
@@ -103,10 +107,20 @@ export default class GMIApiParent
 	getUserMedals(userId: number, callback: (data: {success: boolean; medals: UserMedals[]})=> void)
 	{}
 
-	setVote(contest: string, voteObject: Vote, callback: (data: {success: boolean, error: any})=> void): void
+	setVote(contest: string, voteObject: Vote, callback: (data: {
+		success: boolean;
+		confirmed?: boolean;
+		error?: string;
+		code?: string;
+		errors?: Record<string, string>;
+	})=> void): void
 	{}
 
-	setUserValues(user_id: number, user_name: string, callback: (data: {success: boolean, error: any})=> void): void
+	setUserValues(
+		user_id: number | string,
+		values: { user_name?: string; links?: UserLinks },
+		callback: (data: {success: boolean, error?: any, errors?: Record<string, string>, links?: UserLinks, user_name?: string})=> void
+	): void
 	{}
 
 	setParticipationData(contest: string, game: Game, callback: (data: {success: boolean, error: any})=> void): void
@@ -121,6 +135,13 @@ export default class GMIApiParent
 	getVideos(contestId: number | undefined, callback: (data: {success: boolean; videos: ContestVideo[]})=> void): void
 	{}
 
-	publishResults(contestId: string, callback: (data: {success: boolean; message?: string; error?: string})=> void): void
+	publishResults(contestId: string, callback: (data: {
+		success: boolean;
+		message?: string;
+		error?: string;
+		code?: string;
+		votes_confirmed?: number;
+		votes_required?: number;
+	})=> void): void
 	{}
 }

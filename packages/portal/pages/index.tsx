@@ -19,6 +19,8 @@ interface Props {
 const seeAllClasses =
   "text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 hover:underline hover:decoration-2 hover:underline-offset-4";
 
+const LATEST_CONTESTS_LIMIT = 3;
+
 export default function Home({ posts, games }: Props) {
   const [gamesArray, setGamesArray] = useState<Game[]>(games);
   const [contests, setContests] = useState<Contest[]>([]);
@@ -33,14 +35,14 @@ export default function Home({ posts, games }: Props) {
     GMIApi.getInstance().getContests((data) => {
       if (data?.success) setContests(data.contests || []);
       setContestsLoading(false);
-    });
+    }, LATEST_CONTESTS_LIMIT);
   }, []);
 
   const latestContests = useMemo(
     () =>
       [...contests]
         .sort((a, b) => Number(b.id) - Number(a.id))
-        .slice(0, 3),
+        .slice(0, LATEST_CONTESTS_LIMIT),
     [contests]
   );
 

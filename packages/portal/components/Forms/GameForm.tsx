@@ -3,6 +3,7 @@ import { Config, ParticipantType } from "../../src/Constants";
 import GMIApi from "../../src/api/GMIApi";
 import { Button } from "../commons/Button";
 import { ImageIcon } from "../commons/Icons";
+import { Toast, ToastVariant } from "../commons/Toast";
 
 const InputClasses =
   "w-full border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-gray-400";
@@ -29,6 +30,7 @@ export default function GameForm(props) {
   let [error, setError] = useState<string>();
   let [file, setFile] = useState<File>();
   let [uploading, setUploading] = useState<boolean>(false);
+  let [toast, setToast] = useState<{ message: string; variant: ToastVariant } | null>(null);
 
   const isUrlValid = gameUrl === "" || /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(gameUrl);
   const formValid = isUrlValid && gameName.trim() !== "" && gameShortDesc.trim() !== "" && gameThumbnail;
@@ -50,6 +52,7 @@ export default function GameForm(props) {
 
   function handleChange() {
     setUploading(true);
+    setError(null);
     props.onFormSubmit(
       {
         name: gameName,
@@ -59,11 +62,23 @@ export default function GameForm(props) {
         thumbnailFile: file,
       },
       (data) => {
-        if (!data.success)
-          setError(data.error);
-
-        setSaved(data.success);
         setUploading(false);
+
+        if (!data.success) {
+          const message = data.error || "Impossibile salvare le modifiche. Riprova.";
+          setError(message);
+          setToast({ message, variant: "error" });
+          setSaved(false);
+          return;
+        }
+
+        setSaved(true);
+        setToast({
+          message: isJoined
+            ? "Modifiche al gioco salvate con successo."
+            : "Partecipazione inviata: il gioco è iscritto alla competizione.",
+          variant: "success",
+        });
       });
   }
 
@@ -289,6 +304,14 @@ export default function GameForm(props) {
           </p>
         </div>
       </div>
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          variant={toast.variant}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 }

@@ -113,9 +113,14 @@ export default function Header() {
 
   // Un solo bootstrap dell'utente per tutta l'app: evita richieste duplicate
   // tra la versione desktop e quella mobile dell'header.
+  // Il callback OAuth gestisce da solo exchange e getMe: un bootstrap con
+  // eventuali token vecchi potrebbe cancellare i token appena ottenuti.
+  const isAuthCallback = router.pathname === "/competizioni/auth/callback";
+
   useEffect(() => {
+    if (isAuthCallback) return;
     if (TokenService.isLoggedIn()) dispatch(authAsyncThunk.getMe());
-  }, [dispatch]);
+  }, [dispatch, isAuthCallback]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

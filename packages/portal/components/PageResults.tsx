@@ -125,6 +125,11 @@ export default function PageResults(props)
 
   const games = (results.games_data || []).sort((a, b) => (parseFloat(b.avg_score) || 0) - (parseFloat(a.avg_score) || 0));
   const podium = games.filter((game)=> !!game.avg_score).slice(0, 3);
+
+  const confirmedVotes = Number(results.votes_confirmed ?? 0);
+  const requiredVotes = Number(results.votes_required ?? 0);
+  const missingVotes = Math.max(0, requiredVotes - confirmedVotes);
+  const globalPct = requiredVotes ? Math.round((confirmedVotes / requiredVotes) * 100) : 0;
   
   const leaderboard = games.map((game, index)=>
   {
@@ -218,6 +223,26 @@ export default function PageResults(props)
               <h2 className="text-xl font-bold text-content mb-4">
                 Stato Giudizi
               </h2>
+              {requiredVotes > 0 && (
+                <div className="mb-6 border border-default p-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted">
+                      Voti confermati
+                    </span>
+                    <span className="font-mono text-sm font-bold tabular-nums text-content">
+                      {confirmedVotes}/{requiredVotes}
+                    </span>
+                  </div>
+                  <div className="mt-2 h-2 bg-surface overflow-hidden border border-default">
+                    <div
+                      className={`h-full transition-all duration-1000 ${
+                        missingVotes === 0 ? "bg-[#007A69]" : "bg-secondary"
+                      }`}
+                      style={{ width: `${globalPct}%` }}
+                    />
+                  </div>
+                </div>
+              )}
               <div className="grid md:grid-cols-2 gap-6">
                 {judges_report}
               </div>

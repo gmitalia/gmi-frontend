@@ -55,13 +55,6 @@ export function ContestCard({ contest, showAction = false }: ContestCardProps) {
       >
         Partecipa
       </Link>
-    ) : showAction && status === "judging" ? (
-      <Link
-        href={`${competitionsPath("/results/")}?contest=${contest.id}`}
-        className="inline-flex items-center justify-center border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100"
-      >
-        Segui i giudizi
-      </Link>
     ) : null;
 
   return (

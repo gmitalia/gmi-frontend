@@ -148,9 +148,11 @@ const ContestHeroSection = ({
                 )}
 
                 <p className="mt-4 border-t border-white/10 pt-3 text-[11px] leading-5 text-gray-400">
-                  {canSubmitGames
-                    ? "Smettila di guardare il contatore e torna a sviluppare"
-                    : "La giuria sta valutando i giochi."}
+                  {timeLeft === "Scaduto"
+                    ? "Sbrigati, prima che il capo giuria blocchi le consegne!"
+                    : canSubmitGames
+                      ? "Smettila di guardare il contatore e torna a sviluppare"
+                      : "La giuria sta valutando i giochi."}
                 </p>
               </div>
             </div>

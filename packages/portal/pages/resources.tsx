@@ -24,8 +24,62 @@ interface ResourcesPageProps {
   categories: ResourceCategory[]
 }
 
-// Categorie "macro" mostrate per prime nei filtri
-const MACRO_PRIORITY = ["assets", "tools", "tutorial"];
+type MacroKey = "assets" | "tools" | "tutorial";
+
+interface MacroSection {
+  key: MacroKey;
+  label: string;
+  description: string;
+  icon: string;
+  color: string;
+}
+
+/** Sezioni principali della pagina: ogni risorsa vive in almeno una di queste. */
+const MACRO_SECTIONS: MacroSection[] = [
+  {
+    key: "assets",
+    label: "Assets",
+    description: "Grafica, suoni, font e snippet pronti all'uso",
+    icon: "fa-boxes",
+    color: "#0f766e",
+  },
+  {
+    key: "tools",
+    label: "Tools",
+    description: "Software, generatori e utility per lo sviluppo",
+    icon: "fa-tools",
+    color: "#2563eb",
+  },
+  {
+    key: "tutorial",
+    label: "Tutorials",
+    description: "Guide, approfondimenti e risorse didattiche",
+    icon: "fa-book",
+    color: "#7c3aed",
+  },
+];
+
+const MACRO_KEYS = MACRO_SECTIONS.map(section => section.key);
+
+/** Sottocategorie usate per assegnare una macro alle risorse senza tag esplicito. */
+const ASSET_CATEGORY_KEYS = new Set([
+  "2d",
+  "3d",
+  "animazione",
+  "grafica",
+  "musica",
+  "pixel art",
+  "suoni",
+  "a pagamento",
+]);
+
+const TOOL_CATEGORY_KEYS = new Set([
+  "programmazione",
+  "shaders",
+  "ai",
+  "game design",
+  "marketing",
+]);
 
 /** Icone e colori Font Awesome per le categorie (chiave = titolo normalizzato). */
 const CATEGORY_STYLES: Record<string, { icon: string; color: string }> = {
@@ -71,9 +125,98 @@ function categoryColor(title: string, color?: string) {
   return style?.color || color || FALLBACK_CATEGORY_STYLE.color;
 }
 
+/** Verifica se un titolo normalizzato corrisponde a una delle sezioni principali. */
+function isMacroKey(value: string): value is MacroKey {
+  return (MACRO_KEYS as string[]).includes(value);
+}
+
+/**
+ * Macro di appartenenza di una risorsa. I tag espliciti hanno priorità; per le
+ * risorse più datate, prive di un tag di sezione, si deduce la macro dalle
+ * sottocategorie (es. "2D" -> Assets).
+ */
+function resourceMacroKeys(resource: Resource): MacroKey[] {
+  const normalized = resource.resourceCategories.map(category =>
+    normalizeCategory(category.title)
+  );
+  const explicit = MACRO_KEYS.filter(key => normalized.includes(key));
+
+  if (explicit.length > 0) return explicit;
+  if (normalized.some(key => ASSET_CATEGORY_KEYS.has(key))) return ["assets"];
+  if (normalized.some(key => TOOL_CATEGORY_KEYS.has(key))) return ["tools"];
+  return ["assets"];
+}
+
 const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) => {
+  const [activeMacro, setActiveMacro] = React.useState<MacroKey>("assets");
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
   const [search, setSearch] = React.useState<string>("");
+  const tabRefs = React.useRef<Partial<Record<MacroKey, HTMLButtonElement | null>>>({});
+
+  const resourcesByMacro = React.useMemo(() => {
+    const grouped: Record<MacroKey, Resource[]> = {
+      assets: [],
+      tools: [],
+      tutorial: [],
+    };
+
+    resources.forEach(resource => {
+      resourceMacroKeys(resource).forEach(key => grouped[key].push(resource));
+    });
+
+    return grouped;
+  }, [resources]);
+
+  const activeMacroSection =
+    MACRO_SECTIONS.find(section => section.key === activeMacro) || MACRO_SECTIONS[0];
+  const activeResources = resourcesByMacro[activeMacro];
+
+  // Solo le sottocategorie presenti nella sezione attiva, con il numero di risorse.
+  const activeFilterCategories = React.useMemo(() => {
+    const counts = new Map<string, number>();
+
+    activeResources.forEach(resource => {
+      const seen = new Set<string>();
+
+      resource.resourceCategories.forEach(category => {
+        if (isMacroKey(normalizeCategory(category.title)) || seen.has(category._id)) return;
+        seen.add(category._id);
+        counts.set(category._id, (counts.get(category._id) || 0) + 1);
+      });
+    });
+
+    return categories
+      .filter(category => counts.has(category._id))
+      .map(category => ({ ...category, count: counts.get(category._id) || 0 }))
+      .sort((a, b) =>
+        categoryLabel(a.title).localeCompare(categoryLabel(b.title), "it", {
+          sensitivity: "base",
+        })
+      );
+  }, [activeResources, categories]);
+
+  const selectMacro = (key: MacroKey) => {
+    if (key === activeMacro) return;
+    setActiveMacro(key);
+    setSelectedCategories([]);
+    setSearch("");
+  };
+
+  const handleTabKeyDown = (
+    event: React.KeyboardEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+
+    event.preventDefault();
+    const direction = event.key === "ArrowRight" ? 1 : -1;
+    const nextIndex =
+      (index + direction + MACRO_SECTIONS.length) % MACRO_SECTIONS.length;
+    const nextMacro = MACRO_SECTIONS[nextIndex];
+
+    selectMacro(nextMacro.key);
+    tabRefs.current[nextMacro.key]?.focus();
+  };
 
   const toggleCategory = (catId: string) => {
     setSelectedCategories(prev =>
@@ -88,41 +231,28 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
     setSearch("");
   };
 
-  const filteredResources = resources.filter(r => {
+  const searchTerm = search.trim().toLowerCase();
+
+  const filteredResources = activeResources.filter(resource => {
     const matchesCategory =
       selectedCategories.length === 0
         ? true
-        : selectedCategories.every(selCat =>
-            r.resourceCategories.some(c => c._id === selCat)
+        : selectedCategories.every(selectedId =>
+            resource.resourceCategories.some(category => category._id === selectedId)
           );
     const matchesSearch =
-      search.trim().length === 0
+      searchTerm.length === 0
         ? true
-        : (
-          r.name.toLowerCase().includes(search.toLowerCase()) ||
-          r.description.toLowerCase().includes(search.toLowerCase()) ||
-          r.resourceCategories.some(cat =>
-            cat.title.toLowerCase().includes(search.toLowerCase())
-          )
-        );
+        : resource.name.toLowerCase().includes(searchTerm) ||
+          resource.description.toLowerCase().includes(searchTerm) ||
+          resource.resourceCategories.some(category =>
+            category.title.toLowerCase().includes(searchTerm)
+          );
+
     return matchesCategory && matchesSearch;
   });
 
-  // Ordina le categorie: macrocategorie prima, poi alfabeticamente
-  const orderedCategories = categories.slice().sort((a, b) => {
-    const aNorm = normalizeCategory(a.title);
-    const bNorm = normalizeCategory(b.title);
-    const aPriority = MACRO_PRIORITY.indexOf(aNorm);
-    const bPriority = MACRO_PRIORITY.indexOf(bNorm);
-    const aIsMacro = aPriority !== -1;
-    const bIsMacro = bPriority !== -1;
-    if (aIsMacro && bIsMacro) return aPriority - bPriority;
-    if (aIsMacro) return -1;
-    if (bIsMacro) return 1;
-    return aNorm.localeCompare(bNorm);
-  });
-
-  const hasActiveFilters = selectedCategories.length > 0 || search.trim().length > 0;
+  const hasActiveFilters = selectedCategories.length > 0 || searchTerm.length > 0;
 
   return (
     <div>
@@ -143,169 +273,246 @@ const ResourcesPage: React.FC<ResourcesPageProps> = ({ resources, categories }) 
           Una selezione di strumenti, asset e tutorial per chi sviluppa con GameMaker
         </p>
 
-        {/* Ricerca + conteggio */}
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-xs">
-            <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              {/* Heroicon: Magnifying Glass */}
-              <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" fill="none" />
-                <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-            </span>
-            <input
-              type="text"
-              placeholder="Cerca risorse..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="block w-full pl-9 pr-9 py-2 bg-white border border-gray-200 rounded-sm text-sm text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:border-primary/50"
-              aria-label="Cerca risorse"
-            />
-            {search.length > 0 && (
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-primary transition-colors"
-                aria-label="Cancella ricerca"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
-                  <line x1="6" y1="6" x2="18" y2="18" strokeLinecap="round" />
-                  <line x1="18" y1="6" x2="6" y2="18" strokeLinecap="round" />
-                </svg>
-              </button>
-            )}
-          </div>
+        {/* Macro sezioni */}
+        <div className="mt-8 border border-gray-200 bg-white">
+          <div role="tablist" aria-label="Sezioni risorse" className="grid grid-cols-3">
+            {MACRO_SECTIONS.map((section, index) => {
+              const isActive = section.key === activeMacro;
+              const count = resourcesByMacro[section.key].length;
 
-          <div className="text-[0.7rem] uppercase tracking-wider text-gray-500">
-            {filteredResources.length} {filteredResources.length === 1 ? "risorsa" : "risorse"}
+              return (
+                <button
+                  key={section.key}
+                  ref={element => {
+                    tabRefs.current[section.key] = element;
+                  }}
+                  type="button"
+                  role="tab"
+                  id={`resources-tab-${section.key}`}
+                  aria-selected={isActive}
+                  aria-controls="resources-panel"
+                  tabIndex={isActive ? 0 : -1}
+                  onClick={() => selectMacro(section.key)}
+                  onKeyDown={event => handleTabKeyDown(event, index)}
+                  className={`relative flex flex-col items-start gap-2 px-3 py-4 text-left transition-colors sm:flex-row sm:items-center sm:gap-4 sm:px-5 ${
+                    index > 0 ? "border-l border-gray-200" : ""
+                  } ${
+                    isActive
+                      ? "bg-primary-dark text-white"
+                      : "bg-white text-gray-900 hover:bg-gray-50"
+                  }`}
+                >
+                  <span
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center border text-sm ${
+                      isActive
+                        ? "border-white/20 bg-white/10 text-white"
+                        : "border-gray-200 bg-gray-50"
+                    }`}
+                    style={!isActive ? { color: section.color } : undefined}
+                  >
+                    <i className={`fas ${section.icon}`} aria-hidden="true" />
+                  </span>
+
+                  <span className="min-w-0 sm:flex-1">
+                    <span className="block text-sm font-semibold sm:text-base">
+                      {section.label}
+                    </span>
+                    <span
+                      className={`mt-0.5 hidden text-xs leading-snug md:block ${
+                        isActive ? "text-white/60" : "text-gray-500"
+                      }`}
+                    >
+                      {section.description}
+                    </span>
+                  </span>
+
+                  <span
+                    className={`absolute right-3 top-3 text-[0.7rem] font-semibold tabular-nums sm:static sm:ml-2 sm:text-xs ${
+                      isActive ? "text-white/55" : "text-gray-500"
+                    }`}
+                  >
+                    {count}
+                    <span className="sr-only"> risorse</span>
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Filtri categoria */}
-        <nav
-          aria-label="Categorie risorse"
-          className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-6 mb-2 border-b border-gray-200 pb-1"
+        <div
+          role="tabpanel"
+          id="resources-panel"
+          aria-labelledby={`resources-tab-${activeMacro}`}
+          className="mt-6"
         >
-          <span className="text-gray-700 font-medium text-sm">Filtri attivi</span>
-          <button
-            onClick={() => setSelectedCategories([])}
-            aria-pressed={selectedCategories.length === 0}
-            className={`text-sm pb-1 -mb-1 border-b-2 transition-colors duration-200 ${
-              selectedCategories.length === 0
-                ? 'text-primary border-primary font-semibold'
-                : 'text-gray-500 border-transparent hover:text-primary hover:border-primary/40'
-            }`}
-          >
-            Mostra tutti
-          </button>
-          {orderedCategories.map(cat => {
-            const isActive = selectedCategories.includes(cat._id);
-            return (
-              <button
-                key={cat._id}
-                onClick={() => toggleCategory(cat._id)}
-                aria-pressed={isActive}
-                className={`text-sm pb-1 -mb-1 border-b-2 transition-colors duration-200 ${
-                  isActive
-                    ? 'text-primary font-semibold'
-                    : 'text-gray-500 border-transparent hover:text-primary hover:border-primary/40'
-                }`}
-                style={isActive ? { borderBottomColor: categoryColor(cat.title, cat.color) } : undefined}
-              >
-                <i
-                  className={`fas ${categoryStyle(cat.title).icon} mr-1.5 text-[0.7rem]`}
-                  style={{ color: categoryColor(cat.title, cat.color) }}
-                  aria-hidden="true"
-                />
-                {categoryLabel(cat.title)}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Griglia risorse */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 py-3">
-          {filteredResources.length === 0 && (
-            <div className="col-span-full text-center py-16">
-              <p className="text-gray-500">Nessuna risorsa trovata.</p>
-              {hasActiveFilters && (
+          {/* Ricerca + conteggio */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="relative w-full sm:max-w-sm">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                {/* Heroicon: Magnifying Glass */}
+                <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" fill="none" />
+                  <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </span>
+              <input
+                type="text"
+                placeholder={`Cerca in ${activeMacroSection.label}...`}
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="block w-full pl-9 pr-9 py-2 bg-white border border-gray-200 rounded-sm text-sm text-gray-900 placeholder-gray-400 transition-colors focus:outline-none focus:border-primary/50"
+                aria-label={`Cerca in ${activeMacroSection.label}`}
+              />
+              {search.length > 0 && (
                 <button
                   type="button"
-                  onClick={resetFilters}
-                  className="mt-3 text-sm text-primary underline underline-offset-4 hover:text-primary/70 transition-colors"
+                  onClick={() => setSearch("")}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-primary transition-colors"
+                  aria-label="Cancella ricerca"
                 >
-                  Azzera filtri
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                    <line x1="6" y1="6" x2="18" y2="18" strokeLinecap="round" />
+                    <line x1="18" y1="6" x2="6" y2="18" strokeLinecap="round" />
+                  </svg>
                 </button>
               )}
             </div>
-          )}
 
-          {filteredResources.map(resource => {
-            const macroKey = resource.resourceCategories
-              .map(cat => normalizeCategory(cat.title))
-              .find(norm => MACRO_PRIORITY.includes(norm));
+            <div
+              className="text-[0.7rem] uppercase tracking-wider text-gray-500"
+              aria-live="polite"
+            >
+              {hasActiveFilters
+                ? `${filteredResources.length} di ${activeResources.length} risorse`
+                : `${filteredResources.length} ${
+                    filteredResources.length === 1 ? "risorsa" : "risorse"
+                  }`}
+            </div>
+          </div>
 
-            const primaryCategory =
-              resource.resourceCategories.find(cat => normalizeCategory(cat.title) === macroKey) ||
-              resource.resourceCategories[0];
-
-            const label = primaryCategory ? categoryLabel(primaryCategory.title) : "";
-            const primaryColor = primaryCategory
-              ? categoryColor(primaryCategory.title, primaryCategory.color)
-              : undefined;
-
-            const secondaryCategories = resource.resourceCategories.filter(cat => {
-              const norm = normalizeCategory(cat.title);
-              return cat._id !== primaryCategory?._id && !MACRO_PRIORITY.includes(norm);
-            });
-
-            return (
-              <a
-                key={resource._id}
-                href={resource.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="resource-card"
-                aria-label={`Apri ${resource.name} (si apre in una nuova scheda)`}
+          {/* Filtri categoria */}
+          <div className="mt-5">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-gray-500">
+              Filtra per
+            </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setSelectedCategories([])}
+                aria-pressed={selectedCategories.length === 0}
+                className={`inline-flex items-center gap-1.5 border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  selectedCategories.length === 0
+                    ? "border-primary bg-primary text-white"
+                    : "border-gray-200 bg-white text-gray-500 hover:border-gray-300 hover:text-gray-900"
+                }`}
               >
-                {label && (
-                  <div className="resource-card__top">
-                    <span
-                      className="resource-card__category"
-                      style={primaryColor ? { borderBottomColor: primaryColor } : undefined}
-                    >
-                      {label}
-                    </span>
+                Tutte
+                <span
+                  className={
+                    selectedCategories.length === 0 ? "text-white/60" : "text-gray-500"
+                  }
+                >
+                  {activeResources.length}
+                </span>
+              </button>
+
+              {activeFilterCategories.map(category => {
+                const isActive = selectedCategories.includes(category._id);
+                const color = categoryColor(category.title, category.color);
+
+                return (
+                  <button
+                    key={category._id}
+                    type="button"
+                    onClick={() => toggleCategory(category._id)}
+                    aria-pressed={isActive}
+                    className={`inline-flex items-center gap-1.5 border px-3 py-1.5 text-xs transition-colors ${
+                      isActive
+                        ? "font-semibold text-gray-900"
+                        : "border-gray-200 bg-white font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900"
+                    }`}
+                    style={
+                      isActive
+                        ? { backgroundColor: `${color}12`, borderColor: color }
+                        : undefined
+                    }
+                  >
                     <i
-                      className={`resource-card__icon fas ${categoryStyle(primaryCategory.title).icon}`}
-                      style={primaryColor ? { color: primaryColor } : undefined}
+                      className={`fas ${categoryStyle(category.title).icon} text-[0.68rem]`}
+                      style={{ color }}
                       aria-hidden="true"
                     />
-                  </div>
+                    {categoryLabel(category.title)}
+                    <span
+                      className={`text-[0.65rem] font-semibold ${
+                        isActive ? "text-gray-600" : "text-gray-500"
+                      }`}
+                    >
+                      {category.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Griglia risorse */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 pt-4 pb-6">
+            {filteredResources.length === 0 && (
+              <div className="col-span-full border border-dashed border-gray-300 bg-white px-6 py-16 text-center">
+                <p className="text-gray-500">
+                  Nessuna risorsa trovata nella sezione {activeMacroSection.label}.
+                </p>
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="mt-3 text-sm text-primary underline underline-offset-4 hover:text-primary/70 transition-colors"
+                  >
+                    Azzera filtri
+                  </button>
                 )}
+              </div>
+            )}
 
-                <div className="resource-card__body">
-                  <h3 className="resource-card__title">{resource.name}</h3>
-                  <p className="resource-card__description">{resource.description}</p>
-                </div>
+            {filteredResources.map(resource => {
+              const secondaryCategories = resource.resourceCategories.filter(
+                category => !isMacroKey(normalizeCategory(category.title))
+              );
 
-                <div className="resource-card__footer">
-                  <div className="resource-card__tags">
-                    {secondaryCategories.map(cat => (
-                      <span key={cat._id} className="resource-card__tag">
-                        <span
-                          className="resource-card__dot"
-                          style={{ backgroundColor: categoryColor(cat.title, cat.color) }}
-                          aria-hidden="true"
-                        />
-                        {categoryLabel(cat.title)}
-                      </span>
-                    ))}
+              return (
+                <a
+                  key={resource._id}
+                  href={resource.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="resource-card"
+                  aria-label={`Apri ${resource.name} (si apre in una nuova scheda)`}
+                >
+                  <div className="resource-card__body">
+                    <h3 className="resource-card__title">{resource.name}</h3>
+                    <p className="resource-card__description">{resource.description}</p>
                   </div>
-                </div>
-              </a>
-            );
-          })}
+
+                  <div className="resource-card__footer">
+                    <div className="resource-card__tags">
+                      {secondaryCategories.map(cat => (
+                        <span key={cat._id} className="resource-card__tag">
+                          <span
+                            className="resource-card__dot"
+                            style={{ backgroundColor: categoryColor(cat.title, cat.color) }}
+                            aria-hidden="true"
+                          />
+                          {categoryLabel(cat.title)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

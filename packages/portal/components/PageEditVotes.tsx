@@ -4,12 +4,143 @@ import { getQuery, parseAuthors } from "../src/Utils"
 import VoteForm from "./Forms/VoteForm";
 import GMIApi from "../src/api/GMIApi";
 
-import { Button } from "./commons/Button";
 import LoginRequiredPage from "./commons/LoginRequiredPage";
 import Link from "next/link";
 import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
 import { SectionLayout } from "./WebsiteLayout/SectionLayout";
-import EditionSwitcher from "./Competition/EditionSwitcher";
+import { DownloadIcon, GridIcon } from "./commons/Icons";
+import { Button } from "./commons/Button";
+import { competitionsPath } from "../src/paths";
+import { ContestStatusBadge } from "./Contest/ContestStatusBadge";
+import { formatContestDateRange, getContestStatus } from "../src/contestStatus";
+
+function gameImageUrl(game): string
+{
+  if(!game?.image_url)
+    return GMIApi.getInstance().imageURL + "/thumbnail.png";
+
+  if(game.image_url.indexOf("http") >= 0)
+    return game.image_url;
+
+  return GMIApi.getInstance().imageURL + game.image_url;
+}
+
+function hasVoteData(vote): boolean
+{
+  return !!vote?.saved ||
+    vote?.score !== null && vote?.score !== undefined ||
+    !!vote?.comment?.trim() ||
+    (Array.isArray(vote?.pros) && vote.pros.length > 0) ||
+    (Array.isArray(vote?.cons) && vote.cons.length > 0);
+}
+
+function getVoteLabel(vote, dirty: boolean): string
+{
+  if(vote?.confirmed)
+    return dirty ? "Da riconfermare" : "Confermato";
+
+  return dirty || hasVoteData(vote) ? "Bozza" : "Da votare";
+}
+
+type ContestInfoSectionProps = {
+  contest: Contest | null;
+  totalGames: number;
+  confirmedCount?: number;
+  draftCount?: number;
+  showProgress?: boolean;
+};
+
+function ContestInfoSection({
+  contest,
+  totalGames,
+  confirmedCount = 0,
+  draftCount = 0,
+  showProgress = false,
+}: ContestInfoSectionProps)
+{
+  if(!contest)
+    return null;
+
+  const contestStatus = getContestStatus(contest);
+  const contestDateRange = formatContestDateRange(contest);
+
+  return (
+    <section
+      aria-label="Informazioni competizione"
+      className="mb-6 flex flex-col gap-4 border border-default bg-surface p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5"
+    >
+      <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+        {contest.thumbnail_url && (
+          <img
+            src={contest.thumbnail_url}
+            alt=""
+            loading="lazy"
+            className="hidden h-14 w-20 shrink-0 border border-default object-cover sm:block"
+          />
+        )}
+
+        <div className="min-w-0">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted">
+            Competizione
+          </p>
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            <h2 className="text-lg font-bold leading-tight text-content sm:text-xl">
+              {contest.name}
+            </h2>
+            <ContestStatusBadge variant={contestStatus} />
+          </div>
+          <p className="mt-1 text-xs text-content-muted">
+            <span className="font-mono text-content">{contestDateRange}</span>
+          </p>
+        </div>
+      </div>
+
+      <div className="flex shrink-0 items-center gap-6 border-t border-default pt-3 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted">
+            Giochi
+          </p>
+          <p className="mt-1 font-mono text-xl font-bold tabular-nums text-content">
+            {totalGames}
+          </p>
+        </div>
+        {showProgress && (
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted">
+              Confermati
+            </p>
+            <p className="mt-1 font-mono text-xl font-bold tabular-nums text-content">
+              {confirmedCount}/{totalGames}
+            </p>
+            {draftCount > 0 && (
+              <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-accent-warm">
+                {draftCount} {draftCount === 1 ? "bozza" : "bozze"}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function VoteStatus({ vote, dirty = false }: { vote: any; dirty?: boolean })
+{
+  const isConfirmed = !!vote?.confirmed;
+  const label = getVoteLabel(vote, dirty);
+  const accent = isConfirmed
+    ? dirty ? "border-l-[#DF7B00]" : "border-l-[#007A69]"
+    : hasVoteData(vote) ? "border-l-[#DF7B00]" : "border-l-gray-300";
+  const textColor = dirty ? "text-accent-warm" : "text-gray-800";
+
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center border border-l-[3px] border-gray-200 bg-white px-2.5 py-1.5 text-[10px] font-semibold uppercase leading-none tracking-[0.18em] ${accent} ${textColor}`}
+    >
+      {label}
+    </span>
+  );
+}
 
 //@todo don't load if not judge
 export default function PageEditVotes(props)
@@ -17,39 +148,46 @@ export default function PageEditVotes(props)
   let router = useRouter()
   let query = getQuery(router)
 
-  const breadcrumbs = [
-    homeBreadcrumb,
-    competitionsBreadcrumb,
-    { label: "Area giudizi" },
-  ];
-
-  const shellProps = {
-    title: "Area giudizi",
-    description: "Valuta i giochi della competizione e registra i tuoi voti.",
-    action: <EditionSwitcher contestId={query.contest} />,
-    breadcrumbs,
-  };
-
   let [loaded, setLoaded] = useState(false)
   /**@type {[Game[], (data: Game[])=> any]} */
   let [games, setGames] = useState<any[]>([])
   /**@type {[Vote[], (data: Vote[])=> any]} */
   let [votes, setVotes] = useState<any[]>([])
+  let [contest, setContest] = useState<Contest | null>(null)
   let [gameIndex, setGameIndex] = useState(0)
   let [error, setError] = useState<string>()
+  let [dirtyVotes, setDirtyVotes] = useState<Record<number, boolean>>({})
+
+  useEffect(()=>
+  {
+    if(!router.isReady) return;
+    if(!query.contest) return;
+
+    let cancelled = false;
+    GMIApi.getInstance().getContest(query.contest, data=>
+    {
+      if(!cancelled && data.success)
+        setContest(data.contests?.[0] || null);
+    });
+
+    return () => { cancelled = true; };
+  }, [router.isReady, query.contest])
 
   useEffect(()=>
   {
     if(!router.isReady) return; // Aspetta che router sia pronto
     if(!query.contest) return;
-    GMIApi.getInstance().getGames(query.contest, data=> setGames(data.games))
+    GMIApi.getInstance().getGames(query.contest, data=> setGames(data.games || []))
   }, [router.isReady, query.contest])
 
 
   useEffect(()=>
   {
-    if(!games)
+    if(!games?.length)
       return;
+
+    setLoaded(false);
+    setDirtyVotes({});
 
     GMIApi.getInstance().getVotes(query.contest, null, data=>
     {
@@ -64,7 +202,7 @@ export default function PageEditVotes(props)
       for(let index = 0; index < votes.length; index++)
       {
         const gameId = games[index].id;
-        const voteIdx = data.votes.findIndex(game => game.game_id === gameId);
+        const voteIdx = data.votes.findIndex(game => String(game.game_id) === String(gameId));
         if(voteIdx >= 0)
         {
           let vote = data.votes[voteIdx];
@@ -74,67 +212,56 @@ export default function PageEditVotes(props)
           if(!Array.isArray(vote.pros)) vote.pros = [];
           if(!Array.isArray(vote.cons)) vote.cons = [];
 
-          vote.voted = parseInt(vote.score) > 0 || vote.pros.length > 0 || vote.cons.length > 0 || (vote.comment && vote.comment.trim().length > 0);
+          const parsedScore = vote.score === null || vote.score === undefined || vote.score === ""
+            ? null
+            : Number(vote.score);
 
-          votes[index] = vote;
+          votes[index] = {
+            ...vote,
+            score: Number.isFinite(parsedScore as number) ? parsedScore : null,
+            comment: vote.comment || "",
+            confirmed: !!vote.confirmed,
+            saved: true,
+          };
         }
         else
         {
           votes[index] = 
           {
             game_id:   games[index].id,
-            score:     0,
+            score:     null,
             comment:   "",
             pros:     [],
             cons:     [],
-            voted:     false,
+            confirmed: false,
+            saved:     false,
           };
         }
       }
 
       setVotes(votes)
       setLoaded(true)
-      console.debug("received games and votes", games, votes);
     })
   }, [games, query.contest]); //triggered when "games" changes (received data from API)
 
-  if(!games || !votes)
-  {
-    return (
-      <SectionLayout {...shellProps}>
-        <div className="min-h-[50vh] flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-12 h-12 border-thick border-secondary/30 border-t-secondary rounded-full animate-spin" />
-            <span className="ds-text-muted text-sm">Caricamento voti...</span>
-          </div>
-        </div>
-      </SectionLayout>
-    );
-  }
+  const contestHref = contest
+    ? `${competitionsPath("/contest/")}?contest=${contest.id}`
+    : null;
 
-  function onVoteUpdate(newVote, index, callback)
-  {
-    const newVotes = [...votes];
-    newVotes[index] = newVote;
-    setVotes(newVotes);
+  const breadcrumbs = [
+    homeBreadcrumb,
+    competitionsBreadcrumb,
+    ...(contest && contestHref
+      ? [{ label: contest.name, href: contestHref }]
+      : []),
+    { label: "Area giudizi" },
+  ];
 
-    //todo check if the vote is valid
-    sendVote(newVote, callback);
-  }
-
-  function sendVote(vote, callback)
-  {
-    GMIApi.getInstance().setVote(query.contest, vote, data=>
-    {
-      callback(data.success);
-      if(!data.success)
-        setError(data.error);
-    })
-  }
-
-
-  let yourLeaderboard = [];
-  let gamePages = [];
+  const shellProps = {
+    title: "Area giudizi",
+    description: "Valuta i giochi della competizione e registra i tuoi voti.",
+    breadcrumbs,
+  };
 
   if(error)
   {
@@ -144,6 +271,7 @@ export default function PageEditVotes(props)
     if (isLoginError) {
       return (
         <SectionLayout {...shellProps}>
+          <ContestInfoSection contest={contest} totalGames={games.length} />
           <LoginRequiredPage
             title="Accesso come giudice richiesto"
             message="Per votare devi aver effettuato l'accesso come giudice con il tuo account Discord."
@@ -154,247 +282,475 @@ export default function PageEditVotes(props)
 
     return (
       <SectionLayout {...shellProps}>
-        <div className="ds-card max-w-2xl mx-auto p-8 text-center">
-          <h2 className="text-xl font-bold ds-text-content mb-2">Errore</h2>
-          <p className="ds-text-muted">{error}</p>
+        <ContestInfoSection contest={contest} totalGames={games.length} />
+        <div className="mx-auto max-w-2xl border border-error/20 bg-error/10 p-6 text-center text-error">
+          <h2 className="text-lg font-bold">Impossibile caricare i voti</h2>
+          <p className="mt-1 text-sm">{error}</p>
         </div>
       </SectionLayout>
     );
   }
-  else if(loaded)
+
+  if(!loaded)
   {
-    // Calculate stats
-    const votedCount = votes.filter(v => v.voted).length;
-    const totalGames = games.length;
-    const progressPercent = Math.round((votedCount / totalGames) * 100);
-
-    // Sort leaderboard data
-    const leaderboardData = votes.map((vote, index) => ({
-      game: games[index],
-      vote: votes[index],
-      originalIndex: index
-    })).sort((e1, e2) => parseInt(e2.vote.score) - parseInt(e1.vote.score));
-
-    yourLeaderboard = leaderboardData.map((elem, rank) => {
-      const isVoted = elem.vote.voted;
-      return (
-        <div
-          key={elem.game.id}
-          className={`p-3 flex items-center gap-3 transition-all ${!isVoted ? 'border-l-4 border-l-error/60' : 'border-l-4 border-l-success/60'}`}
-        >
-          <div className="font-bold text-lg w-8 text-center ds-text-muted">
-            {rank + 1}
-          </div>
-          <div className="w-12 h-12 overflow-hidden ds-surface flex-shrink-0">
-            <img 
-              src={elem.game.image_url ? GMIApi.getInstance().imageURL + elem.game.image_url : GMIApi.getInstance().imageURL + "/thumbnail.png"} 
-              alt="" 
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="font-semibold ds-text-content truncate">{elem.game.name}</div>
-            <div className="flex items-center gap-2 text-sm">
-              <span className={`font-bold ${isVoted ? 'text-success' : 'text-error'}`}>
-                {elem.vote.score}
-              </span>
-              {!isVoted && (
-                <span className="text-xs px-2 py-0.5 bg-error/10 text-error font-medium">
-                  Da votare
-                </span>
-              )}
-            </div>
-          </div>
+    return (
+      <SectionLayout {...shellProps}>
+        <ContestInfoSection contest={contest} totalGames={games.length} />
+        <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 border border-default bg-surface">
+          <div className="h-8 w-8 animate-spin rounded-full border-thick border-secondary/30 border-t-secondary" />
+          <span className="text-sm text-content-muted">Caricamento voti...</span>
         </div>
-      );
-    });
-
-    // General / Overview tab
-    gamePages.push(
-      <div className="p-6 md:p-8 space-y-6">
-        {/* Header and stats */}
-        <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6">
-          <div className="flex-1">
-            <h2 className="text-2xl font-bold ds-text-content">I tuoi voti</h2>
-            <p className="ds-text-muted text-sm mt-1">Vota i giochi e crea la tua classifica</p>
-          </div>
-
-          {/* Progress stats */}
-          <div className="px-4 py-2 flex flex-col gap-2 min-w-[160px]">
-            <div className="flex items-center justify-between gap-3 text-xs">
-              <span className="ds-text-muted uppercase tracking-wider">Progresso</span>
-              <span className="font-semibold ds-text-content">{votedCount}/{totalGames} giochi</span>
-            </div>
-            <div className="h-1.5 w-full bg-surface border border-default overflow-hidden">
-              <div className="h-full bg-secondary" style={{ width: `${progressPercent}%` }} />
-            </div>
-            <span className="text-xs ds-text-muted text-right">{progressPercent}%</span>
-          </div>
-        </div>
-
-        {/* Leaderboard Section */}
-        <div className="ds-card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold ds-text-content">
-              La tua classifica
-            </h2>
-            <span className="text-xs ds-text-muted">{totalGames} giochi totali</span>
-          </div>
-          
-          <div className="space-y-2 max-h-[60vh] overflow-y-auto ds-scrollbar-modern pr-2">
-            {yourLeaderboard}
-          </div>
-        </div>
-
-        {/* Quick tips */}
-        <div className="ds-surface p-4 border border-default">
-          <div>
-            <h3 className="font-semibold ds-text-content text-sm">Suggerimenti per la valutazione</h3>
-            <p className="text-sm ds-text-muted mt-1">
-              Clicca su un gioco nelle tab in alto per iniziare a votare. Assegna un punteggio da 0 a 100, 
-              aggiungi pro e contro, e lascia un commento dettagliato.
-            </p>
-          </div>
-        </div>
-      </div>
+      </SectionLayout>
     );
-
-    // Game voting pages
-    gamePages = gamePages.concat(games.map((game, index) => {
-      const vote = votes[index];
-
-      const parsedAuthors = parseAuthors(game.authors);
-      const authorLinks = parsedAuthors.map((author) => (
-        <Link key={author.id} href={`/competizioni/user/?user=${author.id}`} className="ds-link text-sm">
-          {author.name}</Link>
-      ));
-
-      let img_url = GMIApi.getInstance().imageURL + "/thumbnail.png";
-      if(game.image_url) {
-        if(game.image_url.indexOf("http") >= 0)
-          img_url = game.image_url;
-        else
-          img_url = GMIApi.getInstance().imageURL + game.image_url + "?" + Date.now().toString();
-      }
-
-      return (
-        <div key={game.id} className="p-6 h-full overflow-y-auto ds-scrollbar-modern">
-          {/* Game Header Card */}
-          <div className="ds-card-glass p-6 mb-6">
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* Game Thumbnail */}
-              <div className="lg:w-64 flex-shrink-0">
-                <div className="ds-surface overflow-hidden aspect-video lg:aspect-square">
-                  <img 
-                    className="w-full h-full object-cover" 
-                    alt={game.name} 
-                    src={img_url}
-                  />
-                </div>
-              </div>
-
-              {/* Game Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-4 flex-wrap">
-                  <div>
-                    <h2 className="text-2xl font-bold ds-text-content mb-2">{game.name}</h2>
-                    <div className="flex items-center gap-2 text-sm ds-text-muted mb-4">
-                      <span>di {authorLinks}</span>
-                    </div>
-                  </div>
-                  
-                  {/* Vote Status Badge */}
-                  <div className={`ds-chip ${vote.voted ? 'ds-chip-complete' : 'ds-chip-open'}`}>
-                    {vote.voted ? "VOTATO" : "DA VOTARE"}
-                  </div>
-                </div>
-
-                {/* Description */}
-                {game.short_description && (
-                  <div className="mt-4">
-                    <h3 className="text-sm font-semibold ds-text-content mb-2">
-                      Descrizione
-                    </h3>
-                    <p className="ds-text-muted text-sm leading-relaxed">{game.short_description}</p>
-                  </div>
-                )}
-
-                {/* Download Link */}
-                {game.download_url && (
-                  <div className="mt-4 flex items-center gap-2">
-                    <a 
-                      href={game.download_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="ds-link text-sm truncate"
-                    >
-                      {game.download_url}
-                    </a>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Vote Form Section */}
-          <div className="ds-card p-6">
-            <VoteForm {...vote} onChange={onVoteUpdate} index={index} />
-          </div>
-        </div>
-      );
-    }));
   }
+
+  function onVoteUpdate(newVote, index, callback)
+  {
+    GMIApi.getInstance().setVote(query.contest, newVote, data=>
+    {
+      callback(data);
+
+      if(!data.success)
+        return;
+
+      const confirmed = typeof data.confirmed === "boolean"
+        ? data.confirmed
+        : !!newVote.confirmed;
+
+      const newVotes = [...votes];
+      newVotes[index] = {
+        ...newVote,
+        score: newVote.score ?? null,
+        confirmed: confirmed,
+        saved: true,
+      };
+      setVotes(newVotes);
+    })
+  }
+
+  function setVoteDirty(index: number, dirty: boolean)
+  {
+    setDirtyVotes(current => current[index] === dirty
+      ? current
+      : { ...current, [index]: dirty });
+  }
+
+  function selectGame(index: number)
+  {
+    if(gameIndex > 0 && index !== gameIndex)
+      setVoteDirty(gameIndex - 1, false);
+
+    setGameIndex(index);
+    if(typeof window !== "undefined" && window.scrollY > 0)
+      window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // Calculate stats
+  const confirmedCount = votes.filter(v => v.confirmed).length;
+  const draftCount = votes.filter(v => v.saved && !v.confirmed).length;
+  const reconfirmCount = votes.filter((v, index) => v.confirmed && dirtyVotes[index]).length;
+  const totalGames = games.length;
+  const progressPercent = totalGames ? Math.round((confirmedCount / totalGames) * 100) : 0;
+  const averageScore = confirmedCount
+    ? Math.round(votes.filter(v => v.confirmed).reduce((sum, vote) => sum + Number(vote.score ?? 0), 0) / confirmedCount)
+    : 0;
+  const scoreOf = (vote) => vote?.score === null || vote?.score === undefined
+    ? -1
+    : Number(vote.score);
+
+  // Sort leaderboard data
+  const leaderboardData = votes.map((vote, index) => ({
+    game: games[index],
+    vote: votes[index],
+    originalIndex: index
+  })).sort((e1, e2) => scoreOf(e2.vote) - scoreOf(e1.vote));
+
+  const selectedGame = gameIndex > 0 ? games[gameIndex - 1] : null;
+  const selectedVote = gameIndex > 0 ? votes[gameIndex - 1] : null;
+  const extendedDescription = selectedGame?.description?.trim();
+  const hasExtendedDescription = !!extendedDescription;
 
   return (
     <SectionLayout {...shellProps}>
-    <div className="ds-app-shell">
-      <div>
-        {/* Tabs Navigation */}
-        <div className="ds-header p-2 mb-0 border border-default">
-          <div className="flex flex-row flex-wrap gap-1">
-            {/* General Tab */}
-            <Button
-              variant={gameIndex === 0 ? "ghost" : "secondary"}
-              onClick={() => setGameIndex(0)}
-            >
-              <span>Panoramica</span>
-              <span className="ml-1.5 px-1.5 py-0.5 text-xs bg-surface border border-default ds-text-content">
-                {games.length}
-              </span>
-            </Button>
+      <ContestInfoSection
+        contest={contest}
+        totalGames={totalGames}
+        confirmedCount={confirmedCount}
+        draftCount={draftCount}
+        showProgress
+      />
 
-            {/* Divider */}
-            <div className="w-px h-8 bg-border mx-1 self-center" />
+      <div className="grid items-start gap-6 pb-12 lg:grid-cols-[17rem_minmax(0,1fr)]">
 
-            {/* Game Tabs */}
+        {/* Mobile navigation */}
+        <div className="min-w-0 lg:hidden">
+          <label
+            htmlFor="contest-game-select"
+            className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted"
+          >
+            Vai al gioco
+          </label>
+          <select
+            id="contest-game-select"
+            value={gameIndex}
+            onChange={(event) => selectGame(Number(event.target.value))}
+            aria-describedby="contest-game-select-hint"
+            className="ds-select mt-2 w-full !text-base sm:!text-sm"
+          >
+            <option value={0}>
+              Panoramica · {confirmedCount}/{totalGames} confermati
+            </option>
             {games.map((game, index) => {
               const vote = votes[index];
-              const isActive = gameIndex === index + 1;
-              const isVoted = vote?.voted;
-              
+              const dirty = !!dirtyVotes[index];
+              const label = getVoteLabel(vote, dirty);
+              const hasScore = vote?.score !== null && vote?.score !== undefined;
+
               return (
-                <Button
-                  variant={isActive ? "ghost" : "secondary"}
-                  key={game.id}
-                  onClick={() => setGameIndex(index + 1)}
-                  title={game.name}
-                >
-                  <span className="truncate">{game.name}</span>
-                  {!isVoted && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-error flex-shrink-0" />
-                  )}
-                </Button>
+                <option key={game.id} value={index + 1}>
+                  {game.name} · {label}
+                  {hasScore ? ` · ${vote.score}/100` : ""}
+                </option>
               );
             })}
-          </div>
+          </select>
+          <p id="contest-game-select-hint" className="mt-2 text-[11px] leading-relaxed text-content-muted">
+            Scegli un gioco per votarlo o controllare lo stato del tuo voto.
+          </p>
         </div>
 
-        {/* Content Area */}
-        <div className="ds-surface-muted min-h-[calc(100vh-200px)]">
-          {gamePages[gameIndex]}
+        {/* Desktop sidebar */}
+        <aside className="hidden lg:block">
+          <div className="sticky top-20 border border-default bg-surface">
+            <div className="flex items-center justify-between gap-3 border-b border-default px-4 py-3">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted">
+                Giochi
+              </span>
+              <span className="font-mono text-xs tabular-nums text-content-muted">
+                {confirmedCount}/{totalGames}
+              </span>
+            </div>
+
+            <nav
+              aria-label="Giochi della competizione"
+              className="max-h-[calc(100vh-13rem)] overflow-y-auto ds-scrollbar-modern"
+            >
+              <button
+                type="button"
+                onClick={() => selectGame(0)}
+                aria-current={gameIndex === 0 ? "true" : undefined}
+                className={`flex w-full items-center gap-2.5 border-l-2 px-3 py-2.5 text-left text-sm transition-colors ${
+                  gameIndex === 0
+                    ? "border-l-secondary bg-surface-muted font-semibold text-content"
+                    : "border-l-transparent text-content-muted hover:bg-content/5 hover:text-content"
+                }`}
+              >
+                <GridIcon size={14} className="shrink-0" />
+                <span className="min-w-0 flex-1 truncate">Panoramica</span>
+                <span className="font-mono text-xs tabular-nums">{totalGames}</span>
+              </button>
+
+              {games.map((game, index) => {
+                const isActive = gameIndex === index + 1;
+                const vote = votes[index];
+                const dirty = !!dirtyVotes[index];
+                const confirmed = !!vote?.confirmed;
+                const label = getVoteLabel(vote, dirty);
+                const dotColor = confirmed
+                  ? dirty ? "bg-accent-warm" : "bg-success"
+                  : dirty || hasVoteData(vote) ? "bg-accent-warm" : "bg-gray-300";
+
+                return (
+                  <button
+                    type="button"
+                    key={game.id}
+                    onClick={() => selectGame(index + 1)}
+                    aria-current={isActive ? "true" : undefined}
+                    title={`${game.name} · ${label}`}
+                    className={`flex w-full items-center gap-2.5 border-l-2 px-3 py-2 text-left transition-colors ${
+                      isActive
+                        ? "border-l-secondary bg-surface-muted text-content"
+                        : "border-l-transparent text-content-muted hover:bg-content/5 hover:text-content"
+                    }`}
+                  >
+                    <img
+                      src={gameImageUrl(game)}
+                      alt=""
+                      loading="lazy"
+                      className="h-8 w-11 shrink-0 border border-default object-cover"
+                    />
+                    <span className={`min-w-0 flex-1 truncate text-[13px] ${isActive ? "font-semibold" : "font-medium"}`}>
+                      {game.name}
+                    </span>
+                    <span className="flex shrink-0 items-center gap-1.5">
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${dotColor}`}
+                        aria-label={label}
+                      />
+                      <span
+                        className={`w-6 text-right font-mono text-xs tabular-nums ${
+                          dirty || (!confirmed && vote?.score !== null)
+                            ? "font-semibold text-accent-warm"
+                            : ""
+                        }`}
+                      >
+                        {vote?.score !== null && vote?.score !== undefined ? vote.score : "—"}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            <div className="border-t border-default px-4 py-3">
+              <div className="flex items-center justify-between gap-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted">
+                <span>Confermati</span>
+                <span className="font-mono tabular-nums">{progressPercent}%</span>
+              </div>
+              <div className="mt-2 h-1 w-full bg-surface-muted">
+                <div
+                  className="h-full bg-[#007A69] transition-all duration-500"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* Content */}
+        <div className="min-w-0">
+          {!selectedGame || !selectedVote ? (
+            <section className="border border-default bg-surface">
+              <div className="flex flex-col gap-4 border-b border-default p-4 sm:flex-row sm:items-end sm:justify-between sm:p-5">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted">
+                    Panoramica
+                  </p>
+                  <h2 className="mt-1 text-2xl font-bold text-content">La tua classifica</h2>
+                  <p className="mt-1 text-sm text-content-muted">
+                    {confirmedCount === totalGames
+                      ? "Hai confermato tutte le valutazioni."
+                      : `Ti mancano ${totalGames - confirmedCount} valutazioni da confermare.`}
+                  </p>
+                  {draftCount > 0 && (
+                    <p className="mt-1 text-xs font-medium text-accent-warm">
+                      {draftCount} {draftCount === 1 ? "bozza" : "bozze"} da confermare.
+                    </p>
+                  )}
+                  {reconfirmCount > 0 && (
+                    <p className="mt-1 text-xs font-medium text-accent-warm">
+                      {reconfirmCount} {reconfirmCount === 1 ? "voto modificato" : "voti modificati"} da riconfermare.
+                    </p>
+                  )}
+                </div>
+
+                <div className="w-full shrink-0 sm:w-56">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted">
+                      Progresso
+                    </span>
+                    <span className="font-mono text-xs font-semibold tabular-nums text-content">
+                      {confirmedCount}/{totalGames}
+                    </span>
+                  </div>
+                  <div className="mt-2 h-1.5 w-full bg-surface-muted">
+                    <div
+                      className="h-full bg-[#007A69] transition-all duration-500"
+                      style={{ width: `${progressPercent}%` }}
+                    />
+                  </div>
+                  <div className="mt-1 flex justify-between text-[10px] text-content-muted">
+                    <span>{progressPercent}% confermato</span>
+                    {confirmedCount > 0 && <span>Media {averageScore}</span>}
+                  </div>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-default text-[10px] uppercase tracking-widest text-content-muted">
+                      <th className="w-12 py-2 pl-4 pr-2 text-left font-semibold sm:w-16">Pos</th>
+                      <th className="py-2 pr-2 text-left font-semibold">Gioco</th>
+                      <th className="w-16 py-2 pr-4 text-right font-semibold sm:w-20">Voto</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leaderboardData.map((elem, rank) => {
+                      const dirty = !!dirtyVotes[elem.originalIndex];
+                      const confirmed = !!elem.vote.confirmed;
+                      const label = getVoteLabel(elem.vote, dirty);
+                      const hasScore = elem.vote.score !== null && elem.vote.score !== undefined;
+
+                      return (
+                        <tr
+                          key={elem.game.id}
+                          onClick={() => selectGame(elem.originalIndex + 1)}
+                          className="group cursor-pointer border-b border-default transition-colors last:border-0 hover:bg-content/5"
+                        >
+                          <td className="py-2 pl-4 pr-2">
+                            <span
+                              className={`inline-flex h-7 w-7 items-center justify-center text-xs font-bold ${
+                                rank === 0
+                                  ? "ds-trophy-gold"
+                                  : rank === 1
+                                    ? "ds-trophy-silver"
+                                    : rank === 2
+                                      ? "ds-trophy-bronze"
+                                      : "text-content-muted"
+                              }`}
+                            >
+                              {rank + 1}
+                            </span>
+                          </td>
+                          <td className="py-2 pr-2">
+                            <div className="flex min-w-0 items-center gap-2.5">
+                              <img
+                                src={gameImageUrl(elem.game)}
+                                alt=""
+                                loading="lazy"
+                                className="h-9 w-14 shrink-0 border border-default object-cover"
+                              />
+                              <span className="min-w-0">
+                                <button
+                                  type="button"
+                                  onClick={(event) => {
+                                    event.stopPropagation();
+                                    selectGame(elem.originalIndex + 1);
+                                  }}
+                                  className="block max-w-full truncate text-left text-sm font-semibold text-content transition-colors group-hover:text-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+                                >
+                                  {elem.game.name}
+                                </button>
+                                <span className={`mt-0.5 block text-[10px] uppercase tracking-widest ${
+                                  confirmed && !dirty
+                                    ? "text-success"
+                                    : hasVoteData(elem.vote) || dirty
+                                      ? "text-accent-warm"
+                                      : "text-content-muted"
+                                }`}>
+                                  {label}
+                                </span>
+                              </span>
+                            </div>
+                          </td>
+                          <td className="py-2 pr-4 text-right">
+                            <span
+                              className={`font-mono text-lg font-bold tabular-nums ${
+                                hasScore
+                                  ? confirmed && !dirty
+                                    ? "text-content"
+                                    : "text-accent-warm"
+                                  : "text-content-muted"
+                              }`}
+                            >
+                              {hasScore ? elem.vote.score : "—"}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="border-t border-default px-4 py-3 text-[11px] text-content-muted sm:px-5">
+                Seleziona un gioco per assegnare il punteggio, aggiungere pro e contro e lasciare un commento.
+              </div>
+            </section>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {/* Game header */}
+              <section className="border border-default bg-surface p-4 sm:p-5">
+                <div className="flex items-start gap-3 sm:gap-5">
+                  <div className="h-16 w-24 shrink-0 overflow-hidden border border-default bg-surface-muted sm:h-28 sm:w-44">
+                    <img
+                      src={gameImageUrl(selectedGame)}
+                      alt={selectedGame.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+                      <div className="min-w-0">
+                        <h2 className="text-lg font-bold leading-tight text-content sm:text-2xl">
+                          {selectedGame.name}
+                        </h2>
+                        <p className="mt-1 text-xs text-content-muted sm:text-sm">
+                          di{" "}
+                          {parseAuthors(selectedGame.authors).map((author, index, authors) => (
+                            <React.Fragment key={author.id}>
+                              <Link
+                                href={`/competizioni/user/?user=${author.id}`}
+                                className="ds-link"
+                              >
+                                {author.name}
+                              </Link>
+                              {index < authors.length - 1 && (
+                                <span>{index === authors.length - 2 ? " e " : ", "}</span>
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </p>
+                      </div>
+
+                      <VoteStatus
+                        vote={selectedVote}
+                        dirty={!!dirtyVotes[gameIndex - 1]}
+                      />
+                    </div>
+
+                    {selectedGame.short_description && (
+                      <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-content-muted sm:line-clamp-3">
+                        {selectedGame.short_description}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {hasExtendedDescription && (
+                  <div className="mt-4 border-t border-default pt-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted">
+                      Descrizione estesa
+                    </p>
+                    <p className="mt-1 whitespace-pre-line break-words text-sm leading-relaxed text-content">
+                      {extendedDescription}
+                    </p>
+                  </div>
+                )}
+
+                {selectedGame.download_url && (
+                  <div className="mt-4">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      href={selectedGame.download_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={`Scarica ${selectedGame.name}`}
+                      icon={<DownloadIcon size={14} />}
+                    >
+                      Scarica
+                    </Button>
+                  </div>
+                )}
+              </section>
+
+              {/* Vote form */}
+              <section className="border border-default bg-surface p-4 sm:p-5">
+                <VoteForm
+                  key={selectedGame.id}
+                  {...selectedVote}
+                  onChange={onVoteUpdate}
+                  onDirtyChange={setVoteDirty}
+                  index={gameIndex - 1}
+                />
+              </section>
+            </div>
+          )}
         </div>
       </div>
-    </div>
     </SectionLayout>
   );
 }

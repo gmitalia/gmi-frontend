@@ -22,16 +22,9 @@ function orderByAuthor(firstElement: Game, secondElement: Game) {
 }
 
 function orderByTitle(firstElement: Game, secondElement: Game) {
-  const autorA = firstElement.title.toUpperCase(); // Ignora maiuscole/minuscole
-  const autorB = secondElement.author.toUpperCase();
-
-  if (autorA < autorB) {
-    return -1;
-  }
-  if (autorA > autorB) {
-    return 1;
-  }
-  return 0;
+  return firstElement.title.localeCompare(secondElement.title, "it", {
+    sensitivity: "base",
+  });
 }
 
 export default function Showcase({ games }: ShowcaseProps) {

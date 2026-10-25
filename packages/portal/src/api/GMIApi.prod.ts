@@ -2,6 +2,7 @@ import { Config } from "../Constants"
 import GMIApiParent from "./GMIApiParent"
 import apiClient from "../services/ApiClient"
 import { TokenService } from "../services/TokenService"
+import { parseUserLinks } from "../userLinks"
 
 export default class GMIApiProd extends GMIApiParent {
   apiURL = "https://gmitalia.altervista.org/competizioni/api/v1/"
@@ -26,10 +27,20 @@ export default class GMIApiProd extends GMIApiParent {
     this.cache[key] = data
   }
 
+  /** Elimina dalla cache RAM tutte le risposte degli endpoint indicati. */
+  _invalidateCache(...prefixes) {
+    Object.keys(this.cache).forEach(key => {
+      if (prefixes.some(prefix => key.startsWith(prefix))) {
+        delete this.cache[key]
+        delete this.pendingRequests[key]
+      }
+    })
+  }
+
   /* ───────── Auth (promise-based) ───────── */
 
   async getMe() {
-    const data = await apiClient.get(this.apiURL + "get_userinfo.php")
+    const data = await apiClient.get(this.apiURL + "get_me.php")
     // Normalizza response al formato AccountInfo atteso dal frontend
     if (data.success && data.user) {
       const u = data.user
@@ -39,6 +50,7 @@ export default class GMIApiProd extends GMIApiParent {
         forum_id: u.forum_id,
         admin: !!u.admin,
         approved: u.approved !== undefined ? !!u.approved : true,
+        links: parseUserLinks(u.links),
         discord_info: u.discord_info || {
           id: u.user_id,
           username: u.name || u.user_name,
@@ -80,7 +92,13 @@ export default class GMIApiProd extends GMIApiParent {
   }
 
   async exchangeCode(code) {
-    const data = await apiClient.post(this.apiURL + "auth.php?action=exchange", { code })
+    // Endpoint pubblico: il 401 significa "code non valido/scaduto",
+    // non un access token da rinnovare.
+    const data = await apiClient.post(
+      this.apiURL + "auth.php?action=exchange",
+      { code },
+      { skipAuth: true, skipAuthRefresh: true }
+    )
     return data
   }
 
@@ -117,21 +135,26 @@ export default class GMIApiProd extends GMIApiParent {
     }
 
     if (this.pendingRequests[cacheKey]) {
-      this.pendingRequests[cacheKey].push(callback)
+      this.pendingRequests[cacheKey].callbacks.push(callback)
       return
     }
 
-    this.pendingRequests[cacheKey] = [callback]
+    const request = { callbacks: [callback] }
+    this.pendingRequests[cacheKey] = request
 
     try {
       const data = await apiClient.get(url)
-      this._setInCache(cacheKey, data)
-      const callbacks = this.pendingRequests[cacheKey]
-      delete this.pendingRequests[cacheKey]
-      callbacks.forEach(cb => cb(data))
+
+      if (this.pendingRequests[cacheKey] === request) {
+        this._setInCache(cacheKey, data)
+        delete this.pendingRequests[cacheKey]
+      }
+
+      request.callbacks.forEach(cb => cb(data))
     } catch (error) {
       console.error("GMIApi Error:", error)
-      delete this.pendingRequests[cacheKey]
+      if (this.pendingRequests[cacheKey] === request)
+        delete this.pendingRequests[cacheKey]
     }
   }
 
@@ -149,9 +172,23 @@ export default class GMIApiProd extends GMIApiParent {
     this._fetchWithCache(cacheKey, this.apiURL + "get_contests.php?" + params.toString(), callback)
   }
 
-  getContests(callback) {
-    const cacheKey = this._getCacheKey("get_contests")
-    this._fetchWithCache(cacheKey, this.apiURL + "get_contests.php", callback)
+  getContests(callback, limit) {
+    const params = new URLSearchParams()
+
+    if (limit !== undefined) {
+      if (!Number.isInteger(limit) || limit <= 0) {
+        callback({ success: false, error: "Invalid 'limit' parameter" })
+        return
+      }
+      params.set("limit", String(limit))
+    }
+
+    const query = params.toString()
+    // La chiave include il limit: la home (limit=3) e la pagina competizioni
+    // (senza limit) mantengono due voci di cache RAM distinte.
+    const cacheKey = this._getCacheKey("get_contests", query ? params : undefined)
+    const url = this.apiURL + "get_contests.php" + (query ? "?" + query : "")
+    this._fetchWithCache(cacheKey, url, callback)
   }
 
   getParticipants(contest, onlyMe, callback) {
@@ -231,10 +268,17 @@ export default class GMIApiProd extends GMIApiParent {
 
   /* ───────── Auth-required POST endpoints ───────── */
 
-  setUserValues(user_id, user_name, callback) {
-    apiClient.post(this.apiURL + "set_user_values.php", { user_id, user_name })
-      .then(data => callback(data))
-      .catch(error => console.error("GMIApi Error:", error))
+  setUserValues(user_id, values, callback) {
+    apiClient.post(this.apiURL + "set_user_values.php", { user_id, ...values })
+      .then(data => {
+        if (data.success)
+          this._invalidateCache("get_user_info")
+        callback(data)
+      })
+      .catch(error => {
+        console.error("GMIApi Error:", error)
+        callback({ success: false, error: "Errore di rete durante il salvataggio del profilo." })
+      })
   }
 
   setVote(contest, voteObject, callback) {
@@ -243,15 +287,23 @@ export default class GMIApiProd extends GMIApiParent {
 
     apiClient.post(url, {
       vote: {
-        score: voteObject.score,
+        score: voteObject.score ?? null,
         comment: voteObject.comment,
-        pros: JSON.stringify(voteObject.pros),
-        cons: JSON.stringify(voteObject.cons),
-        voted: voteObject.voted,
+        pros: JSON.stringify(voteObject.pros || []),
+        cons: JSON.stringify(voteObject.cons || []),
+        confirmed: !!voteObject.confirmed,
       },
     })
-      .then(data => callback(data))
-      .catch(error => console.error("GMIApi Error:", error))
+      .then(data => {
+        if (data.success) {
+          this._invalidateCache("get_votes", "get_results")
+        }
+        callback(data)
+      })
+      .catch(error => {
+        console.error("GMIApi Error:", error)
+        callback({ success: false, error: "Errore di rete durante il salvataggio del voto." })
+      })
   }
 
   setParticipationData(contest, game, callback) {
@@ -268,7 +320,10 @@ export default class GMIApiProd extends GMIApiParent {
 
     apiClient.postFormData(this.apiURL + "set_participation_data.php?" + params.toString(), formData)
       .then(data => callback(data))
-      .catch(error => console.error("GMIApi Error:", error))
+      .catch(error => {
+        console.error("GMIApi Error:", error)
+        callback({ success: false, error: "Errore di rete durante il salvataggio delle modifiche." })
+      })
   }
 
   deleteParticipationData(contest, callback) {
@@ -280,8 +335,16 @@ export default class GMIApiProd extends GMIApiParent {
 
   publishResults(contestId, callback) {
     const params = new URLSearchParams({ contest: contestId })
-    apiClient.post(this.apiURL + "publish_results.php?" + params.toString(), {})
-      .then(data => callback(data))
-      .catch(error => console.error("GMIApi Error:", error))
+    apiClient.post(this.apiURL + "set_results.php?" + params.toString(), {})
+      .then(data => {
+        if (data.success) {
+          this._invalidateCache("get_votes", "get_results", "get_contests", "get_games", "get_participants")
+        }
+        callback(data)
+      })
+      .catch(error => {
+        console.error("GMIApi Error:", error)
+        callback({ success: false, error: "Errore di rete durante la pubblicazione dei risultati." })
+      })
   }
 }

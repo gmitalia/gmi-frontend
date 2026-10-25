@@ -10,6 +10,8 @@ const VARIANT_MAP = {
     "bg-transparent text-gray-100 border border-white/30 hover:border-white/60 hover:bg-white/10",
   ghost:
     "bg-transparent text-gray-500 border border-transparent hover:text-gray-900 hover:bg-gray-100",
+  ghostLight:
+    "bg-transparent text-gray-300 border border-transparent hover:text-white hover:bg-white/10",
   text: "text-gray-500 hover:text-gray-900 hover:underline underline-offset-4",
   danger: "text-error hover:bg-error/10 border border-error/30",
   success: "text-success hover:bg-success/10 border border-success/30",

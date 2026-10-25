@@ -20,6 +20,9 @@ type GameData =
 	judges_data: JudgeData[];
 	games_count: number;
 	public: boolean;
+	votes_confirmed?: number;
+	votes_required?: number;
+	all_votes_confirmed?: boolean;
  };
 
 type Partecipation =
@@ -94,12 +97,12 @@ type Vote =
 	game_id: string; // L'ID del gioco votato
 	created_at: string; // La data in cui il voto è stato creato
 	updated_at: string; // La data dell'aggiornamento del voto
-	score: string; // Il punteggio assegnato al gioco
+	score: string | null; // Il punteggio assegnato al gioco (null in bozza)
 	comment: string; // Il commento lasciato dall'utente
 	pros: string[]; // I punti positivi menzionati nel voto
 	cons: string[]; // I punti negativi menzionati nel voto
 	judge_name: string; // Il nome del giudice
-	voted: boolean;
+	confirmed: boolean; // Se il voto è stato confermato dal giudice
 }
 
 
@@ -116,6 +119,20 @@ type User =
 }
 
 
+type UserLinkPlatform =
+	| "x"
+	| "bluesky"
+	| "itchio"
+	| "gamejolt"
+	| "indiexpo"
+	| "youtube"
+	| "twitch"
+	| "steam"
+	| "github"
+	| "website"
+
+type UserLinks = Partial<Record<UserLinkPlatform, string>>
+
 type UserInfo =
 {
 	user_id: string
@@ -125,6 +142,7 @@ type UserInfo =
 	games: Game[]
 	user_avatar: string
 	votes: [{contest_id: number}]
+	links?: UserLinks
 }
 
 type AccountInfo =
@@ -133,6 +151,7 @@ type AccountInfo =
 	user_name?: string;
 	forum_id: string | null;
 	admin: boolean;
+	links?: UserLinks;
 	discord_info:
 	{
 		id: string;

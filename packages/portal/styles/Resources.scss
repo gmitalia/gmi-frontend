@@ -1,6 +1,6 @@
 /**
  * Card delle risorse - stesso linguaggio delle card del blog:
- * superficie bianca, angoli netti, etichetta categoria maiuscola con filetto colorato.
+ * superficie bianca e angoli netti.
  */
 .resource-card {
   background-color: var(--white);
@@ -21,34 +21,9 @@
     outline-offset: 2px;
   }
 
-  &__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin: calc(var(--defaultSpace) / 2) calc(var(--defaultSpace) / 2) 0;
-  }
-
-  &__category {
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 0.07em;
-    font-weight: 600;
-    color: #23233a;
-    border-bottom: 2px solid var(--cloudGrayDark);
-    padding-bottom: 2px;
-    width: fit-content;
-  }
-
-  &__icon {
-    font-size: 0.95rem;
-    line-height: 1;
-    flex: none;
-  }
-
   &__body {
     flex: 1;
-    padding: 0 calc(var(--defaultSpace) / 2);
+    padding: calc(var(--defaultSpace) / 2) calc(var(--defaultSpace) / 2) 0;
   }
 
   &__title {

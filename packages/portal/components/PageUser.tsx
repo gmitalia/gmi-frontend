@@ -12,6 +12,11 @@ import UserStats from "./User/UserStats";
 import UserGames from "./User/UserGames";
 import moment from "moment";
 import UserVotes from "./User/UserVotes";
+import UserLinks from "./User/UserLinks";
+import ProfileEditor from "./User/ProfileEditor";
+import { parseUserLinks } from "../src/userLinks";
+import { Toast } from "./commons/Toast";
+import { CloseIcon, EditIcon } from "./commons/Icons";
 import ContestHeroBackground from "./Contest/ContestHeroBackground";
 
 const UserHeroSkeleton = () => (
@@ -72,29 +77,10 @@ export default function PageUser(props) {
   let [isHistorical, setIsHistorical] = useState(false);
   let [contests, setContests] = useState([]);
 
-  let [editName, setEditName] = useState(false);
-  let [name, setName] = useState("");
+  let [isEditingProfile, setIsEditingProfile] = useState(false);
+  let [toast, setToast] = useState<string | null>(null);
 
   const isOwnProfile = userInfo?.user?.user_id == user?.user_id;
-
-  const handleSaveName = () => {
-    if (name.trim() === "") return;
-    if (name !== user.user_name) {
-      GMIApi.getInstance().setUserValues(user.user_id, name, data => {
-        if (data.success) {
-          setUser({ ...user, user_name: name });
-          setEditName(false);
-        }
-      });
-    } else {
-      setEditName(false);
-    }
-  }
-
-  const handleCancelEdit = () => {
-    setName(user.user_name);
-    setEditName(false);
-  }
 
   useEffect(() => {
     // 1. Fetch User Info
@@ -107,8 +93,8 @@ export default function PageUser(props) {
         }
         if (rawUser.votes)
           user.votes = JSON.parse(rawUser.votes)
+        user.links = parseUserLinks(rawUser.links);
         setUser(user);
-        setName(user.user_name);
 
         // 2. Fetch All Contests (Centralized)
         GMIApi.getInstance().getContests(contestData => {
@@ -200,36 +186,9 @@ export default function PageUser(props) {
                 />
 
                 <div className="min-w-0">
-                  {editName ? (
-                    <div className="flex w-full max-w-md flex-col gap-2 sm:flex-row">
-                      <input
-                        type="text"
-                        autoFocus
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") handleSaveName();
-                          if (e.key === "Escape") handleCancelEdit();
-                        }}
-                        className="w-full border border-white/20 bg-white/10 px-3 py-2 text-lg font-semibold text-white outline-none transition-colors placeholder:text-gray-500 focus:border-white/50"
-                      />
-                      <div className="flex shrink-0 gap-2">
-                        <Button variant="light" size="sm" onClick={handleSaveName}>Salva</Button>
-                        <Button variant="outlineLight" size="sm" onClick={handleCancelEdit}>Annulla</Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-wrap items-center gap-3">
-                      <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl">
-                        {user.user_name}
-                      </h1>
-                      {isOwnProfile && (
-                        <Button variant="outlineLight" size="sm" onClick={() => setEditName(true)}>
-                          Modifica
-                        </Button>
-                      )}
-                    </div>
-                  )}
+                  <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl">
+                    {user.user_name}
+                  </h1>
 
                   <div className="mt-4 flex flex-wrap items-center gap-2">
                     {!isHistorical &&(<span className="border border-white/15 bg-white/[0.04] px-2.5 py-1.5 text-[10px] font-semibold uppercase leading-none tracking-[0.18em] text-gray-300">
@@ -242,6 +201,8 @@ export default function PageUser(props) {
                       </span>
                     )}
                   </div>
+
+                  <UserLinks links={user.links} userName={user.user_name} />
                 </div>
               </div>
 
@@ -250,6 +211,21 @@ export default function PageUser(props) {
                 <UserStats userInfo={user} variant="hero" />
               </div>
             </div>
+
+            {isOwnProfile && (
+              <div className="mt-6 flex justify-end">
+                <Button
+                  variant="ghostLight"
+                  size="sm"
+                  onClick={() => setIsEditingProfile((current) => !current)}
+                  aria-expanded={isEditingProfile}
+                  aria-controls={isEditingProfile ? "profile-edit-form" : undefined}
+                  icon={isEditingProfile ? <CloseIcon size={14} /> : <EditIcon size={14} />}
+                >
+                  {isEditingProfile ? "Chiudi modifica" : "Modifica profilo"}
+                </Button>
+              </div>
+            )}
           </div>
         </section>
       }
@@ -261,9 +237,22 @@ export default function PageUser(props) {
       ]}
     >
       <div className="flex w-full flex-col gap-8 pb-12">
+        {isOwnProfile && isEditingProfile && (
+          <ProfileEditor
+            user={user}
+            onCancel={() => setIsEditingProfile(false)}
+            onSaved={({ user_name, links }) => {
+              setUser((current) => current ? { ...current, user_name, links } : current);
+              setIsEditingProfile(false);
+              setToast("Profilo aggiornato con successo.");
+            }}
+          />
+        )}
         <UserGames userInfo={user} contests={contests} />
         <UserVotes userInfo={user} contests={contests} />
       </div>
+
+      {toast && <Toast message={toast} onClose={() => setToast(null)} />}
     </SectionLayout>
   );
 }

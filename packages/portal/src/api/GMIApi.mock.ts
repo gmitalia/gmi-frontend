@@ -3,6 +3,7 @@ import { store } from "../store";
 import { authActions } from "../slices/authSlice";
 import GMIApiParent from "./GMIApiParent"
 import { MockContest, MockGames, MockPartecipants, MockUsers, MockVideos } from "./MockDatabase";
+import { USER_LINK_PLATFORMS } from "../userLinks";
 
 // Mock token pair
 const MOCK_TOKENS = {
@@ -18,28 +19,44 @@ export default class GMIApiMock extends GMIApiParent
   prizesURL = "https://gmitalia.altervista.org/competizioni/prizes/";
   forumProfileURL = "https://gmitalia.altervista.org/forum/memberlist.php?mode=viewprofile&u=";
 
+  mockUserLinks: Record<string, UserLinks> = {
+    "15": {
+      website: "https://example.com/simsure",
+      github: "https://github.com/simsure",
+    },
+    "16": {
+      x: "https://x.com/mockuser",
+      itchio: "https://mockuser.itch.io",
+      website: "https://example.com",
+    },
+  };
+
+  mockUserNames: Record<string, string> = {};
+
   /* ───────── Auth ───────── */
 
   getMe()
   {
-    // Simula risposta da get_userinfo.php
+    // Simula risposta da get_me.php
+    const mockName = this.mockUserNames["16"] ?? "MockUser";
     const mockUser = {
       user_id: "16",
-      name: "MockUser",
+      name: mockName,
       avatar: null,
       admin: true,
       approved: true,
       forum_id: "1",
+      links: this.mockUserLinks["16"] ?? {},
       discord_info: {
         id: "16",
-        username: "MockUser",
+        username: mockName,
         avatar: null,
         discriminator: "0",
         public_flags: 0,
         flags: 0,
         banner: null,
         accent_color: null,
-        global_name: "MockUser",
+        global_name: mockName,
         avatar_decoration_data: null,
         banner_color: null,
         clan: null,
@@ -133,12 +150,26 @@ export default class GMIApiMock extends GMIApiParent
     });
   }
 
-  getContests(callback)
+  getContests(callback, limit)
   {
+    if (limit !== undefined && (!Number.isInteger(limit) || limit <= 0))
+    {
+      callback(
+      {
+        success: false,
+        error: "Invalid 'limit' parameter"
+      });
+      return;
+    }
+
+    const contests = [...MockContest].sort((a, b) =>
+      String(b.end_at).localeCompare(String(a.end_at))
+    );
+
     callback(
     {
       success: true,
-      contests: MockContest
+      contests: limit === undefined ? contests : contests.slice(0, limit)
     });
   }
 
@@ -216,16 +247,53 @@ export default class GMIApiMock extends GMIApiParent
 
   getUserInfo(userId, callback)
   {
+    const users = MockUsers.reduce((acc, obj)=>
+      {
+        if(!acc.some(item => item.id === obj.id))
+          acc.push(obj)
+        return acc
+      }, []).filter(o=> o.id == userId).map((obj) => ({
+        ...obj,
+        user_id: obj.id,
+        user_name: this.mockUserNames[obj.id] ?? obj.name,
+        user_discord_id: obj.discord_id,
+        user_forum_id: obj.forum_id,
+        user_avatar: null,
+        games: "[]",
+        votes: "[]",
+        links: this.mockUserLinks[obj.id] ?? {},
+      }));
+
     callback(
     {
       success: true,
-      users: MockUsers.reduce((acc, obj)=>
-          {
-            if(!acc.some(item => item.id === obj.id))
-              acc.push(obj)
-            return acc
-          }, []).filter(o=> o.id == userId)
+      users,
     });
+  }
+
+  setUserValues(userId, values, callback)
+  {
+    const key = String(userId);
+    const current = { ...(this.mockUserLinks[key] ?? {}) };
+
+    if (typeof values.user_name === "string" && values.user_name.trim())
+      this.mockUserNames[key] = values.user_name.trim();
+
+    if (values.links) {
+      for (const [platform, rawValue] of Object.entries(values.links)) {
+        if (!(USER_LINK_PLATFORMS as readonly string[]).includes(platform))
+          continue;
+
+        const url = typeof rawValue === "string" ? rawValue.trim() : "";
+        if (url)
+          (current as Record<string, string>)[platform] = url;
+        else
+          delete (current as Record<string, string>)[platform];
+      }
+    }
+
+    this.mockUserLinks[key] = current;
+    callback({ success: true, links: current, user_name: this.mockUserNames[key] });
   }
 
   getParticipation(contest, callback)
@@ -262,6 +330,7 @@ export default class GMIApiMock extends GMIApiParent
           pros: '["8"]',
           cons: '["4"]',
           judge_name: "MockJudge",
+          confirmed: true,
         },
       ],
     });
@@ -304,11 +373,11 @@ export default class GMIApiMock extends GMIApiParent
       {
         vote:
         {
-          score: voteObject.score,
+          score: voteObject.score ?? null,
           comment: voteObject.comment,
-          pros: JSON.stringify(voteObject.pros),
-          cons: JSON.stringify(voteObject.cons),
-          voted: voteObject.voted,
+          pros: JSON.stringify(voteObject.pros || []),
+          cons: JSON.stringify(voteObject.cons || []),
+          confirmed: !!voteObject.confirmed,
         },
       }),
     })
@@ -341,7 +410,10 @@ export default class GMIApiMock extends GMIApiParent
     })
       .then((response) => response.json())
       .then((data) => callback(data))
-      .catch((error) => console.error("GMIApi Error:", error));
+      .catch((error) => {
+        console.error("GMIApi Error:", error);
+        callback({ success: false, error: "Errore di rete durante il salvataggio delle modifiche." });
+      });
   }
 
   deleteParticipationData(contest, callback)
@@ -395,13 +467,31 @@ export default class GMIApiMock extends GMIApiParent
   }
 
   publishResults(contestId, callback) {
-    const contest = MockContest.find(c => String(c.id) === String(contestId));
-    if (contest) {
-      contest.public = "1";
-      contest.is_completed = true;
-      callback({ success: true, message: "Results published successfully" });
-    } else {
-      callback({ success: false, error: "Contest not found" });
-    }
+    const params = new URLSearchParams({ contest: contestId });
+    fetch(this.apiURL + "set_results.php?" + params.toString(),
+    {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify({}),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const contest = MockContest.find(c => String(c.id) === String(contestId));
+          if (contest) {
+            contest.public = "1";
+            contest.is_completed = true;
+          }
+        }
+        callback(data);
+      })
+      .catch((error) => {
+        console.error("GMIApi Error:", error);
+        callback({ success: false, error: "Errore di rete durante la pubblicazione dei risultati." });
+      });
   }
 }

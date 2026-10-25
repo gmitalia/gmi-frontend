@@ -1,5 +1,12 @@
 import { TokenService } from './TokenService'
 
+type RequestConfig = {
+  /** Non invia il Bearer token (per endpoint pubblici come exchange). */
+  skipAuth?: boolean
+  /** Non tenta il refresh automatico su 401 (l'errore è del payload, non del token). */
+  skipAuthRefresh?: boolean
+}
+
 /**
  * Fetch wrapper with automatic Bearer token injection and 401 auto-refresh.
  * Queues concurrent requests during refresh to avoid multiple refresh calls.
@@ -14,10 +21,10 @@ class ApiClient {
     this._refreshing = null
   }
 
-  async request(url: string, options: RequestInit = {}) {
+  async request(url: string, options: RequestInit = {}, config: RequestConfig = {}) {
     const execute = () => {
       const headers: Record<string, string> = { ...(options.headers as Record<string, string>) }
-      const token = TokenService.getAccessToken()
+      const token = config.skipAuth ? null : TokenService.getAccessToken()
       if (token) {
         headers['Authorization'] = `Bearer ${token}`
       }
@@ -32,7 +39,7 @@ class ApiClient {
     let data = await this._parseJSON(response)
 
     // Auto-refresh on 401 if we have a refresh token
-    if (response.status === 401 && TokenService.getRefreshToken()) {
+    if (!config.skipAuthRefresh && response.status === 401 && TokenService.getRefreshToken()) {
       const refreshed = await this._handleRefresh()
       if (refreshed) {
         response = await execute()
@@ -53,12 +60,12 @@ class ApiClient {
     return this.request(url, { method: 'GET' })
   }
 
-  post(url, body) {
+  post(url, body, config: RequestConfig = {}) {
     return this.request(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-    })
+    }, config)
   }
 
   postFormData(url, formData) {
