@@ -3,24 +3,20 @@
 # Exit on error
 set -e
 
-# Pass --maintenance flag to enable maintenance mode for gmicontest
+# Pass --maintenance flag to enable maintenance mode for the competitions section
 if [ "$1" = "--maintenance" ]; then
     export NEXT_PUBLIC_MAINTENANCE_MODE=true
-    echo "Root build: gmicontest will use MAINTENANCE MODE"
+    echo "Root build: competizioni in MAINTENANCE MODE"
 fi
 
+# Pulisce l'output precedente per evitare file rimasti da build vecchie
+rm -rf public
 mkdir -p public
 
-# blog
-cd packages/blog
-npm run export
-cd ./out
+# Blog e competizioni vivono in un'unica app Next (packages/portal).
+# L'export statico contiene già le competizioni sotto /competizioni.
+cd packages/portal
+npm run build
+cd out
 cp -r . ../../../public
 cd ../../..
-
-# gmicontest
-cd packages/gmicontest
-npm run build && npm run export
-mv out competizioni
-cp -r ./competizioni ../../public
-rm -rf competizioni

@@ -6,12 +6,11 @@ Frontend del sito [GameMaker Italia](https://gamemakeritalia.it), gestito tramit
 
 ## Struttura del progetto
 
-Il progetto è organizzato in tre pacchetti:
+Il progetto è organizzato in due pacchetti:
 
 | Pacchetto | Tecnologia | Ruolo |
 |---|---|---|
-| [packages/blog](packages/blog) | React + Next.js + Tailwind | Blog frontend, consuma contenuti da Sanity CMS |
-| [packages/gmicontest](packages/gmicontest) | React + Next.js + Redux | Gestione competizioni e contest |
+| [packages/portal](packages/portal) | React + Next.js + Tailwind + Redux | Portale: blog, showcase, risorse, tutorial e competizioni (`/competizioni`); consuma contenuti da Sanity CMS |
 | [packages/sanity](packages/sanity) | Sanity Studio v3 | CMS per la gestione dei contenuti |
 
 ## Ambienti
@@ -21,21 +20,17 @@ Il progetto è organizzato in tre pacchetti:
 
 ## Prerequisiti
 
-- Node.js (per gmicontest è raccomandata la v16.13.2)
+- Node.js 20+
 - npm
 - Firebase CLI (`npx firebase`)
 
 ## Sviluppo locale
 
-Ogni pacchetto può essere avviato in modalità sviluppo in modo indipendente:
+Il portale si avvia con un'unica app Next:
 
 ```bash
-# Blog
-cd packages/blog
-npm run dev
-
-# Contest
-cd packages/gmicontest
+# Portale (http://localhost:3000 e /competizioni)
+cd packages/portal
 npm run dev
 
 # CMS (Sanity Studio)
@@ -45,31 +40,31 @@ npm run dev
 
 ## Build
 
-La build completa dei pacchetti viene gestita da [build.sh](build.sh), che esporta i progetti Next.js come file statici nella cartella `public/` pronti per il deploy.
+La build completa viene gestita da [build.sh](build.sh), che esporta l'app Next come file statici nella cartella `public/`, pronta per il deploy.
 
 ### Build totale (build.sh)
 
-Esegue l'esportazione di tutti i pacchetti in un unico comando:
+Esegue l'esportazione dell'app in un unico comando:
 
 ```bash
 npm run build
 ```
 
 Lo script:
-1. Compila il **blog** con `next export` e copia i file statici in `public/`
-2. Compila **gmicontest** con `next build && next export` e sposta l'output in `public/competizioni/`
+1. Compila l'unica app Next in `packages/portal` (blog + competizioni) con `next build` in modalità export statico
+2. Copia l'output (`packages/portal/out`) in `public/`, incluse le rotte `/competizioni`
 
 Dopo aver lanciato `build.sh`, la cartella `public/` conterrà tutti i file pronti per il deploy su Firebase.
 
-### Build del blog
+### Build del portale
 
 ```bash
-cd packages/blog
+cd packages/portal
 npm install
-npm run export
+npm run build
 ```
 
-Maggiori dettagli: [packages/blog/README.md](packages/blog/README.md)
+Maggiori dettagli: [packages/portal/README.md](packages/portal/README.md)
 
 ### Build del CMS Sanity
 
@@ -80,16 +75,6 @@ npm run build
 ```
 
 Maggiori dettagli: [packages/sanity/README.md](packages/sanity/README.md)
-
-### Build di gmicontest
-
-```bash
-cd packages/gmicontest
-npm install
-npm run build && npm run export
-```
-
-Maggiori dettagli: [packages/gmicontest/README.md](packages/gmicontest/README.md)
 
 ## Deploy
 
