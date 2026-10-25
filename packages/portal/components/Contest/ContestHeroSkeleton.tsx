@@ -62,7 +62,7 @@ const ContestHeroSkeleton = () => (
         </div>
 
         <div className="w-full shrink-0 lg:w-[22rem]">
-          <div className="border border-white/10 bg-[#0b1220]/90 p-5">
+          <div className="border border-white/10 bg-night-800/90 p-5">
             <div className="flex items-center justify-between gap-3">
               <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em]">
                 <ClockIcon size={12} className="text-white/20" />

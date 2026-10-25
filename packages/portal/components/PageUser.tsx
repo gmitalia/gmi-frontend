@@ -196,7 +196,7 @@ export default function PageUser(props) {
                     </span>
                     )}
                     {isHistorical && (
-                      <span className="border border-white/15 border-l-[3px] border-l-[#FBC147] bg-white/[0.04] px-2.5 py-1.5 text-[10px] font-semibold uppercase leading-none tracking-[0.18em] text-gray-300">
+                      <span className="border border-white/15 border-l-[3px] border-l-gold-light bg-white/[0.04] px-2.5 py-1.5 text-[10px] font-semibold uppercase leading-none tracking-[0.18em] text-gray-300">
                         Membro storico
                       </span>
                     )}

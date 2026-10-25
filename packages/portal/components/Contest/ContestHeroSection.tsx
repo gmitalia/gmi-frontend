@@ -44,7 +44,7 @@ function formatDeadline(value?: string | null) {
 
 const Deadline = ({ label, value }: { label: string; value: string }) => (
   <div className="flex items-start gap-2.5">
-    <ClockIcon size={14} className="mt-0.5 shrink-0 text-[#7dd3c7]" />
+    <ClockIcon size={14} className="mt-0.5 shrink-0 text-accent-cool" />
     <div>
       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-500">
         {label}
@@ -105,10 +105,10 @@ const ContestHeroSection = ({
 
           {!isComplete && (
             <div className="w-full shrink-0 lg:w-[22rem]">
-              <div className="border border-white/10 bg-[#0b1220]/90 p-5">
+              <div className="border border-white/10 bg-night-800/90 p-5">
                 <div className="flex items-center justify-between gap-3">
                   <p className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-gray-400">
-                    <ClockIcon size={12} className="text-[#7dd3c7]" />
+                    <ClockIcon size={12} className="text-accent-cool" />
                     {canSubmitGames
                       ? "Tempo per consegnare"
                       : "Tempo per i giudizi"}

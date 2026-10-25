@@ -13,7 +13,7 @@ export function DiscordCommunitySection({
     >
       <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-[#5865F2] text-white sm:h-16 sm:w-16">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm bg-discord text-white sm:h-16 sm:w-16">
             <DiscordIcon />
           </div>
           <div>

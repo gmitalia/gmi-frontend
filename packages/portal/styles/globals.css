@@ -1,42 +1,7 @@
+/*
+ * Tailwind entry point.
+ * Custom global styles live in app.scss.
+ */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-html {
-  /* Evita che la comparsa della scrollbar sposti il contenuto tra le pagine. */
-  scrollbar-gutter: stable;
-}
-
-:root {
-  /* Colors */
-  --cloudGrayLight: #F5F7F9;
-  --cloudGray: #E8EDF1;
-  --cloudGrayDark: #BAC7D5;
-  --white: #FFF;
-
-  --orangeLight: #FEF2E6;
-  --orange: #DF7B00;
-  --orangeDark: #AD5700;
-
-  --pinkLight: #e64980;
-  --pink: #d6336c;
-  --pinkDark: #c2255c;
-
-  --purpleLight: #834bff;
-  --purple: #651fff;
-  --purpleDark: #4615b2;
-
-  --greenLight: #00A58E;
-  --green: #007A69;
-  --greenDark: #005C4E;
-
-  /* Size and distances */
-  --defaultSpace: 24px;
-  --blogPostWidth: 70rem;
-}
-
-.page {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-  min-height: 100vh;
-}

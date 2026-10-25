@@ -10,13 +10,7 @@ import {
 } from "../components/WebsiteLayout/SiteBreadcrumbs";
 
 import "../styles/globals.css";
-import "../styles/competizioni.scss";
-import "../styles/BlogPost.scss";
-import "../styles/BlogCard.scss";
-import "../styles/Code.scss";
-import "../styles/ShowcaseCard.scss";
-import "../styles/Resources.scss";
-import "../styles/Footer.scss";
+import "../styles/app.scss";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

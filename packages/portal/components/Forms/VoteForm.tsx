@@ -536,7 +536,7 @@ export default function VoteForm(props) {
         <div>
           <div className="flex items-center justify-between gap-3 border-b border-default pb-2">
             <span className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-content-muted">
-              <span className="h-1.5 w-1.5 bg-[#007A69]" />
+              <span className="h-1.5 w-1.5 bg-success" />
               Pro
               <span className="font-mono normal-case tracking-normal">({pros.length}/3)</span>
             </span>

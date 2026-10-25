@@ -6,11 +6,11 @@ const STATUS_CONFIG: Record<
 > = {
   open: {
     label: "In corso",
-    accent: "border-l-[#007A69]",
+    accent: "border-l-success",
   },
   judging: {
     label: "In giudizio",
-    accent: "border-l-[#DF7B00]",
+    accent: "border-l-warning",
   },
   complete: {
     label: "Conclusa",

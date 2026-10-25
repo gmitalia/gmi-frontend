@@ -1,27 +1,25 @@
-body {
-  background-color: var(--cloudGray)
-}
-
-
+/**
+ * Sezione blog: card dell'elenco articoli.
+ */
 .blog-card {
-  background-color: var(--white);
+  background-color: var(--ds-color-surface);
   display: flex;
   flex-direction: column;
 
   &--tutorial {
-    --categoryColor: var(--greenLight);
+    --categoryColor: var(--ds-color-category-tutorial);
   }
 
   &--notizie {
-    --categoryColor: var(--pink);
+    --categoryColor: var(--ds-color-category-news);
   }
 
   &--game-jam {
-    --categoryColor: var(--purpleDark)
+    --categoryColor: var(--ds-color-category-game-jam)
   }
 
   &--competizioni {
-    --categoryColor: var(--orange)
+    --categoryColor: var(--ds-color-category-competition)
   }
 
 
@@ -30,7 +28,7 @@ body {
     font-size: .7rem;
     border-bottom: 2px solid var(--categoryColor);
     margin-left: calc(var(--defaultSpace) / 2);
-    // color: var(--white);
+    // color: var(--ds-color-surface);
     width: fit-content;
   }
 

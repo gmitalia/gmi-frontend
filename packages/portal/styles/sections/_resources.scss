@@ -1,9 +1,9 @@
 /**
- * Card delle risorse - stesso linguaggio delle card del blog:
+ * Sezione risorse: card con lo stesso linguaggio delle card del blog,
  * superficie bianca e angoli netti.
  */
 .resource-card {
-  background-color: var(--white);
+  background-color: var(--ds-color-surface);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -17,7 +17,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid #3b3c5c;
+    outline: 2px solid var(--ds-color-secondary);
     outline-offset: 2px;
   }
 
@@ -31,12 +31,12 @@
     line-height: 1.15;
     font-weight: 600;
     margin: calc(var(--defaultSpace) / 2) 0;
-    color: #111827;
+    color: var(--ds-color-content);
     overflow-wrap: anywhere;
   }
 
   &__description {
-    color: #4b5563;
+    color: var(--ds-color-content-muted);
     font-size: 0.95rem;
     line-height: 1.55;
     margin-bottom: calc(var(--defaultSpace) / 2);
@@ -67,7 +67,7 @@
     font-size: 0.65rem;
     letter-spacing: 0.06em;
     font-weight: 600;
-    color: #6b7280;
+    color: var(--ds-color-content-muted);
     white-space: nowrap;
   }
 
@@ -75,7 +75,7 @@
     width: 6px;
     height: 6px;
     border-radius: 9999px;
-    background-color: var(--cloudGrayDark);
+    background-color: var(--ds-color-border);
     flex: none;
   }
 }

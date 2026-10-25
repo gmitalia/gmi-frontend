@@ -236,7 +236,7 @@ export default function PageResults(props)
                   <div className="mt-2 h-2 bg-surface overflow-hidden border border-default">
                     <div
                       className={`h-full transition-all duration-1000 ${
-                        missingVotes === 0 ? "bg-[#007A69]" : "bg-secondary"
+                        missingVotes === 0 ? "bg-success" : "bg-secondary"
                       }`}
                       style={{ width: `${globalPct}%` }}
                     />

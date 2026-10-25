@@ -13,7 +13,7 @@ export const Menu = (props)=>
           <Button variant="secondary" size="md" onClick={onClose}>Chiudi</Button>
           <div className="my-4">
             <h1 className="text-lg font-bold">GameMaker Italia</h1>
-            <span className="ds-text-muted">Archivio competizioni e giochi</span>
+            <span className="text-content-muted">Archivio competizioni e giochi</span>
           </div>
           {children}
         </div>

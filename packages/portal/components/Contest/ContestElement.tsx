@@ -18,13 +18,13 @@ export const ContestElement = (props)=>
   else if(Date.now() > end_date)
     statusColor = "bg-warning"
 
-  const selectedClass = `${isSelected ? "bg-secondary text-content border-secondary" : "ds-surface ds-text-content"}`;
+  const selectedClass = `${isSelected ? "bg-secondary text-content border-secondary" : "ds-surface text-content"}`;
   const hoverClass = "hover:cursor-pointer hover:border-secondary"
 
   return (
     <Link href={`/competizioni/contest/?contest=${contest.id}`}>
 
-      <div className={`flex flex-row items-center ds-rounded-cta border border-default p-3 ${selectedClass} ${hoverClass}`}>
+      <div className={`flex flex-row items-center rounded-cta border border-default p-3 ${selectedClass} ${hoverClass}`}>
         
         <div className='mr-2 flex w-5 justify-center'>
           <span className={`inline-block w-2 h-2 rounded-full ${statusColor}`} aria-hidden="true" />

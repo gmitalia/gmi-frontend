@@ -129,8 +129,8 @@ function VoteStatus({ vote, dirty = false }: { vote: any; dirty?: boolean })
   const isConfirmed = !!vote?.confirmed;
   const label = getVoteLabel(vote, dirty);
   const accent = isConfirmed
-    ? dirty ? "border-l-[#DF7B00]" : "border-l-[#007A69]"
-    : hasVoteData(vote) ? "border-l-[#DF7B00]" : "border-l-gray-300";
+    ? dirty ? "border-l-warning" : "border-l-success"
+    : hasVoteData(vote) ? "border-l-warning" : "border-l-gray-300";
   const textColor = dirty ? "text-accent-warm" : "text-gray-800";
 
   return (
@@ -457,8 +457,8 @@ export default function PageEditVotes(props)
                 const confirmed = !!vote?.confirmed;
                 const label = getVoteLabel(vote, dirty);
                 const dotColor = confirmed
-                  ? dirty ? "bg-accent-warm" : "bg-success"
-                  : dirty || hasVoteData(vote) ? "bg-accent-warm" : "bg-gray-300";
+                  ? dirty ? "bg-accent" : "bg-success"
+                  : dirty || hasVoteData(vote) ? "bg-accent" : "bg-gray-300";
 
                 return (
                   <button
@@ -509,7 +509,7 @@ export default function PageEditVotes(props)
               </div>
               <div className="mt-2 h-1 w-full bg-surface-muted">
                 <div
-                  className="h-full bg-[#007A69] transition-all duration-500"
+                  className="h-full bg-success transition-all duration-500"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
@@ -555,7 +555,7 @@ export default function PageEditVotes(props)
                   </div>
                   <div className="mt-2 h-1.5 w-full bg-surface-muted">
                     <div
-                      className="h-full bg-[#007A69] transition-all duration-500"
+                      className="h-full bg-success transition-all duration-500"
                       style={{ width: `${progressPercent}%` }}
                     />
                   </div>

@@ -4,7 +4,7 @@ import { basePath } from "../../src/paths";
 import { EmptyState } from "../commons/EmptyState";
 
 const roleLabelClasses =
-  "mt-1 inline-flex items-center gap-1.5 px-2 py-1 text-[10px] font-semibold uppercase leading-none tracking-[0.18em]";
+  "mt-1 inline-flex items-center gap-1.5 px-2 py-1 text-[10px] uppercase leading-none tracking-[0.18em]";
 
 const getPercent = (votes: number, total: number) =>
   total > 0 ? Math.min(100, Math.round((votes / total) * 100)) : 0;
@@ -12,7 +12,6 @@ const getPercent = (votes: number, total: number) =>
 const JudgeCard = ({ judge, isHost, progress, total }) => {
   const votes = Math.max(0, Number(progress?.votes_count ?? 0));
   const pct = getPercent(votes, total);
-  const complete = total > 0 && votes >= total;
 
   return (
     <div className="group flex flex-col items-center text-center">
@@ -23,7 +22,7 @@ const JudgeCard = ({ judge, isHost, progress, total }) => {
         <img
           src={judge.avatar || judge.user_avatar || basePath + "/img/profile.png"}
           className={`h-20 w-20 object-cover md:h-24 md:w-24 ${
-            isHost ? "border-4 border-accent" : "border-4 border-default"
+            isHost ? "border-4 border-secondary" : "border-4 border-default"
           }`}
           alt={judge.user_name}
           onError={(e) => { (e.target as HTMLImageElement).src = basePath + "/img/profile.png"; }}
@@ -36,11 +35,11 @@ const JudgeCard = ({ judge, isHost, progress, total }) => {
         {judge.user_name}
       </Link>
       {isHost ? (
-        <span className={`${roleLabelClasses} text-accent`}>
+        <span className={`${roleLabelClasses} font-bold text-secondary`}>
           Organizzatore
         </span>
       ) : (
-        <span className={`${roleLabelClasses} text-content-muted`}>
+        <span className={`${roleLabelClasses} font-semibold text-content-muted`}>
           Giudice
         </span>
       )}
@@ -64,9 +63,7 @@ const JudgeCard = ({ judge, isHost, progress, total }) => {
             aria-label={`Voti confermati da ${judge.user_name}`}
           >
             <div
-              className={`h-full transition-all duration-1000 ${
-                complete ? "bg-success" : "bg-accent-warm"
-              }`}
+              className="h-full transition-all duration-1000 bg-success"
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -81,7 +78,6 @@ const ContestJudgesSection = ({ judges = [], judgingProgress = null }) => {
   const confirmed = Math.max(0, Number(judgingProgress?.votes_confirmed ?? 0));
   const required = Math.max(0, Number(judgingProgress?.votes_required ?? 0));
   const globalPct = getPercent(confirmed, required);
-  const allConfirmed = required > 0 && confirmed >= required;
 
   const progressById = new Map(
     (judgingProgress?.judges_data || []).map((judge) => [
@@ -110,13 +106,9 @@ const ContestJudgesSection = ({ judges = [], judgingProgress = null }) => {
         <div className="mb-6">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-content-muted">
-              Avanzamento globale
+              Avanzamento giudizi
             </span>
-            <span
-              className={`font-mono text-sm font-bold tabular-nums ${
-                allConfirmed ? "text-success" : "text-content"
-              }`}
-            >
+            <span className="font-mono text-sm font-bold tabular-nums text-content">
               {globalPct}%
             </span>
           </div>
@@ -129,9 +121,7 @@ const ContestJudgesSection = ({ judges = [], judgingProgress = null }) => {
             aria-label="Voti confermati totali"
           >
             <div
-              className={`h-full transition-all duration-1000 ${
-                allConfirmed ? "bg-success" : "bg-accent-warm"
-              }`}
+              className="h-full transition-all duration-1000 bg-success"
               style={{ width: `${globalPct}%` }}
             />
           </div>

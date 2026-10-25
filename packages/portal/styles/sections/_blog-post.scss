@@ -1,31 +1,34 @@
+/**
+ * Sezione blog: layout dell'articolo e tipografia del contenuto editoriale.
+ */
 .blog-post {
   @media (max-width: 768px) {
     --defaultSpace: 12px;
   }
 
-  background-color: var(--white);
+  background-color: var(--ds-color-surface);
   max-width: var(--blogPostWidth);
   margin: 0 auto;
   padding: var(--defaultSpace) 0;
 
   &--tutorial {
-    --categoryColor: var(--greenLight);
+    --categoryColor: var(--ds-color-category-tutorial);
   }
 
   &--notizie {
-    --categoryColor: var(--pink);
+    --categoryColor: var(--ds-color-category-news);
   }
 
   &--game-jam {
-    --categoryColor: var(--purpleDark)
+    --categoryColor: var(--ds-color-category-game-jam)
   }
 
   &--competizioni {
-    --categoryColor: var(--orange)
+    --categoryColor: var(--ds-color-category-competition)
   }
 
   &__wrapper {
-    background-color: var(--cloudGrayLight);
+    background-color: var(--ds-color-primary-light);
     padding: var(--defaultSpace) 0;
   }
 
@@ -48,8 +51,7 @@
     align-items: center;
     gap: var(--defaultSpace);
     padding: var(--defaultSpace);
-    color: white;
-    //text-shadow: 1px 1px 5px #000;
+    color: var(--ds-color-on-secondary);
     p + p:before {
       content: "|";
       margin-right: var(--defaultSpace);
@@ -67,8 +69,8 @@
 
     pre {
       border-radius: 8px;
-      background-color: #2f2f2f;
-      color: var(--white);
+      background-color: var(--ds-color-code-surface);
+      color: var(--ds-color-surface);
       padding: 8px 16px;
       margin-bottom: 8px;
       font-size: 10pt;
@@ -113,7 +115,7 @@
 
     blockquote {
       font-style: italic;
-      background-color: #efefef;
+      background-color: var(--ds-color-surface-muted);
       padding: 1em 1.5em;
       margin-bottom: 10px;
     }

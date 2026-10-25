@@ -27,12 +27,25 @@ module.exports = {
       secondary: "rgba(var(--ds-rgb-secondary), <alpha-value>)",
       accent: "rgba(var(--ds-rgb-accent), <alpha-value>)",
       "accent-warm": "rgba(var(--ds-rgb-accent-warm), <alpha-value>)",
+      "accent-cool": "rgba(var(--ds-rgb-accent-cool), <alpha-value>)",
 
       // Semantic colors (use theme-aware values, keep exact colors for opacity)
       success: "rgba(var(--ds-rgb-success), <alpha-value>)",
+      "success-light": "rgba(var(--ds-rgb-success-light), <alpha-value>)",
       error: "rgba(var(--ds-rgb-error), <alpha-value>)",
       warning: "rgba(var(--ds-rgb-warning), <alpha-value>)",
       info: "rgba(var(--ds-rgb-info), <alpha-value>)",
+      "gold": "rgba(var(--ds-rgb-gold), <alpha-value>)",
+      "gold-light": "rgba(var(--ds-rgb-gold-light), <alpha-value>)",
+      "silver": "rgba(var(--ds-rgb-silver), <alpha-value>)",
+      "bronze": "rgba(var(--ds-rgb-bronze), <alpha-value>)",
+      discord: "rgba(var(--ds-rgb-discord), <alpha-value>)",
+      night: {
+        600: "rgba(var(--ds-rgb-night-600), <alpha-value>)",
+        700: "rgba(var(--ds-rgb-night-700), <alpha-value>)",
+        800: "rgba(var(--ds-rgb-night-800), <alpha-value>)",
+        900: "rgba(var(--ds-rgb-night-900), <alpha-value>)",
+      },
 
       // Text colors
       content: "rgba(var(--ds-rgb-content), <alpha-value>)",
@@ -224,6 +237,7 @@ module.exports = {
     borderColor: ({ theme }) => ({
       ...theme("colors"),
       DEFAULT: "var(--ds-color-border)",
+      default: "var(--ds-color-border)",
     }),
     borderOpacity: ({ theme }) => theme("opacity"),
     borderRadius: {

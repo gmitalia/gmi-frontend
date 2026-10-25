@@ -111,7 +111,7 @@ export default function GameForm(props) {
         <div className="min-w-0">
           <span
             className={`inline-flex items-center border border-gray-200 border-l-[3px] bg-white px-2.5 py-1.5 text-[10px] font-semibold uppercase leading-none tracking-[0.18em] text-gray-700 ${
-              isJudge ? "border-l-[#DF7B00]" : "border-l-[#007A69]"
+              isJudge ? "border-l-warning" : "border-l-success"
             }`}
           >
             {isJoined

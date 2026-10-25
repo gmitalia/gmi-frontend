@@ -3,6 +3,13 @@ import Head from 'next/head'
 import { GetStaticProps } from 'next'
 import { groq } from 'next-sanity'
 import { sanityClient } from '../sanity'
+import {
+  RESOURCE_PALETTE,
+  categoryColor,
+  categoryLabel,
+  categoryStyle,
+  normalizeCategory,
+} from '../src/resourceCategories'
 
 interface Resource {
   _id: string
@@ -41,21 +48,21 @@ const MACRO_SECTIONS: MacroSection[] = [
     label: "Assets",
     description: "Grafica, suoni, font e snippet pronti all'uso",
     icon: "fa-boxes",
-    color: "#0f766e",
+    color: RESOURCE_PALETTE.teal,
   },
   {
     key: "tools",
     label: "Tools",
     description: "Software, generatori e utility per lo sviluppo",
     icon: "fa-tools",
-    color: "#2563eb",
+    color: RESOURCE_PALETTE.blue,
   },
   {
     key: "tutorial",
     label: "Tutorials",
     description: "Guide, approfondimenti e risorse didattiche",
     icon: "fa-book",
-    color: "#7c3aed",
+    color: RESOURCE_PALETTE.violet,
   },
 ];
 
@@ -80,50 +87,6 @@ const TOOL_CATEGORY_KEYS = new Set([
   "game design",
   "marketing",
 ]);
-
-/** Icone e colori Font Awesome per le categorie (chiave = titolo normalizzato). */
-const CATEGORY_STYLES: Record<string, { icon: string; color: string }> = {
-  assets: { icon: "fa-boxes", color: "#0f766e" },
-  tools: { icon: "fa-tools", color: "#2563eb" },
-  tutorial: { icon: "fa-book", color: "#7c3aed" },
-  "2d": { icon: "fa-image", color: "#d6336c" },
-  "3d": { icon: "fa-cube", color: "#0e7490" },
-  "a pagamento": { icon: "fa-euro-sign", color: "#059669" },
-  ai: { icon: "fa-robot", color: "#4f46e5" },
-  animazione: { icon: "fa-film", color: "#c026d3" },
-  "game design": { icon: "fa-gamepad", color: "#dc2626" },
-  grafica: { icon: "fa-palette", color: "#e11d48" },
-  marketing: { icon: "fa-bullhorn", color: "#ea580c" },
-  musica: { icon: "fa-headphones", color: "#7e22ce" },
-  "pixel art": { icon: "fa-th", color: "#15803d" },
-  programmazione: { icon: "fa-code", color: "#0d9488" },
-  shaders: { icon: "fa-flask", color: "#475569" },
-  suoni: { icon: "fa-volume-up", color: "#0284c7" },
-};
-
-const FALLBACK_CATEGORY_STYLE = { icon: "fa-tag", color: "#3b3c5c" };
-
-/** Normalizza il titolo di una categoria: solo lettere, numeri e spazi, in minuscolo. */
-function normalizeCategory(title: string) {
-  return (title.match(/[A-Za-z0-9\s]+/g) || []).join("").trim().toLowerCase();
-}
-
-/** Rimuove l'eventuale emoji iniziale dal nome della categoria. "🎧 Musica" -> "Musica" */
-function categoryLabel(title: string) {
-  const match = title.match(/^([^A-Za-z0-9\u00C0-\u024F]+)(.*)$/);
-  return match && match[2].trim() ? match[2].trim() : title.trim();
-}
-
-/** Stile associato alla categoria (icona e colore di fallback). */
-function categoryStyle(title: string) {
-  return CATEGORY_STYLES[normalizeCategory(title)] || FALLBACK_CATEGORY_STYLE;
-}
-
-/** Colore della categoria: palette locale per categoria, con fallback su Sanity. */
-function categoryColor(title: string, color?: string) {
-  const style = CATEGORY_STYLES[normalizeCategory(title)];
-  return style?.color || color || FALLBACK_CATEGORY_STYLE.color;
-}
 
 /** Verifica se un titolo normalizzato corrisponde a una delle sezioni principali. */
 function isMacroKey(value: string): value is MacroKey {

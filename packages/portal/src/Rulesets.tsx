@@ -15,7 +15,7 @@ export const Rulesets =
 				 <h2 className="text-2xl font-bold text-gray-900">
 		        Regolamento della competizione
 		      </h2>
-				<b className="p-3" style={{color: "red", background: "#ff000017"}}>
+				<b className="p-3" style={{ color: "var(--ds-color-error)", background: "rgba(var(--ds-rgb-error), 0.09)" }}>
 					Questo regolamento è quello 'originale' in vigore negli anni 2004-{">"}2011, per leggere il regolamento moderno consulta quello su una competizione recente o sulla home
 				</b>
 
@@ -60,7 +60,7 @@ export const Rulesets =
 				 <h2 className="text-2xl font-bold text-gray-900">
 		        Regolamento della competizione
 		      </h2>
-				<b className="p-3" style={{color: "red", background: "#ff000017"}}>
+				<b className="p-3" style={{ color: "var(--ds-color-error)", background: "rgba(var(--ds-rgb-error), 0.09)" }}>
 					Questo regolamento è quello 'classico' in vigore negli anni 2013-{">"}2017, per leggere il regolamento moderno consulta quello su una competizione recente o sulla home
 				</b>
 
@@ -132,7 +132,7 @@ export const Rulesets =
 				 <h2 className="text-2xl font-bold text-gray-900">
 		        Regolamento della competizione
 		      </h2>
-				<b className="p-3" style={{color: "red", background: "#ff000017"}}>
+				<b className="p-3" style={{ color: "var(--ds-color-error)", background: "rgba(var(--ds-rgb-error), 0.09)" }}>
 					Questo regolamento è quello 'sperimentale' in vigore negli anni 2018-{">"}2020, per leggere il regolamento moderno consulta quello su una competizione recente o sulla home
 				</b>
 
