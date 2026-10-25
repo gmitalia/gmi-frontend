@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { prosList, consList } from "../src/Constants";
 import GMIApi from "../src/api/GMIApi";
-import { marked } from "../src/marked"
+import { renderMarkdown } from "../src/markdown"
 import { parseAuthors } from "../src/Utils"
 import { Button } from "./commons/Button";
 import { AwardBadge } from "./Contest/AwardsBadge";
@@ -35,10 +35,8 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
         GMIApi.getInstance().getUsers(userData => {
           const processedVotes = data.votes.map(vote => {
             try {
-              const isOldContest = contest < 19;
               let comment = vote.comment;
               comment = comment.replace(/^[-=_]{3,}$/gm, '<hr class="my-8 border-default" />');
-              if (!isOldContest) comment = comment.replaceAll("\n", "⠀⠀\n");
 
               // Enrich with avatar from global user list if possible
               let finalAvatar = vote.judge_avatar || vote.avatar;
@@ -363,7 +361,7 @@ export function VotesModal({ contest, gameId, gameName, authors, resultsPublic, 
                     Commento del Giudice
                   </h4>
                   <div className="border border-default p-6 md:p-8 leading-relaxed text-content">
-                    <div className="content vote-tables prose max-w-none" dangerouslySetInnerHTML={{ __html: marked.parse(activeVote.comment, { breaks: true }) }}></div>
+                    <div className="content vote-tables prose max-w-none" dangerouslySetInnerHTML={{ __html: renderMarkdown(activeVote.comment) }}></div>
                   </div>
                 </div>
               </div>

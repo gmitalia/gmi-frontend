@@ -238,7 +238,7 @@ export default function Header() {
             ))}
             <li className="my-4">
               <div className="px-2">
-                <HeaderUserInfo />
+                <HeaderUserInfo onClose={closeMenu} />
               </div>
             </li>
           </ul>

@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 import { getQuery } from "../src/Utils";
 import GMIApi from "../src/api/GMIApi";
 import { SectionLayout } from "./WebsiteLayout/SectionLayout";
-import { competitionTabs } from "../src/competitionSections";
-import EditionSwitcher from "./Competition/EditionSwitcher";
+import { Button } from "./commons/Button";
+import ConfirmationModal from "./commons/ConfirmationModal";
 import { VotesModal } from "./PopupVotes";
 import { basePath, competitionsPath } from "../src/paths";
 import { competitionsBreadcrumb, homeBreadcrumb } from "../src/breadcrumbs";
+import type { RootState } from "../src/store";
 
 export default function PageResults(props)
 {
   const router = useRouter();
   const query = getQuery(router);
+  const userInfo = useSelector((root: RootState) => root.auth.userInfo);
+  const myUserId = userInfo?.user?.user_id;
   const [results, setResults] = useState<Results | null>(null);
   const [contest, setContest] = useState<Contest | null>(null);
   const [judges, setJudges] = useState([]);
@@ -22,9 +26,17 @@ export default function PageResults(props)
   const [error, setError] = useState<string>();
   const [visibleGames, setVisibleGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
+  const [showPublishModal, setShowPublishModal] = useState(false);
+  const [publishError, setPublishError] = useState<{
+    message: string;
+    votes_confirmed?: number;
+    votes_required?: number;
+  } | null>(null);
 
   useEffect(()=>
   {
+    setJudges([]);
+
     GMIApi.getInstance().getResults(query.contest, (data)=>
     {
       if(!data.success)
@@ -62,14 +74,13 @@ export default function PageResults(props)
       }
     });
   },
-  [query.contest]);
+  [query.contest, myUserId]);
 
   if(error)
     return (
       <SectionLayout
         title="Risultati"
         description="Classifiche, voti e giudizi delle competizioni."
-        tabs={competitionTabs}
       >
         <div className="bg-error/10 border border-error/20 p-6 md:p-12 text-center text-error">
           {error}
@@ -82,7 +93,6 @@ export default function PageResults(props)
       <SectionLayout
         title="Risultati"
         description="Classifiche, voti e giudizi delle competizioni."
-        tabs={competitionTabs}
       >
         <div className="bg-surface border border-default p-6 md:p-12 text-center text-content-muted">
           <div className="animate-pulse flex flex-col items-center gap-4">
@@ -92,6 +102,29 @@ export default function PageResults(props)
         </div>
       </SectionLayout>
     );
+
+  const isJudging = !!contest && !contest.is_completed && contest.is_ended;
+  const isComplete = !!contest && contest.is_completed;
+
+  const confirmedVotes = Number(results.votes_confirmed ?? 0);
+  const requiredVotes = Number(results.votes_required ?? 0);
+  const missingVotes = Math.max(0, requiredVotes - confirmedVotes);
+  const globalPct = requiredVotes ? Math.round((confirmedVotes / requiredVotes) * 100) : 0;
+
+  const isHost =
+    !!myUserId &&
+    judges.some(
+      (judge) =>
+        judge.id == myUserId &&
+        (judge.host === 1 || judge.host === "1" || judge.host === true)
+    );
+  const votesComplete =
+    requiredVotes > 0 &&
+    (results.all_votes_confirmed === true || confirmedVotes >= requiredVotes);
+  const resultsArePublic = results.public === true || String(results.public) === "1";
+  const isHostPreview = isHost && votesComplete && !resultsArePublic;
+  const showResults = isComplete || isHostPreview;
+  const showJudgingProgress = isJudging && !isHostPreview;
 
   const toggleGameVisibility = (index)=>
   {
@@ -103,7 +136,7 @@ export default function PageResults(props)
   const handleGameClick = (game, index, isVisible) => {
     if (!isVisible) {
       toggleGameVisibility(index);
-    } else if (results.public) {
+    } else if (resultsArePublic) {
       // Fetch dettagli completi del gioco (inclusi autori) da getGames
       GMIApi.getInstance().getGames(query.contest, (gamesData) => {
         if (gamesData.success) {
@@ -120,20 +153,44 @@ export default function PageResults(props)
     }
   };
 
-  const isJudging = !!contest && !contest.is_completed && contest.is_ended;
-  const isComplete = !!contest && contest.is_completed;
+  const handlePublish = () => {
+    setShowPublishModal(false);
+    setPublishError(null);
+    GMIApi.getInstance().publishResults(query.contest, (data) => {
+      if (data.success) {
+        // La pubblicazione rende subito visibili i risultati e rimuove lo
+        // spoiler senza attendere un nuovo caricamento della pagina.
+        setResults(current => current ? { ...current, public: true } : current);
+        setContest(current => current ? { ...current, is_completed: true } : current);
+        alert("Risultati pubblicati con successo!");
+        return;
+      }
+
+      if (data.code === "VOTES_NOT_CONFIRMED" && data.votes_required !== undefined) {
+        setResults(current => current
+          ? {
+              ...current,
+              votes_confirmed: data.votes_confirmed ?? current.votes_confirmed,
+              votes_required: data.votes_required,
+              all_votes_confirmed: false,
+            }
+          : current);
+      }
+
+      setPublishError({
+        message: data.error || "Errore sconosciuto durante la pubblicazione.",
+        votes_confirmed: data.votes_confirmed,
+        votes_required: data.votes_required,
+      });
+    });
+  };
 
   const games = (results.games_data || []).sort((a, b) => (parseFloat(b.avg_score) || 0) - (parseFloat(a.avg_score) || 0));
   const podium = games.filter((game)=> !!game.avg_score).slice(0, 3);
 
-  const confirmedVotes = Number(results.votes_confirmed ?? 0);
-  const requiredVotes = Number(results.votes_required ?? 0);
-  const missingVotes = Math.max(0, requiredVotes - confirmedVotes);
-  const globalPct = requiredVotes ? Math.round((confirmedVotes / requiredVotes) * 100) : 0;
-  
   const leaderboard = games.map((game, index)=>
   {
-    const isVisible = visibleGames[index] || results.public;
+    const isVisible = visibleGames[index] || resultsArePublic;
     const isTop3 = index < 3 && game.avg_score;
     
     return (
@@ -143,18 +200,16 @@ export default function PageResults(props)
        onClick={() => handleGameClick(game, index, isVisible)}
       >
         <td className="p-2 md:p-4 text-center">
-          {game.avg_score && !(isComplete && !results.public) ? (
-            <span className={`inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold ${
-              index === 0 ? "ds-trophy-gold" :
-              index === 1 ? "ds-trophy-silver" :
-              index === 2 ? "ds-trophy-bronze" :
-              "text-content-muted"
-            }`}>
-              {index + 1}
-            </span>
-          ) : isComplete && !results.public ? (
-            <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold text-content-muted">?</span>
-          ) : "-"}
+          <span className={`inline-flex items-center justify-center w-8 h-8 rounded-lg font-bold ${
+            game.avg_score
+              ? index === 0 ? "ds-trophy-gold" :
+                index === 1 ? "ds-trophy-silver" :
+                index === 2 ? "ds-trophy-bronze" :
+                "text-content-muted"
+              : "text-content-muted"
+          }`}>
+            {index + 1}
+          </span>
         </td>
         <td className="p-2 md:p-4">
           <div className={`font-bold transition-colors ${isVisible ? "text-content group-hover:text-secondary" : "text-content-muted/60"}`}>
@@ -163,8 +218,10 @@ export default function PageResults(props)
           {!isVisible && <div className="text-[10px] text-content-muted uppercase mt-0.5">Clicca per rivelare</div>}
         </td>
         <td className="p-2 md:p-4 text-center">
-          <span className="font-mono font-bold text-lg text-secondary">
-            {game.avg_score ? parseFloat(game.avg_score).toFixed(1) : "N/A"}
+          <span className={`font-mono font-bold text-lg ${isVisible ? "text-secondary" : "text-content-muted/60"}`}>
+            {isVisible
+              ? game.avg_score ? parseFloat(game.avg_score).toFixed(1) : "N/A"
+              : "***"}
           </span>
         </td>
       </tr>
@@ -193,14 +250,27 @@ export default function PageResults(props)
 
   return (
     <SectionLayout
-      title={isJudging ? "Avanzamento giudizi" : "Classifica"}
-      description={
-        isJudging
-          ? `${contest?.name || "Competizione"} · I giudici stanno valutando i giochi. Ecco lo stato di avanzamento in tempo reale.`
-          : `${contest?.name || "Competizione"} · Esplora il verdetto finale e i punteggi medi dei giochi in gara.`
+      title={
+        isHostPreview
+          ? "Anteprima Risultati"
+          : isJudging
+            ? "Avanzamento giudizi"
+            : "Classifica"
       }
-      tabs={competitionTabs}
-      action={<EditionSwitcher contestId={query.contest} />}
+      description={
+        isHostPreview
+          ? `${contest?.name || "Competizione"} · Anteprima riservata al capo giuria. I risultati non sono ancora pubblici.`
+          : isJudging
+            ? `${contest?.name || "Competizione"} · I giudici stanno valutando i giochi. Ecco lo stato di avanzamento in tempo reale.`
+            : `${contest?.name || "Competizione"} · Esplora il verdetto finale e i punteggi medi dei giochi in gara.`
+      }
+      action={
+        isHostPreview ? (
+          <Button onClick={() => setShowPublishModal(true)}>
+            Pubblica Risultati
+          </Button>
+        ) : undefined
+      }
       breadcrumbs={
         contest
           ? [
@@ -210,15 +280,29 @@ export default function PageResults(props)
                 label: contest.name,
                 href: `${competitionsPath("/contest/")}?contest=${contest.id}`,
               },
-              { label: isJudging ? "Avanzamento giudizi" : "Risultati" },
+              { label: isHostPreview ? "Anteprima Risultati" : isJudging ? "Avanzamento giudizi" : "Risultati" },
             ]
           : undefined
       }
     >
       <div className="flex flex-col gap-8 pb-12 overflow-x-clip">
+        {publishError && (
+          <div role="alert" className="w-full max-w-5xl mx-auto border border-error/20 bg-error/10 p-4 text-sm text-error">
+            <p className="font-bold">Impossibile pubblicare i risultati</p>
+            <p className="mt-1">{publishError.message}</p>
+            {publishError.votes_required !== undefined && (
+              <p className="mt-1 font-mono text-xs">
+                Voti confermati: {publishError.votes_confirmed ?? 0}/{publishError.votes_required}
+                {" · "}
+                mancano {Math.max(0, publishError.votes_required - (publishError.votes_confirmed ?? 0))}
+              </p>
+            )}
+          </div>
+        )}
+
         <div className="w-full max-w-5xl mx-auto">
           {/* Judging Phase: Show only progress bars */}
-          {isJudging && (
+          {showJudgingProgress && (
             <section className="bg-surface border border-default p-5 md:p-8">
               <h2 className="text-xl font-bold text-content mb-4">
                 Stato Giudizi
@@ -249,8 +333,8 @@ export default function PageResults(props)
             </section>
           )}
 
-          {/* Complete Phase: Show ranking table and judges section */}
-          {isComplete && (
+          {/* Complete Phase (o anteprima del capo giuria): classifica e giuria */}
+          {showResults && (
             <>
               <section className="bg-surface border border-default overflow-hidden">
                 <div className="p-6 border-b border-default flex items-center justify-between">
@@ -318,7 +402,7 @@ export default function PageResults(props)
             </>
           )}
 
-          {!isJudging && !isComplete && (
+          {!showJudgingProgress && !showResults && (
             <div className="bg-surface border border-default p-12 text-center text-content-muted">
               Nessun dato disponibile per questa fase della competizione.
             </div>
@@ -331,9 +415,20 @@ export default function PageResults(props)
         gameId={selectedGame?.id}
         gameName={selectedGame?.name}
         authors={selectedGame?.authors}
-        resultsPublic={results?.public}
+        resultsPublic={resultsArePublic}
         isOpen={!!selectedGame}
         onClose={() => setSelectedGame(null)}
+      />
+
+      <ConfirmationModal
+        isOpen={showPublishModal}
+        title="Pubblica Risultati"
+        message="Verranno resi i risultati e le votazioni visibili al pubblico. Vuoi continuare?"
+        confirmText="Pubblica"
+        cancelText="Annulla"
+        variant="primary"
+        onConfirm={handlePublish}
+        onCancel={() => setShowPublishModal(false)}
       />
     </SectionLayout>
   );

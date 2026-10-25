@@ -15,7 +15,6 @@ import { Button } from "./commons/Button";
 import { SectionLayout } from "./WebsiteLayout/SectionLayout";
 import ContestPrizesSection from "./Contest/ContestPrizesSection";
 import ContestVideosSection from "./Contest/ContestVideosSection";
-import ConfirmationModal from "./commons/ConfirmationModal";
 
 export default function PageContest(props) {
   let router = useRouter();
@@ -32,12 +31,6 @@ export default function PageContest(props) {
   let [timeLeft, setTimeLeft] = useState<string | null>(null);
   let [judgingProgress, setJudgingProgress] = useState<Results | null>(null);
   let [resultsPublic, setResultsPublic] = useState<boolean | null>(null);
-  let [showPublishModal, setShowPublishModal] = useState(false);
-  let [publishError, setPublishError] = useState<{
-    message: string;
-    votes_confirmed?: number;
-    votes_required?: number;
-  } | null>(null);
 
   const isHost = participant?.kind == String(ParticipantType.judge) &&
     (participant?.host == "1" || participant?.host === true);
@@ -206,9 +199,9 @@ export default function PageContest(props) {
 
   const votesConfirmed = Number(judgingProgress?.votes_confirmed ?? 0);
   const votesRequired = Number(judgingProgress?.votes_required ?? 0);
-  const missingVotes = Math.max(0, votesRequired - votesConfirmed);
-  const publishReady = !!judgingProgress?.all_votes_confirmed;
-  const hasPublishProgress = !!judgingProgress && votesRequired > 0;
+  const publishReady =
+    !!judgingProgress?.all_votes_confirmed ||
+    (votesRequired > 0 && votesConfirmed >= votesRequired);
 
   const actions = [];
   const canVote = isJudge && !isComplete && !canSubmitGames;
@@ -260,8 +253,14 @@ export default function PageContest(props) {
     );
   }
 
-  // Host preview button when complete but not published
-  if (isComplete && isHost && resultsPublic === false) {
+  // Il capo giuria può consultare l'anteprima quando i risultati non sono
+  // pubblici. In fase di giudizio serve il 100% dei voti confermati; a
+  // competizione completata l'anteprima resta disponibile. La pubblicazione
+  // avviene dalla pagina di anteprima.
+  const showHostPreview =
+    isHost && resultsPublic === false && (isComplete || publishReady);
+
+  if (showHostPreview) {
     actions.push(
       <Button
         key="anteprima"
@@ -269,34 +268,6 @@ export default function PageContest(props) {
         variant="light"
       >
         Anteprima Risultati
-      </Button>
-    );
-
-    actions.push(
-      <span key="publish-progress" className="text-xs font-medium text-gray-300">
-        {hasPublishProgress
-          ? `${votesConfirmed}/${votesRequired} voti confermati${missingVotes > 0 ? ` · ${missingVotes === 1 ? "manca 1 voto" : `mancano ${missingVotes} voti`}` : ""}`
-          : "Verifica voti confermati..."}
-      </span>
-    );
-
-    actions.push(
-      <Button
-        key="pubblica"
-        onClick={() => setShowPublishModal(true)}
-        variant="light"
-        disabled={!publishReady}
-        title={
-          publishReady
-            ? "Tutti i voti sono confermati"
-            : hasPublishProgress
-              ? missingVotes === 1
-                ? "Manca 1 voto da confermare"
-                : `Mancano ${missingVotes} voti da confermare`
-              : "Verifica lo stato dei voti prima di pubblicare"
-        }
-      >
-        Pubblica Risultati
       </Button>
     );
   }
@@ -316,20 +287,6 @@ export default function PageContest(props) {
       }
     >
       <div className="w-full flex flex-col gap-8 pb-12">
-        {publishError && (
-          <div role="alert" className="border border-error/20 bg-error/10 p-4 text-sm text-error">
-            <p className="font-bold">Impossibile pubblicare i risultati</p>
-            <p className="mt-1">{publishError.message}</p>
-            {publishError.votes_required !== undefined && (
-              <p className="mt-1 font-mono text-xs">
-                Voti confermati: {publishError.votes_confirmed ?? 0}/{publishError.votes_required}
-                {" · "}
-                mancano {Math.max(0, publishError.votes_required - (publishError.votes_confirmed ?? 0))}
-              </p>
-            )}
-          </div>
-        )}
-
         <ContestGamesSection
           contest={contest.id}
           contestEnded={isComplete}
@@ -345,51 +302,6 @@ export default function PageContest(props) {
 
         <ContestPrizesSection contestId={contest.id} />
       </div>
-      <ConfirmationModal
-        isOpen={showPublishModal}
-        title="Pubblica Risultati"
-        message="Vuoi davvero pubblicare i risultati della competizione? Questo calcolerà i piazzamenti in base ai voti e renderà i risultati visibili a tutti."
-        confirmText="Pubblica"
-        cancelText="Annulla"
-        variant="primary"
-        onConfirm={() => {
-          setShowPublishModal(false);
-          setPublishError(null);
-          GMIApi.getInstance().publishResults(contest.id, (data) => {
-            if (data.success) {
-              alert("Risultati pubblicati con successo!");
-              setResultsPublic(true);
-              setJudgingProgress(current => current
-                ? {
-                    ...current,
-                    public: true,
-                    all_votes_confirmed: true,
-                    votes_confirmed: current.votes_required ?? current.votes_confirmed,
-                  }
-                : current);
-              return;
-            }
-
-            if (data.code === "VOTES_NOT_CONFIRMED" && data.votes_required !== undefined) {
-              setJudgingProgress(current => current
-                ? {
-                    ...current,
-                    votes_confirmed: data.votes_confirmed ?? current.votes_confirmed,
-                    votes_required: data.votes_required,
-                    all_votes_confirmed: false,
-                  }
-                : current);
-            }
-
-            setPublishError({
-              message: data.error || "Errore sconosciuto durante la pubblicazione.",
-              votes_confirmed: data.votes_confirmed,
-              votes_required: data.votes_required,
-            });
-          });
-        }}
-        onCancel={() => setShowPublishModal(false)}
-      />
     </SectionLayout>
   );
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { prosList, consList } from "../../src/Constants"
 import { Button } from "../commons/Button";
-import { marked } from "../../src/marked"
+import { renderMarkdownPreview } from "../../src/markdown"
 import { CloseIcon, InfoIcon } from "../commons/Icons";
 
 const MIN_PROS_CONS = 2;
@@ -501,7 +501,7 @@ export default function VoteForm(props) {
                 <div
                   className="prose prose-sm max-w-none"
                   dangerouslySetInnerHTML={{
-                    __html: marked.parse(comment.replaceAll("\n", "⠀⠀\n"), { breaks: true })
+                    __html: renderMarkdownPreview(comment)
                   }}
                 />
               ) : (

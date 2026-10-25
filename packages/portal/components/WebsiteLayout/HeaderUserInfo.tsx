@@ -6,7 +6,7 @@ import { basePath, competitionsPath } from "../../src/paths";
 import { Button } from "../commons/Button";
 import type { AppDispatch, RootState } from "../../src/store";
 
-export const HeaderUserInfo = () => {
+export const HeaderUserInfo = ({ onClose }: { onClose?: () => void }) => {
   const userInfo = useSelector((root: RootState) => root.auth.userInfo);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -29,6 +29,7 @@ export const HeaderUserInfo = () => {
       <div className="flex items-center gap-3">
         <Link
           href={`${competitionsPath("/user/")}?user=${user.user_id}`}
+          onClick={onClose}
           className="flex items-center gap-2 hover:underline decoration-2 underline-offset-4"
         >
           <img
