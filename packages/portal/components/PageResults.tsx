@@ -327,7 +327,7 @@ export default function PageResults(props)
     >
       <div className="flex flex-col gap-8 pb-12 overflow-x-clip">
         {publishError && (
-          <div role="alert" className="w-full max-w-5xl mx-auto border border-error/20 bg-error/10 p-4 text-sm text-error">
+          <div role="alert" className="w-full max-w-7xl border border-error/20 bg-error/10 p-4 text-sm text-error">
             <p className="font-bold">Impossibile pubblicare i risultati</p>
             <p className="mt-1">{publishError.message}</p>
             {publishError.votes_required !== undefined && (
@@ -340,7 +340,7 @@ export default function PageResults(props)
           </div>
         )}
 
-        <div className="w-full max-w-5xl mx-auto">
+        <div className="w-full max-w-7xl">
           {/* Judging Phase: Show only progress bars */}
           {showJudgingProgress && (
             <section className="bg-surface border border-default p-5 md:p-8">

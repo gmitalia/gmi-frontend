@@ -10,7 +10,7 @@ type LoginRequiredPageProps = {
 
 export default function LoginRequiredPage({ title = "Accesso richiesto", message, onBack }: LoginRequiredPageProps) {
   return (
-    <div className="mx-auto flex w-full max-w-5xl items-center justify-center py-12">
+    <div className="mx-auto flex w-full max-w-7xl items-center justify-center py-12">
       <div className="w-full border border-gray-200 bg-white p-8 text-center md:p-12">
         <h2 className="text-xl font-bold text-gray-900">{title}</h2>
         <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-gray-500">{message}</p>

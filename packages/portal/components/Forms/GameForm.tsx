@@ -106,7 +106,7 @@ export default function GameForm(props) {
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl border border-gray-200 bg-white">
+    <div className="mx-auto w-full max-w-7xl border border-gray-200 bg-white">
       <div className="flex flex-col gap-6 p-6 md:flex-row md:items-start md:justify-between md:p-8">
         <div className="min-w-0">
           <span

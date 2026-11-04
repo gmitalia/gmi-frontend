@@ -81,7 +81,7 @@ export default function PageEditParticipation(props) {
     }
 
     return renderBody(
-      <div className="mx-auto w-full max-w-5xl border border-error/20 bg-error/10 p-8 text-center">
+      <div className="w-full max-w-7xl border border-error/20 bg-error/10 p-8 text-center">
         <h2 className="text-xl font-bold text-error">Errore</h2>
         <p className="mt-2 text-sm text-error">{error}</p>
         <div className="mt-6">
@@ -117,7 +117,7 @@ export default function PageEditParticipation(props) {
   }
 
   return renderBody(
-    <div className="mx-auto w-full max-w-5xl border border-gray-200 bg-white p-10">
+    <div className="w-full max-w-7xl border border-gray-200 bg-white p-10">
       <div className="flex flex-col items-center gap-3">
         <div className="h-10 w-10 animate-spin rounded-full border-thick border-gray-200 border-t-gray-700" />
         <span className="text-sm text-gray-500">Caricamento partecipazione...</span>
