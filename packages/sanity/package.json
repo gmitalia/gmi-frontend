@@ -9,28 +9,28 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "deploy-graphql": "sanity graphql deploy"
+    "deploy-graphql": "sanity graphql deploy",
+    "check": "sanity check"
   },
   "keywords": [
     "sanity"
   ],
   "dependencies": {
-    "@sanity/code-input": "^4.1.4",
-    "@sanity/vision": "^3.63.0",
+    "@sanity/code-input": "^7.3.14",
+    "@sanity/vision": "^6.22.0",
     "get-youtube-id": "^1.0.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-youtube": "^9.0.3",
-    "sanity": "^3.63.0",
-    "styled-components": "^6.1.8",
-    "vercel": "^29.3.6"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-youtube": "^10.1.0",
+    "sanity": "^6.22.0",
+    "styled-components": "^6.6.0"
   },
   "devDependencies": {
-    "@sanity/eslint-config-studio": "^4.0.0",
-    "@types/react": "^18.0.25",
-    "eslint": "^8.6.0",
-    "prettier": "^3.0.2",
-    "typescript": "^5.1.6"
+    "@sanity/eslint-config-studio": "^7.0.0",
+    "@types/react": "^19.3.0",
+    "eslint": "^10.14.0",
+    "prettier": "^3.9.10",
+    "typescript": "^7.0.2"
   },
   "prettier": {
     "semi": false,
