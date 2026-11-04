@@ -12,8 +12,9 @@ import GMIApi from "../src/api/GMIApi";
 import { useEffect, useMemo, useState } from "react";
 
 interface Props {
-  posts: [PostInterface];
-  games: [Game];
+  posts: PostInterface[];
+  tutorials: PostInterface[];
+  games: Game[];
 }
 
 const seeAllClasses =
@@ -21,7 +22,7 @@ const seeAllClasses =
 
 const LATEST_CONTESTS_LIMIT = 3;
 
-export default function Home({ posts, games }: Props) {
+export default function Home({ posts, tutorials, games }: Props) {
   const [gamesArray, setGamesArray] = useState<Game[]>(games);
   const [contests, setContests] = useState<Contest[]>([]);
   const [contestsLoading, setContestsLoading] = useState(true);
@@ -73,18 +74,32 @@ export default function Home({ posts, games }: Props) {
         <div className="flex flex-col items-start mt-5 mb-4 md:flex-row md:items-center md:justify-between">
           <h2 className="text-3xl mb-2 md:mb-0">Ultimi articoli</h2>
         </div>
-        {/* posts */}
+        {/* articoli (esclusi i tutorial) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 py-3">
-          {posts.slice(0, 3).map((post) => {
-            return (
-              <BlogCard post={post} key={post?._id} />
-            );
-          })}
-
+          {posts.slice(0, 3).map((post) => (
+            <BlogCard post={post} key={post?._id} />
+          ))}
         </div>
         <div className="mt-4 flex justify-center">
           <Link href="/blog/" title="Vai alla pagina Blog" className={seeAllClasses}>
             Vedi tutti gli articoli
+          </Link>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto p-5 blog-section">
+        <div className="flex flex-col items-start mt-5 mb-4 md:flex-row md:items-center md:justify-between">
+          <h2 className="text-3xl mb-2 md:mb-0">Tutorial</h2>
+        </div>
+        {/* solo tutorial */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 py-3">
+          {tutorials.slice(0, 3).map((tutorial) => (
+            <BlogCard post={tutorial} key={tutorial?._id} />
+          ))}
+        </div>
+        <div className="mt-4 flex justify-center">
+          <Link href="/tutorial/" title="Vai alla pagina Tutorial" className={seeAllClasses}>
+            Vedi tutti i tutorial
           </Link>
         </div>
       </div>
@@ -154,7 +169,7 @@ export default function Home({ posts, games }: Props) {
   );
 }
 export async function getStaticProps() {
-  const query = `*[_type == 'post'] | order(publishedAt desc) [0..2] {
+  const postFields = `{
     _id,
     title,
     publishedAt,
@@ -169,6 +184,10 @@ export async function getStaticProps() {
   description
   }`;
 
+  const queryPosts = `*[_type == 'post' && !("Tutorial" in categories[]->title)] | order(publishedAt desc) [0..6] ${postFields}`;
+
+  const queryTutorials = `*[_type == 'post' && "Tutorial" in categories[]->title] | order(publishedAt desc) [0..6] ${postFields}`;
+
   const queryGames = `*[_type == 'game'] | order(title asc) {
     _id,
     title,
@@ -179,8 +198,9 @@ export async function getStaticProps() {
 
   const games = await sanityClient.fetch(queryGames)
 
-  const posts = await sanityClient.fetch(query);
+  const posts = await sanityClient.fetch(queryPosts);
+  const tutorials = await sanityClient.fetch(queryTutorials);
   return {
-    props: { posts, games }, // will be passed to the page component as props
+    props: { posts, tutorials, games }, // will be passed to the page component as props
   };
 }

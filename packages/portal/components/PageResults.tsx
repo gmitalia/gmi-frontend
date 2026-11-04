@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import { getQuery } from "../src/Utils";
+import { getQuery, parseAuthors } from "../src/Utils";
+import type { Author } from "../src/Utils";
 import GMIApi from "../src/api/GMIApi";
 import { SectionLayout } from "./WebsiteLayout/SectionLayout";
 import { Button } from "./commons/Button";
@@ -22,6 +23,7 @@ export default function PageResults(props)
   const [contest, setContest] = useState<Contest | null>(null);
   const [judges, setJudges] = useState([]);
   const [judgeAvatars, setJudgeAvatars] = useState({}); // Mappa ID -> avatar
+  const [gameAuthors, setGameAuthors] = useState<Record<string, Author[]>>({});
 
   const [error, setError] = useState<string>();
   const [visibleGames, setVisibleGames] = useState([]);
@@ -36,6 +38,7 @@ export default function PageResults(props)
   useEffect(()=>
   {
     setJudges([]);
+    setGameAuthors({});
 
     GMIApi.getInstance().getResults(query.contest, (data)=>
     {
@@ -64,6 +67,17 @@ export default function PageResults(props)
 
     GMIApi.getInstance().getContest(query.contest, (data) => {
       if (data.success) setContest(data.contests[0]);
+    });
+
+    // Gli autori non sono inclusi nei risultati: recuperali dall'elenco giochi.
+    GMIApi.getInstance().getGames(query.contest, (data) => {
+      if (!data.success) return;
+
+      const authorsByGame: Record<string, Author[]> = {};
+      for (const game of data.games || [])
+        authorsByGame[String(game.id)] = parseAuthors(game.authors);
+
+      setGameAuthors(authorsByGame);
     });
 
     // Fetch judges data with avatars for completed contests
@@ -137,6 +151,12 @@ export default function PageResults(props)
     if (!isVisible) {
       toggleGameVisibility(index);
     } else if (resultsArePublic) {
+      const authors = gameAuthors[String(game.id)];
+      if (authors !== undefined) {
+        setSelectedGame({ ...game, authors });
+        return;
+      }
+
       // Fetch dettagli completi del gioco (inclusi autori) da getGames
       GMIApi.getInstance().getGames(query.contest, (gamesData) => {
         if (gamesData.success) {
@@ -192,6 +212,7 @@ export default function PageResults(props)
   {
     const isVisible = visibleGames[index] || resultsArePublic;
     const isTop3 = index < 3 && game.avg_score;
+    const authors = gameAuthors[String(game.id)] || [];
     
     return (
       <tr
@@ -215,6 +236,25 @@ export default function PageResults(props)
           <div className={`font-bold transition-colors ${isVisible ? "text-content group-hover:text-secondary" : "text-content-muted/60"}`}>
             {isVisible ? game.name : "**************"}
           </div>
+          {isVisible && authors.length > 0 && (
+            <div className="mt-0.5 break-words text-[11px] leading-relaxed text-content-muted">
+              di{" "}
+              {authors.map((author, authorIndex) => (
+                <React.Fragment key={author.id}>
+                  <Link
+                    href={`/competizioni/user/?user=${author.id}`}
+                    onClick={(event) => event.stopPropagation()}
+                    className="ds-link"
+                  >
+                    {author.name}
+                  </Link>
+                  {authorIndex < authors.length - 1 && (
+                    <span>{authorIndex === authors.length - 2 ? " e " : ", "}</span>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          )}
           {!isVisible && <div className="text-[10px] text-content-muted uppercase mt-0.5">Clicca per rivelare</div>}
         </td>
         <td className="p-2 md:p-4 text-center">
