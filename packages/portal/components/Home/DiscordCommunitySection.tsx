@@ -29,7 +29,7 @@ export function DiscordCommunitySection({
         <div className="flex flex-wrap justify-center gap-3 md:justify-start">
           <Button
             variant="primary"
-            href="https://discord.gg/0wKBBPIbX2r3S32a"
+            href="https://discord.com/invite/juj4yEF2Yv"
             target="_blank"
             rel="noopener noreferrer"
           >
